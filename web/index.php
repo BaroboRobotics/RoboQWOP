@@ -20,8 +20,8 @@
             <a href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
             <h1>Robo QWOP</h1>
             <p>
-                Best way to play with a mobot without owning one.
-            </p>
+            	Drive a Mobot for Free!
+	    </p>
             <p>
                 <a href="main.php">Connect to the Robot</a>
             </p>
