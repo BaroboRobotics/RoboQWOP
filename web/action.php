@@ -65,12 +65,15 @@ if ($_POST["e"] == "1") {
 } else if ($_POST["r"] == "1") {
         $bj2 = 1;
 }
-$handle = fopen("/tmp/mobot_movement.data", "a");
-if ($handle) {
-	fwrite($handle, "$fp1,$fp2,$bj1,$bj2,$speed\n");
-} else {
-	print_r(error_get_last());
-	exit();
+$host = "localhost";
+$port = 8082;
+
+if (!$fp = fsockopen($host, $port, $errno, $errstr, 2)) {
+    echo '{"result":"error", "msg": "' . $errstr . '"}';
+    exit();
 }
+fputs($fp, "$robot_number,0,$fp1,$fp2,$bj1,$bj2,$speed\n");
+fclose($fp);
+
 ?>
 { "result":"success" }
