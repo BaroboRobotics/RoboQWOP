@@ -139,3 +139,72 @@ table.controls .red {
 table.controls .green {
     background-color: #cdffb7;
 }
+
+.quad {
+display:none;
+}
+
+th, input {
+text-align:left;
+vertical-align:top;
+}
+
+.quad_active {
+display:block;
+}
+
+td, th {
+padding:0;
+border:1px solid #000;
+}
+
+table {
+border-collapse:collapse;
+}
+
+th {
+width:100px;
+background:#003;
+color:#FFF;
+}
+
+th, input {
+padding:5px;
+}
+
+.green, .red, .button {
+width:200px;
+color:#FFF;
+}
+
+input {
+border:0;
+}
+
+.button {
+background:#696969;
+}
+
+.button:hover {
+background:#CCC;
+}
+
+.green {
+background:green;
+}
+
+.red {
+background:red;
+}
+
+.red:hover {
+background:#F30;
+}
+
+.green:hover {
+background:#090;
+}
+
+.active, .active:hover {
+background:#000;
+}
