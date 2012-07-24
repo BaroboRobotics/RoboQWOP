@@ -24,7 +24,19 @@ try {
 	$mysqli->query("update sessions set active = 1 where active = 0 order by created asc limit 1");
 	$mysqli->query("update sessions set started = NULL where active = 0");
 	$mysqli->query("update sessions set last_active = CURRENT_TIMESTAMP where id = " . $_SESSION['id']);
-	$mysqli->query("DELETE FROM sessions WHERE last_active < (NOW() - INTERVAL 1 MINUTE)");
+	// Set session time limit based on number of users
+	if ($stmt = $mysqli->prepare("SELECT count(*) from sessions")) {
+		$stmt->execute();
+		$stmt->bind_result($total_users);
+		$stmt->fetch(); $stmt->close();
+	}	
+	if (($total_users >= 2) && ($total_users <= 8)) {
+	    $seconds = 180 - (($total_users - 2) * 20; // 2 users equals 180 seconds 3 users equals 160 seconds 4 users equals 120 seconds
+	} else {
+	    $seconds = 40;
+	}
+	// $mysqli->query("DELETE FROM sessions WHERE last_active < (NOW() - INTERVAL 1 MINUTE)");
+	$mysqli->query("DELETE FROM sessions WHERE last_active < (NOW() - INTERVAL " . $seconds . " SECONDS)");
 	// Get the current record.
 	$today_min_30_seconds = new DateTime();
 	$today_min_30_seconds->sub(new DateInterval('PT60S'));
