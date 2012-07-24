@@ -201,7 +201,7 @@ if (!isset($_SESSION['id'])) {
                         break;
                 }
             }
-
+            old_active = False;
             function executeAction() {
                 count += 100;
                 if (send && active) {
@@ -249,6 +249,10 @@ if (!isset($_SESSION['id'])) {
                 $.getJSON('status.php', function(data) {
                     $('#status').html(data.status);
                     active = data.active;
+					if (oldactive != active) {
+                        $.playSound('/sounds/beep.mp3');
+					}
+                    oldactive = active;					
                     if (active) {
                         $('#status').css({'color':'red', 'font-weight':'bold'});
                     } else {
