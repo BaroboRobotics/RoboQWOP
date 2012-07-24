@@ -202,7 +202,7 @@ if (!isset($_SESSION['id'])) {
                         break;
                 }
             }
-            old_active = False;
+            old_active = false;
             function executeAction() {
                 count += 100;
                 if (send && active) {
