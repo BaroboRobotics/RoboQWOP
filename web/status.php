@@ -4,14 +4,14 @@ header('Content-type: application/json');
 session_start();
 if (!isset($_SESSION['id'])): ?>
 { "result":"error","msg":"invalid session id" }
-<?
+<?php
         exit();
 endif;
 
 $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 if (mysqli_connect_errno()): ?>
 { "result":"error","msg":"Connection failed" }
-<? 
+<?php 
         exit();
 endif;
 
@@ -31,7 +31,7 @@ try {
 		$stmt->fetch(); $stmt->close();
 	}	
 	if (($total_users >= 2) && ($total_users <= 8)) {
-	    $seconds = 180 - (($total_users - 2) * 20; // 2 users equals 180 seconds 3 users equals 160 seconds 4 users equals 120 seconds
+	    $seconds = 180 - (($total_users - 2) * 20); // 2 users equals 180 seconds 3 users equals 160 seconds 4 users equals 120 seconds
 	} else {
 	    $seconds = 40;
 	}
