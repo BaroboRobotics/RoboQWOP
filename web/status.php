@@ -64,7 +64,7 @@ try {
 			if ($results = $mysqli->query("select count(*) as number from sessions")) {
 				$obj = $results->fetch_object();
 				if ($obj->number > 1) {
-					$ret_val = '{"active":false, "status":"There are '. ($obj->number - 1) . ' users in front of you."}';
+					$ret_val = '{"active":false, "status":"There are '. ($obj->number - 1) . ' users in front of you. Total users: ' . $total_users . '"}';
 				} else {
                                         $ret_val = '{"active":true, "status":"You are controlling the robot."}';
                                 }
@@ -78,7 +78,7 @@ try {
 				$stmt->execute();
 				$stmt->bind_result($number_val);
 				$stmt->fetch(); $stmt->close();
-				$ret_val = '{"active":false, "status":"There are '. $number_val . ' users in front of you."}';
+				$ret_val = '{"active":false, "status":"There are '. $number_val . ' users in front of you. Total users: ' . $total_users . '"}';
 			}	
 			
 		}
