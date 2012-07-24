@@ -95,13 +95,6 @@ if (!isset($_SESSION['id'])) {
                 Speed Slider
                 <div id="slider" style="width: 250px; margin: 10px 0;"></div>
             </p>
-            <div class="social-widget" style="margin-top: 50px;">
-                <a target="_blank" href="http://twitter.com/BaroboRobotics"> <img src="img/icons/twitter.png" alt="Twitter" width="40" /> </a>
-                <a target="_blank" href="http://www.facebook.com/barobo"> <img src="img/icons/facebook.png" alt="Facebook" width="40" /> </a>
-                <a target="_blank" href="https://plus.google.com/110706245535499996481?prsrc=3" rel="publisher"> <img src="img/icons/googleplus.png" alt="Google Plus" width="40" /> </a>
-                <a target="_blank" href="http://www.youtube.com/BaroboRobotics"> <img src="img/icons/youtube.png" alt="Youtube" width="40" /> </a>
-            </div>
-        </div>
 		<table>
 <tr><th rowspan="2">Orientation</th><td><input type="button" value="Red is on left" id="on_left_is_red" class="button active" /></td><td><input type="button" value="Green is on left" id="on_left_is_green" class="button" /></td></tr>
 <tr><td><input type="button" id="facing_north_south" value="Facing North/South" class="button active" /></td><td><input type="button" id="facing_east_west" value="Facing East/West" class="button" /></td></tr>
@@ -137,6 +130,14 @@ if (!isset($_SESSION['id'])) {
 <tr><td><input type="button" value="Southwest" onmousedown="handleKeyEvent(73, true);" class="green" /></td><td><input type="button" value="Southeast" onmousedown="handleKeyEvent(85, true);" class="green" /></td></tr>
 <tr><td><input type="button" value="Northwest" onmousedown="handleKeyEvent(69, true);" class="red" /></td><td><input type="button" value="Northeast" onmousedown="handleKeyEvent(82, true);" class="red" /></td></tr>
 </table>
+            <div class="social-widget" style="margin-top: 50px;">
+                <a target="_blank" href="http://twitter.com/BaroboRobotics"> <img src="img/icons/twitter.png" alt="Twitter" width="40" /> </a>
+                <a target="_blank" href="http://www.facebook.com/barobo"> <img src="img/icons/facebook.png" alt="Facebook" width="40" /> </a>
+                <a target="_blank" href="https://plus.google.com/110706245535499996481?prsrc=3" rel="publisher"> <img src="img/icons/googleplus.png" alt="Google Plus" width="40" /> </a>
+                <a target="_blank" href="http://www.youtube.com/BaroboRobotics"> <img src="img/icons/youtube.png" alt="Youtube" width="40" /> </a>
+            </div>
+        </div>
+
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
         <script>
             window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')
@@ -249,6 +250,7 @@ if (!isset($_SESSION['id'])) {
                 $.getJSON('status.php', function(data) {
                     $('#status').html(data.status);
                     active = data.active;
+					// time_limit = $.load('
 					if (oldactive != active) {
                         $.playSound('/sounds/beep.mp3');
 					}
@@ -260,7 +262,15 @@ if (!isset($_SESSION['id'])) {
                     }
                     setInterval(executeAction, 100);
                 });
-				    $("#left_is_red_face_north_south").show();
+				    
+            });
+            $(document).mouseup(function(event) {
+                q = 0; w = 0; o = 0; p = 0;
+                u = 0; i = 0; e = 0; r = 0;
+                send = true;
+            });
+$(document).ready(function(){
+    $("#left_is_red_face_north_south").show();
 	$("#on_left_is_red").click(function(){
 	   $("#on_left_is_red").addClass('active');
 	   $("#on_left_is_green").removeClass('active');
@@ -305,12 +315,7 @@ if (!isset($_SESSION['id'])) {
           $("#bottom_is_green_face_east_west").show();
        }	   
 	});
-            });
-            $(document).mouseup(function(event) {
-                q = 0; w = 0; o = 0; p = 0;
-                u = 0; i = 0; e = 0; r = 0;
-                send = true;
-            });
+});
         </script>
     </body>
 </html>
