@@ -250,7 +250,7 @@ if (!isset($_SESSION['id'])) {
                 $.getJSON('status.php', function(data) {
                     $('#status').html(data.status);
                     active = data.active;
-					#time_limit = $.load('
+					// time_limit = $.load('
 					if (oldactive != active) {
                         $.playSound('/sounds/beep.mp3');
 					}
