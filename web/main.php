@@ -102,6 +102,41 @@ if (!isset($_SESSION['id'])) {
                 <a target="_blank" href="http://www.youtube.com/BaroboRobotics"> <img src="img/icons/youtube.png" alt="Youtube" width="40" /> </a>
             </div>
         </div>
+		<table>
+<tr><th rowspan="2">Orientation</th><td><input type="button" value="Red is on left" id="on_left_is_red" class="button active" /></td><td><input type="button" value="Green is on left" id="on_left_is_green" class="button" /></td></tr>
+<tr><td><input type="button" id="facing_north_south" value="Facing North/South" class="button active" /></td><td><input type="button" id="facing_east_west" value="Facing East/West" class="button" /></td></tr>
+</table>
+<table id="left_is_red_face_north_south" class="quad">
+<tr><th rowspan="4">Controls</th><td><input type="button" value="Spin clockwise" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" /></td><td><input type="button" value="Spin counter clockwise"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" /></td></tr>
+
+<tr><td><input type="button" value="North" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" /></td><td><input type="button" value="South" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" /></td></tr>
+<tr><td><input type="button" value="Northeast" onmousedown="handleKeyEvent(82, true);" class="red" /></td><td><input type="button" value="Northwest" onmousedown="handleKeyEvent(85, true);" class="green" /></td></tr>
+<tr><td><input type="button" value="Southeast" onmousedown="handleKeyEvent(69, true);" class="red" /></td><td><input type="button" value="Southwest" onmousedown="handleKeyEvent(73, true);" class="green" /></td></tr>
+</table>
+<table id="left_is_green_face_north_south" class="quad">
+<tr><th rowspan="4">Controls</th><td><input type="button" value="Spin clockwise" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" /></td><td><input type="button" value="Spin counter clockwise"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" /></td></tr>
+
+<tr><td><input type="button" value="North" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" /></td><td><input type="button" value="South" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" /></td></tr>
+<tr><td><input type="button" value="Northwest" onmousedown="handleKeyEvent(73, true);" class="green" /></td><td><input type="button" value="Northeast" onmousedown="handleKeyEvent(69, true);" class="red" /></td></tr>
+<tr><td><input type="button" value="Southwest" onmousedown="handleKeyEvent(85, true);" class="green" /></td><td><input type="button" value="Southeast" onmousedown="handleKeyEvent(82, true);" class="red" /></td></tr>
+</table>
+
+<table id="bottom_is_green_face_east_west" class="quad">
+<tr><th rowspan="4">Controls</th><td><input type="button" value="Spin clockwise" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" /></td><td><input type="button" value="Spin counter clockwise"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" /></td></tr>
+
+<tr><td><input type="button" value="West" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" /></td><td><input type="button" value="East" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" /></td></tr>
+
+<tr><td><input type="button" value="Southwest" onmousedown="handleKeyEvent(82, true);" class="red" /></td><td><input type="button" value="Southeast" onmousedown="handleKeyEvent(69, true);" class="red" /></td></tr>
+<tr><td><input type="button" value="Northwest" onmousedown="handleKeyEvent(85, true);" class="green" /></td><td><input type="button" value="Northeast" onmousedown="handleKeyEvent(73, true);" class="green" /></td></tr>
+</table>
+<table id="bottom_is_red_face_east_west" class="quad">
+<tr><th rowspan="4">Controls</th><td><input type="button" value="Spin clockwise" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" /></td><td><input type="button" value="Spin counter clockwise"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" /></td></tr>
+
+<tr><td><input type="button" value="West" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" /></td><td><input type="button" value="East" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" /></td></tr>
+
+<tr><td><input type="button" value="Southwest" onmousedown="handleKeyEvent(73, true);" class="green" /></td><td><input type="button" value="Southeast" onmousedown="handleKeyEvent(85, true);" class="green" /></td></tr>
+<tr><td><input type="button" value="Northwest" onmousedown="handleKeyEvent(69, true);" class="red" /></td><td><input type="button" value="Northeast" onmousedown="handleKeyEvent(82, true);" class="red" /></td></tr>
+</table>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
         <script>
             window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')
@@ -221,6 +256,51 @@ if (!isset($_SESSION['id'])) {
                     }
                     setInterval(executeAction, 100);
                 });
+				    $("#left_is_red_face_north_south").show();
+	$("#on_left_is_red").click(function(){
+	   $("#on_left_is_red").addClass('active');
+	   $("#on_left_is_green").removeClass('active');
+	   $(".quad").hide();
+	   if ($("#facing_north_south").is('.active')) {
+          $("#left_is_red_face_north_south").show();
+       } else {
+          $("#bottom_is_red_face_east_west").show();
+       }
+	});
+	$("#on_left_is_green").click(function(){
+	   $("#on_left_is_green").addClass('active');
+	   $("#on_left_is_red").removeClass('active');
+	   $(".quad").hide();
+	   if ($("#facing_north_south").is('.active')) {
+          $("#left_is_green_face_north_south").show();
+       } else {
+          $("#bottom_is_green_face_east_west").show();
+       }
+	});
+	$("#facing_north_south").click(function(){
+	   $("#facing_north_south").addClass('active');
+	   $("#facing_east_west").removeClass('active');
+	   $("#on_left_is_red").prop('value', 'Red is on left');
+	   $("#on_left_is_green").prop('value', 'Green is on left');
+	   $(".quad").hide();
+	   if ($("#on_left_is_red").is('.active')) {
+          $("#left_is_red_face_north_south").show();
+       } else {
+          $("#left_is_green_face_north_south").show();
+       }
+	});
+	$("#facing_east_west").click(function(){
+	   $("#facing_east_west").addClass('active');
+	   $("#facing_north_south").removeClass('active');
+	   $("#on_left_is_red").prop('value', 'Red is on bottom');
+	   $("#on_left_is_green").prop('value', 'Green is on bottom');
+	   $(".quad").hide();
+	   if ($("#on_left_is_red").is('.active')) {
+          $("#bottom_is_red_face_east_west").show();
+       } else {
+          $("#bottom_is_green_face_east_west").show();
+       }	   
+	});
             });
             $(document).mouseup(function(event) {
                 q = 0; w = 0; o = 0; p = 0;
