@@ -249,6 +249,7 @@ if (!isset($_SESSION['id'])) {
                 $.getJSON('status.php', function(data) {
                     $('#status').html(data.status);
                     active = data.active;
+					#time_limit = $.load('
 					if (oldactive != active) {
                         $.playSound('/sounds/beep.mp3');
 					}
@@ -260,7 +261,15 @@ if (!isset($_SESSION['id'])) {
                     }
                     setInterval(executeAction, 100);
                 });
-				    $("#left_is_red_face_north_south").show();
+				    
+            });
+            $(document).mouseup(function(event) {
+                q = 0; w = 0; o = 0; p = 0;
+                u = 0; i = 0; e = 0; r = 0;
+                send = true;
+            });
+$(document).ready(function(){
+    $("#left_is_red_face_north_south").show();
 	$("#on_left_is_red").click(function(){
 	   $("#on_left_is_red").addClass('active');
 	   $("#on_left_is_green").removeClass('active');
@@ -305,12 +314,7 @@ if (!isset($_SESSION['id'])) {
           $("#bottom_is_green_face_east_west").show();
        }	   
 	});
-            });
-            $(document).mouseup(function(event) {
-                q = 0; w = 0; o = 0; p = 0;
-                u = 0; i = 0; e = 0; r = 0;
-                send = true;
-            });
+});
         </script>
     </body>
 </html>
