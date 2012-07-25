@@ -66,9 +66,7 @@ if (!isset( $_SESSION['user_id'] )) {
             <a style="margin: 0 auto; display: block;" href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
             <h1>Robo QWOP</h1>
             <img src="img/imobot_diagram.png" alt="Mobot Diagram" title="Mobot Diagram" />
-            <p id="status">
-                Retrieving status information.
-            </p>
+			<p><span id="status">Retrieving status information.</span> <span id="time_left"></span></p>
             <div id="control-tabs">
                 <ul>
                     <li><a href="#default-controls">Default Controls</a></li>
@@ -270,6 +268,8 @@ if (!isset( $_SESSION['user_id'] )) {
         <script type="text/javascript">
             var q = 0; var w = 0; var o = 0; var p = 0;
             var u = 0; var i = 0; var e = 0; var r = 0;
+			var time_left = 61;
+			var countdown = false;
             var send = false;
             var active = false;
             var count = 0;
@@ -278,7 +278,16 @@ if (!isset( $_SESSION['user_id'] )) {
                     send = true;
                 }
             }
-
+            function countDown() {
+			    if (countdown == true) {
+				    time_left = time_left - 1;
+			        $('#time_left').text('You have '+time_left+' seconds left.');
+				}
+				if (time_left == 0) {
+				    countdown = false;
+					$('#time_left').text('')
+				}
+			}
             function handleKeyEvent(keyCode, down) {
                 var oldval;
                 switch (keyCode) {
@@ -340,6 +349,9 @@ if (!isset( $_SESSION['user_id'] )) {
 					   $(queue_data).appendTo("#queue");
 					});
 					if (!active && data.active) {
+					    time_left = 61;
+						countdown = true;
+					    
 						soundHandle = document.getElementById('soundHandle');
 						soundHandle.src = 'sounds/beep.mp3';
 						soundHandle.play();
@@ -391,6 +403,7 @@ if (!isset( $_SESSION['user_id'] )) {
                 
                 updateStatus();
 				setInterval(executeAction, 100);
+				setInterval(countDown, 1000);
 
                 $("#left_is_red_face_north_south").show();
                 $("#on_left_is_red").click(function() {
