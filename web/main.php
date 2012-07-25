@@ -62,6 +62,7 @@ if (!isset( $_SESSION['user_id'] )) {
     </head>
     <body>
         <div role="main" id="page">
+		    <table id="queue"></table>
             <a style="margin: 0 auto; display: block;" href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
             <h1>Robo QWOP</h1>
             <img src="img/imobot_diagram.png" alt="Mobot Diagram" title="Mobot Diagram" />
@@ -323,7 +324,34 @@ if (!isset( $_SESSION['user_id'] )) {
                         break;
                 }
             }
-
+            function updateStatus() {
+			    $.getJSON('status.php', function(data) {
+					$('#status').html(data.status);
+					$('#queue').html(' ');
+					$.each(data.control, function(i, dataq) {
+					   var queue_data = "<tr><td>1</td><td>"+dataq.first_name+" "+dataq.last_name+"</td></tr>";
+					   
+					   $(queue_data).appendTo("#queue");
+					});
+					$.each(data.queue, function(i, dataq) {
+					   var position = dataq.position + 1;
+					   var queue_data = "<tr><td>"+position+"</td><td>"+dataq.first_name+" "+dataq.last_name+"</td></tr>";
+					   
+					   $(queue_data).appendTo("#queue");
+					});
+					if (!active && data.active) {
+						soundHandle = document.getElementById('soundHandle');
+						soundHandle.src = 'sounds/beep.mp3';
+						soundHandle.play();
+					}
+					active = data.active;
+					if (active) {
+						$('#status').css({'color':'red', 'font-weight':'bold'});
+					} else {
+						$('#status').css({'color':'black', 'font-weight':'normal'});
+					}
+				});
+			}
             function executeAction() {
                 count += 100;
                 if (send && active) {
@@ -344,20 +372,7 @@ if (!isset( $_SESSION['user_id'] )) {
                 }
                 if (count >= 5000) {
                     count = 0;
-                    $.getJSON('status.php', function(data) {
-                        $('#status').html(data.status);
-                        if (!active && data.active) {
-                            soundHandle = document.getElementById('soundHandle');
-                            soundHandle.src = 'sounds/beep.mp3';
-                            soundHandle.play();
-                        }
-                        active = data.active;
-                        if (active) {
-                            $('#status').css({'color':'red', 'font-weight':'bold'});
-                        } else {
-                            $('#status').css({'color':'black', 'font-weight':'normal'});
-                        }
-                    });
+                    updateStatus();
                 }
             }
             $(document).keydown(function(event) {
@@ -374,21 +389,8 @@ if (!isset( $_SESSION['user_id'] )) {
                     "value" : 120
                 });
                 
-                $.getJSON('status.php', function(data) {
-                    $('#status').html(data.status);
-                    if (!active && data.active) {
-                        soundHandle = document.getElementById('soundHandle');
-                        soundHandle.src = 'sounds/beep.mp3';
-                        soundHandle.play();
-                    }
-                    active = data.active;
-                    if (active) {
-                        $('#status').css({'color':'red', 'font-weight':'bold'});
-                    } else {
-                        $('#status').css({'color':'black', 'font-weight':'normal'});
-                    }
-                    setInterval(executeAction, 100);
-                });
+                updateStatus();
+				setInterval(executeAction, 100);
 
                 $("#left_is_red_face_north_south").show();
                 $("#on_left_is_red").click(function() {
