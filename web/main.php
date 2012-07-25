@@ -62,12 +62,11 @@ if (!isset( $_SESSION['user_id'] )) {
     </head>
     <body>
         <div role="main" id="page">
+		    <table id="queue"></table>
             <a style="margin: 0 auto; display: block;" href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
             <h1>Robo QWOP</h1>
             <img src="img/imobot_diagram.png" alt="Mobot Diagram" title="Mobot Diagram" />
-            <p id="status">
-                Retrieving status information.
-            </p>
+			<p><span id="status">Retrieving status information.</span> <span id="time_left"></span></p>
             <div id="control-tabs">
                 <ul>
                     <li><a href="#default-controls">Default Controls</a></li>
@@ -101,8 +100,6 @@ if (!isset( $_SESSION['user_id'] )) {
                             </tr>
                         </tbody>
                     </table>
-                    <p>Speed Slider</p>
-                    <div id="slider" style="width: 250px; margin: 10px 0;"></div>
                 </div>
                 <div id="oriented-controls">
                     <table>
@@ -248,7 +245,10 @@ if (!isset( $_SESSION['user_id'] )) {
                             </td>
                         </tr>
                     </table>
+					
                 </div>
+				<p>Speed Slider</p>
+                <div id="slider" style="width: 250px; margin: 10px 0;"></div>
             </div>
             <div class="social-widget" style="margin-top: 50px;">
                 <a target="_blank" href="http://twitter.com/BaroboRobotics"> <img src="img/icons/twitter.png" alt="Twitter" width="40" /> </a>
@@ -268,6 +268,8 @@ if (!isset( $_SESSION['user_id'] )) {
         <script type="text/javascript">
             var q = 0; var w = 0; var o = 0; var p = 0;
             var u = 0; var i = 0; var e = 0; var r = 0;
+			var time_left = 61;
+			var countdown = false;
             var send = false;
             var active = false;
             var count = 0;
@@ -276,7 +278,16 @@ if (!isset( $_SESSION['user_id'] )) {
                     send = true;
                 }
             }
-
+            function countDown() {
+			    if (countdown == true) {
+				    time_left = time_left - 1;
+			        $('#time_left').text('You have '+time_left+' seconds left.');
+				}
+				if (time_left == 0) {
+				    countdown = false;
+					$('#time_left').text('')
+				}
+			}
             function handleKeyEvent(keyCode, down) {
                 var oldval;
                 switch (keyCode) {
@@ -322,7 +333,37 @@ if (!isset( $_SESSION['user_id'] )) {
                         break;
                 }
             }
-
+            function updateStatus() {
+			    $.getJSON('status.php', function(data) {
+					$('#status').html(data.status);
+					$('#queue').html(' ');
+					$.each(data.control, function(i, dataq) {
+					   var queue_data = "<tr><td>1</td><td>"+dataq.first_name+" "+dataq.last_name+"</td></tr>";
+					   
+					   $(queue_data).appendTo("#queue");
+					});
+					$.each(data.queue, function(i, dataq) {
+					   var position = dataq.position + 1;
+					   var queue_data = "<tr><td>"+position+"</td><td>"+dataq.first_name+" "+dataq.last_name+"</td></tr>";
+					   
+					   $(queue_data).appendTo("#queue");
+					});
+					if (!active && data.active) {
+					    time_left = 61;
+						countdown = true;
+					    
+						soundHandle = document.getElementById('soundHandle');
+						soundHandle.src = 'sounds/beep.mp3';
+						soundHandle.play();
+					}
+					active = data.active;
+					if (active) {
+						$('#status').css({'color':'red', 'font-weight':'bold'});
+					} else {
+						$('#status').css({'color':'black', 'font-weight':'normal'});
+					}
+				});
+			}
             function executeAction() {
                 count += 100;
                 if (send && active) {
@@ -343,20 +384,7 @@ if (!isset( $_SESSION['user_id'] )) {
                 }
                 if (count >= 5000) {
                     count = 0;
-                    $.getJSON('status.php', function(data) {
-                        $('#status').html(data.status);
-                        if (!active && data.active) {
-                            soundHandle = document.getElementById('soundHandle');
-                            soundHandle.src = 'sounds/beep.mp3';
-                            soundHandle.play();
-                        }
-                        active = data.active;
-                        if (active) {
-                            $('#status').css({'color':'red', 'font-weight':'bold'});
-                        } else {
-                            $('#status').css({'color':'black', 'font-weight':'normal'});
-                        }
-                    });
+                    updateStatus();
                 }
             }
             $(document).keydown(function(event) {
@@ -373,21 +401,9 @@ if (!isset( $_SESSION['user_id'] )) {
                     "value" : 120
                 });
                 
-                $.getJSON('status.php', function(data) {
-                    $('#status').html(data.status);
-                    if (!active && data.active) {
-                        soundHandle = document.getElementById('soundHandle');
-                        soundHandle.src = 'sounds/beep.mp3';
-                        soundHandle.play();
-                    }
-                    active = data.active;
-                    if (active) {
-                        $('#status').css({'color':'red', 'font-weight':'bold'});
-                    } else {
-                        $('#status').css({'color':'black', 'font-weight':'normal'});
-                    }
-                    setInterval(executeAction, 100);
-                });
+                updateStatus();
+				setInterval(executeAction, 100);
+				setInterval(countDown, 1000);
 
                 $("#left_is_red_face_north_south").show();
                 $("#on_left_is_red").click(function() {
