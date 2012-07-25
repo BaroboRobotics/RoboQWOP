@@ -101,8 +101,6 @@ if (!isset( $_SESSION['user_id'] )) {
                             </tr>
                         </tbody>
                     </table>
-                    <p>Speed Slider</p>
-                    <div id="slider" style="width: 250px; margin: 10px 0;"></div>
                 </div>
                 <div id="oriented-controls">
                     <table>
@@ -248,7 +246,10 @@ if (!isset( $_SESSION['user_id'] )) {
                             </td>
                         </tr>
                     </table>
+					
                 </div>
+				<p>Speed Slider</p>
+                <div id="slider" style="width: 250px; margin: 10px 0;"></div>
             </div>
             <div class="social-widget" style="margin-top: 50px;">
                 <a target="_blank" href="http://twitter.com/BaroboRobotics"> <img src="img/icons/twitter.png" alt="Twitter" width="40" /> </a>
