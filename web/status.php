@@ -2,91 +2,156 @@
 include 'config.php';
 header('Content-type: application/json');
 session_start();
-if (!isset($_SESSION['id'])): ?>
-{ "result":"error","msg":"invalid session id" }
-<?php
-        exit();
-endif;
-
+if (!isset($_SESSION['user_id'])) {
+    echo '{ "result":"error","msg":"invalid session id" }';
+    exit();
+}
 $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-if (mysqli_connect_errno()): ?>
-{ "result":"error","msg":"Connection failed" }
-<?php 
-        exit();
-endif;
+if (mysqli_connect_errno()) {
+    echo '{ "result":"error","msg":"Connection failed" }';
+    exit();
+}
+
+$ret_val = '{"active":false,"status":"Error occurred retrieving status."}';
 
 try {
-	$ret_val = '{"active":false,"status":"Error occurred retrieving status."}';
-	// Do the following operations iwthin the transaction.
-	$mysqli->autocommit(FALSE);
-	// Update the active session.
-	$mysqli->query("update sessions set active = 0");
-	$mysqli->query("update sessions set active = 1 where active = 0 order by created asc limit 1");
-	$mysqli->query("update sessions set started = NULL where active = 0");
-	$mysqli->query("update sessions set last_active = CURRENT_TIMESTAMP where id = " . $_SESSION['id']);
-	// Set session time limit based on number of users
-	if ($stmt = $mysqli->prepare("SELECT count(*) from sessions")) {
-		$stmt->execute();
-		$stmt->bind_result($total_users);
-		$stmt->fetch(); $stmt->close();
-	}	
-	if (($total_users >= 2) && ($total_users <= 8)) {
-	    $seconds = 180 - (($total_users - 2) * 20); // 2 users equals 180 seconds 3 users equals 160 seconds 4 users equals 120 seconds
-	} else {
-	    $seconds = 40;
-	}
-	// $mysqli->query("DELETE FROM sessions WHERE last_active < (NOW() - INTERVAL 1 MINUTE)");
-	$mysqli->query("DELETE FROM sessions WHERE last_active < (NOW() - INTERVAL " . $seconds . " SECONDS)");
-	// Get the current record.
-	$today_min_30_seconds = new DateTime();
-	$today_min_30_seconds->sub(new DateInterval('PT60S'));
-	if ($stmt = $mysqli->prepare("SELECT started,created,active FROM sessions WHERE id = ?")) {
-		$stmt->bind_param('i', $session_id_val);
-        	$session_id_val = $_SESSION['id'];
-		$stmt->execute();
-        	$stmt->bind_result($started_val, $created_val, $active_val);
-        	$stmt->fetch(); $stmt->close();
-		$started_dt = new DateTime($started_val);
-		if ($active_val == 1 && is_null($started_val)) {
-			// The session has just been activated.
-			$mysqli->query("UPDATE sessions set started = CURRENT_TIMESTAMP where id = " . $_SESSION['id']);
-			$ret_val = '{"active":true, "status":"You are controlling the robot."}';
-			$handle = fopen("/tmp/mobot_movement.data", "a");
-			if ($handle) {
-        			fwrite($handle, "0,0,0,0,45\n");
-			}				
-		} else if ($active_val == 1 && $started_dt > $today_min_30_seconds) {
-			// The session is still active.
-			$ret_val = '{"active":true, "status":"You are controlling the robot."}';
-		} else if ($active_val == 1) {
-			// The session will no longer be valid after this call.
-			$mysqli->query("UPDATE sessions set created = CURRENT_TIMESTAMP where id = " . $_SESSION['id']);
-			if ($results = $mysqli->query("select count(*) as number from sessions")) {
-				$obj = $results->fetch_object();
-				if ($obj->number > 1) {
-					$ret_val = '{"active":false, "status":"There are '. ($obj->number - 1) . ' users in front of you. Total users: ' . $total_users . '"}';
-				} else {
-                                        $ret_val = '{"active":true, "status":"You are controlling the robot."}';
-                                }
-			}
-		} else {
-			$ret_val = '{"active":false, "status":"issue with query ' . $created_val . '" }';
-			
-
-			if ($stmt = $mysqli->prepare("SELECT count(*) from sessions WHERE created < ?")) {
-				$stmt->bind_param('s', $created_val);
-				$stmt->execute();
-				$stmt->bind_result($number_val);
-				$stmt->fetch(); $stmt->close();
-				$ret_val = '{"active":false, "status":"There are '. $number_val . ' users in front of you. Total users: ' . $total_users . '"}';
-			}	
-			
-		}
-	}	
-	$mysqli->commit();
+    // Manage queue and controllers.
+    $mysqli->autocommit(FALSE);
+    // Update the last active time for the current user.
+    $mysqli->query("UPDATE queue SET last_active = CURRENT_TIMESTAMP WHERE user_id = " . $_SESSION['user_id']);
+    // Remove any controllers that are over their timelimit.
+    $sql = "SELECT id, user_id, robot_number
+        FROM controllers where created < (NOW() - INTERVAL control_time SECOND)";
+    if ($result = $mysqli->query($sql)) {
+        while ($row = $result->fetch_object()) {
+            $user_id = $row->user_id;
+            $robot_num = $row->robot_number;
+            $id = $row->id;
+            // Delete the controller entry.
+            $mysqli->query("DELETE FROM controllers where id = " . $id);
+            // Move the controller entry to back to the queue.
+            if ($stmt = $mysqli -> prepare("INSERT INTO queue (created, last_active, user_id, robot_number) values (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?)")) {
+                $stmt -> bind_param('ii', $user_id, $robot_num);
+                $stmt -> execute();
+                $_SESSION['queue_id'] = $stmt -> insert_id;
+                $stmt -> close();
+            }          
+        }
+        // Free result set
+        $result->close();
+    }
+    $robot_number = 0;
+    if (isset( $_SESSION['robot'] )) {
+        $robot_number = $_SESSION['robot'];
+    }
+    // Remove inactive users from the queue.
+    $mysqli->query("DELETE FROM queue WHERE last_active < (NOW() - INTERVAL 1 MINUTE)");
+    // Find out how many robots are available and make sure the controllers are set.
+    if ($stmt = $mysqli->prepare("SELECT count(*) from controllers where robot_number = ?")) {
+        $stmt->bind_param('i', $robot_number);
+        $stmt->execute();
+        $stmt->bind_result($total_users);
+        $stmt->fetch();
+        $stmt->close();
+    }
+    if ($total_users == 0) {
+        // Insert a controller record for the user on the top of the queue for the user's robot number
+        $sql = "SELECT q.id, q.user_id, u.control_time FROM queue q
+                INNER JOIN users as u on u.id = q.user_id WHERE q.robot_number = $robot_number
+                ORDER BY q.created asc LIMIT 1";
+        $queue_id = NULL;
+        if ($sub_results = $mysqli -> query($sql)) {
+            
+            while ($sub_row = $sub_results->fetch_object()) {
+                $control_time = $sub_row->control_time;
+                $queue_id = $sub_row->id;
+                $user_id = $sub_row->user_id;
+                if ($stmt = $mysqli -> prepare("INSERT INTO controllers (created, control_time, user_id, robot_number) values (CURRENT_TIMESTAMP, ?, ?, ?)")) {
+                    $stmt -> bind_param('iii', $control_time, $user_id, $robot_number);
+                    $stmt -> execute();
+                    $stmt -> close();
+                }
+            }
+            $sub_results -> close();
+        }
+        // Remove the queue record.
+        if (!is_null($queue_id)) {
+            $mysqli->query("DELETE FROM queue where id = " . $queue_id);
+        } 
+    }
+    
+    // Get the statistics, used to show users the status of the queue and their position.
+    $active = false;
+    $status = "Error retrieving status information";
+    // Get the users in the queue.
+    $queue_result = '"queue":[';
+    $sql = "SELECT q.user_id, u.first_name, u.last_name, u.country
+        FROM queue q INNER JOIN users AS u on u.id = q.user_id WHERE q.robot_number = ? ORDER BY q.created asc";
+    if ($stmt = $mysqli->prepare($sql)) {
+        $stmt->bind_param('i', $robot_number);
+        $stmt->execute();
+        $stmt->bind_result($r_user_id, $r_first_name, $r_last_name, $r_country);
+        $position = 1;
+        $comma = false;
+        while ($stmt->fetch()) {
+            if ($comma) {
+                $queue_result = $queue_result . ',';
+            } else {
+                $comma = true;
+            }
+            $queue_result .= '{ "user_id":' . $r_user_id . ',"first_name":"' . $r_first_name
+                 . '", "last_name":"' . $r_last_name . '", "country":"' . $r_country
+                 . '", "position":' . $position . ' }';
+            if ($r_user_id == $_SESSION['user_id']) {
+                if ($position == 1) {
+                    $status = "There is 1 user in front of you.";
+                } else {
+                    $status = "There are $position users in front of you.";
+                }
+            }
+            $position += 1;
+        }
+        // Free result set
+        $stmt->close();
+    }
+    $queue_result .= ']';
+    
+    // Get the users controlling the Mobot.
+    $control_result = '"control":[';
+    $sql = "SELECT c.user_id, u.first_name, u.last_name, u.country, r.name
+        FROM controllers c
+        INNER JOIN users AS u on u.id = c.user_id
+        INNER JOIN robots AS r on r.number = c.robot_number";
+    if ($result = $mysqli->query($sql)) {
+        $count = mysqli_num_rows($result);
+        // Cycle through results
+        $comma = false;
+        while ($row = $result->fetch_object()) {
+            if ($comma) {
+                $control_result = $control_result . ',';
+            } else {
+                $comma = true;
+            }
+            $control_result .= '{ "user_id":' . $row->user_id . ',"first_name":"' . $row->first_name
+                 . '", "last_name":"' . $row->last_name . '", "country":"' . $row->country
+                 . '", "robot_name":"' . $row->name . '" }';
+            
+            if ($row->user_id == $_SESSION['user_id']) {
+                $active = true;
+                $status = "You are controlling the Robot.";
+            }
+        }
+        // Free result set
+        $result->close();
+    }
+    $control_result .= ']';
+    $mysqli->commit();
+    $mysqli->close();
+    $ret_val = '{"active":' . (($active) ? 'true' : 'false') . ', "status":"' . $status . '", ' . $queue_result . ', ' . $control_result . '}';
 } catch (Exception $e) {
-	$mysqli->rollback();
+    $mysqli->rollback();
+    $ret_val = '{"active":false,"status":' . $e->getMessage() . '}';
 }
-$mysqli->close();
+
 echo $ret_val;
 ?>

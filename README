@@ -23,5 +23,9 @@ update the database connection information in the config.php
 
 ### Install the databse
 Remember to update the password in the sql file.
-login to the mysql console and type "source <path to repo>sql\barobodb.sql"
+login to the mysql console and type:
+    source <apth to repo>sql\createdb.sql
+    source <path to repo>sql\barobodb.sql
 
+### Compiling the mobot control code notes:
+Install libbluetooth-dev and libmysqlclient-dev

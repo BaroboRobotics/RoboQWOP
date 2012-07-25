@@ -10,15 +10,24 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <my_global.h>
+#include <mysql.h>
 
 using namespace std;
 
 #define MAX_PENDING 5 /* Maximum number of pending connection requests */
+#define ROBOTS 4
 #define RECV_BUFFER_SIZE 256
 #define CMD_MV_CONT 0
+#define CMD_RESET 1
+#define DB_HOST "localhost"
+#define DB_USER "user"
+#define DB_PASSWORD "changeme01"
+#define DB_NAME "barobo"
 
-
-CMobot mobot[4];
+CMobot mobot[ROBOTS];
+char *addresses[ROBOTS];
+int max_mobot_index = 0;
 double last_speed = -1.0;
 
 int main(int arc, char **argv) {
@@ -26,11 +35,8 @@ int main(int arc, char **argv) {
 	unsigned short server_port = 8082;
 	unsigned int client_len;
 	struct sockaddr_in server_addr, client_addr;
-	if (mobot[0].connect() != 0) {
-		error("ERROR connecting to the Mobot.");
-	}
-	printf("Connected successfully\n");
-	mobot[0].moveToZero();
+
+	init_mobots();
 
 	server_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (server_sock < 0) {
@@ -62,6 +68,41 @@ int main(int arc, char **argv) {
 	return 0;
 }
 
+void init_mobots() {
+	int index;
+	MYSQL *conn;
+	MYSQL_RES *result;
+	MYSQL_ROW row;
+
+	conn = mysql_init(NULL);
+	mysql_real_connect(conn, DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, 0, NULL, 0);
+	// Query the number and address information from the robots table.
+	mysql_query(conn, "SELECT number, address FROM robots");
+	result = mysql_store_result(conn);
+	for (index = 0; index < ROBOTS; index++) {
+		addresses[index] = NULL;
+	}
+	// Retrieve the address information.
+	while ((row = mysql_fetch_row(result))) {
+		index = atoi(row[0]);
+		addresses[index] = row[1];
+	}
+	// Close the mysql connection.
+	mysql_free_result(result);
+	mysql_close(conn);
+	for (index = 0; index < ROBOTS; index++) {
+		if (addresses[index] != NULL) {
+			printf("Attempting to connect at address %s\n", addresses[index]);
+			if (mobot[index].connectWithAddress(addresses[index], 1) != 0) {
+				error("ERROR connecting to the Mobot.");
+			}
+			printf("Connected successfully\n");
+			mobot[index].moveToZero();
+			max_mobot_index = index;
+		}
+	}
+}
+
 void error(const char *msg) {
 	perror(msg);
 	exit(1);
@@ -88,7 +129,6 @@ int process_command(char *commands, int length) {
 	if (length <= 0) {
 		return 0;
 	}
-	printf("Commands: %s\n", commands);
 	val = strtok(commands, " ,");
 	while (val != NULL && i < 8) {
 		switch (i) {
@@ -104,14 +144,18 @@ int process_command(char *commands, int length) {
 		i++;
 		val = strtok (NULL, " ,");
 	}
-	printf("Parsed commands [%i, %i, %lf, %lf, %lf, %lf, %lf, %lf]\n",
+	printf("Commands [%i, %i, %lf, %lf, %lf, %lf, %lf, %lf]\n",
 			mobot_num, cmd_type,
 			values[0], values[1], values[2], values[3], values[4], values[5]);
+	if (mobot_num > max_mobot_index) {
+		printf("invalid Mobot number reference");
+		return 0;
+	}
 	while (!mobot[mobot_num].isConnected()) {
 		printf("Lost connection to the Mobot, attempting to re-connect.\n");
 		mobot[mobot_num].disconnect();
-		mobot[mobot_num].connect();
-		usleep(100000);
+		usleep(50000);
+		mobot[mobot_num].connectWithAddress(addresses[mobot_num], 1);
 	}
 	switch (cmd_type) {
 	case CMD_MV_CONT:
@@ -123,6 +167,9 @@ int process_command(char *commands, int length) {
 				get_state(values[3]),
 				get_state(values[2]),
 				get_state(values[1]));
+		break;
+	case CMD_RESET:
+		mobot[mobot_num].moveToZero();
 		break;
 	default:
 		printf("Unknown command\n");

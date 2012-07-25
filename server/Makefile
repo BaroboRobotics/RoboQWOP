@@ -1,12 +1,12 @@
 CC=g++
-INCLUDES=-I.
+INCLUDES=-I. ${shell mysql_config --include}
 CFLAGS = -Wall -g
-DEPS= mobot.h
+DEPS= mobot.h server.h
 OBJ = server.o
-LIBS = -lmobot
+LIBS = -lmobot ${shell mysql_config --libs}
 
 %.o: %.cpp $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) -c -o $@ $< $(CFLAGS) $(INCLUDES)
 
 mobot_server: $(OBJ)
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^ $(LIBS)

@@ -140,71 +140,57 @@ table.controls .green {
     background-color: #cdffb7;
 }
 
-.quad {
-display:none;
+/* Oriented Controls CSS */
+#oriented-controls .quad {
+    display:none;
 }
-
-th, input {
-text-align:left;
-vertical-align:top;
+#oriented-controls th, #oriented-controls input {
+    text-align:left;
+    vertical-align:top;
 }
-
-.quad_active {
-display:block;
+#oriented-controls .quad_active {
+    display:block;
 }
-
-td, th {
-padding:0;
-border:1px solid #000;
+#oriented-controls td, #oriented-controls th {
+    padding:0;
+    border:1px solid #000;
 }
-
-table {
-border-collapse:collapse;
+#oriented-controls table {
+    border-collapse:collapse;
 }
-
-th {
-width:100px;
-background:#003;
-color:#FFF;
+#oriented-controls th {
+    width:100px;
+    background:#003;
+    color:#FFF;
 }
-
-th, input {
-padding:5px;
+#oriented-controls th, #oriented-controls input {
+    padding:5px;
 }
-
-.green, .red, .button {
-width:200px;
-color:#FFF;
+#oriented-controls .green, #oriented-controls .red, #oriented-controls .button {
+    width:200px;
+    color:#FFF;
 }
-
-input {
-border:0;
+#oriented-controls input {
+    border:0;
 }
-
-.button {
-background:#696969;
+#oriented-controls .button {
+    background:#696969;
 }
-
-.button:hover {
-background:#CCC;
+#oriented-controls .button:hover {
+    background:#CCC;
 }
-
-.green {
-background:green;
+#oriented-controls .green {
+    background:green;
 }
-
-.red {
-background:red;
+#oriented-controls .red {
+    background:red;
 }
-
-.red:hover {
-background:#F30;
+#oriented-controls .red:hover {
+    background:#F30;
 }
-
-.green:hover {
-background:#090;
+#oriented-controls .green:hover {
+    background:#090;
 }
-
-.active, .active:hover {
-background:#000;
+#oriented-controls .active, #oriented-controls .active:hover {
+    background:#000;
 }

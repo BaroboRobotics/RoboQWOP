@@ -20,10 +20,25 @@
             <a href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
             <h1>Robo QWOP</h1>
             <p>
-            	Drive a Mobot for Free!
-	    </p>
+                Best way to play with a mobot without owning one.
+            </p>
             <p>
-                <a href="main.php">Connect to the Robot</a>
+                <?php
+                    require 'config.php';
+                    $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+                    if (mysqli_connect_errno()) {
+                        echo 'The database is Offline: ' . mysqli_connect_error();
+                    } else {
+                        if ($results = $mysqli->query("SELECT name, number FROM robots")) {
+                            while ($row = $results->fetch_object()) {
+                                echo '<a href="authenticate.php?robot=' . $row->number . '">Connect to the ' . $row->name . '</a> ';
+                            }
+                            // Free result set
+                            $results->close();
+                        }
+                        $mysqli->close();
+                    }
+                ?>
             </p>
             <div class="social-widget">
                 <a target="_blank" href="http://twitter.com/BaroboRobotics"> <img src="img/icons/twitter.png" alt="Twitter" width="40" /> </a>
@@ -40,5 +55,4 @@
         <script src="js/plugins.js"></script>
         <script src="js/script.js"></script>
     </body>
-
 </html>

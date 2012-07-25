@@ -2,29 +2,31 @@
 include 'config.php';
 header('Content-type: application/json');
 session_start();
-if (!isset($_SESSION['id'])): ?>
-{ "result":"error","msg":"invalid session id" }
-<?
-	exit(); 
-endif;
+// Validate session information.
+if (!isset($_SESSION['user_id'])) {
+    echo '{ "result":"error","msg":"invalid session id" }';
+    exit();
+}
+
 $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-if (mysqli_connect_errno()): ?>
-{ "result":"error","msg":"Connection failed" }
-<? 
-	exit();
-endif;
-if ($stmt = $mysqli->prepare("SELECT active FROM sessions WHERE id = ?")) {
+if (mysqli_connect_errno()) {
+    echo '{ "result":"error","msg":"Connection failed" }';
+    exit();
+}
+$robot_number = NULL;
+// Validate the active user and get the robot number.
+if ($stmt = $mysqli->prepare("SELECT robot_number FROM controllers WHERE user_id = ?")) {
 	$stmt->bind_param('i', $session_id_val);
-        $session_id_val = $_SESSION['id'];
-        $stmt->execute();
-      	$stmt->bind_result($active_val);
+    $session_id_val = $_SESSION['user_id'];
+    $stmt->execute();
+    $stmt->bind_result($robot_number);
 	$stmt->fetch();
 	$stmt->close();
-	if ($active_val != 1): ?>
-{ "result":"error","msg":"not the active user" }
-	<?
-		exit(); 	
-	endif;
+}
+
+if (is_null($robot_number)) {
+    echo '{ "result":"error","msg":"You are not controlling the Mobot(s)" }';
+    exit();
 }
 
 $fp1 = 0;
@@ -74,6 +76,5 @@ if (!$fp = fsockopen($host, $port, $errno, $errstr, 2)) {
 }
 fputs($fp, "$robot_number,0,$fp1,$fp2,$bj1,$bj2,$speed\n");
 fclose($fp);
-
 ?>
 { "result":"success" }

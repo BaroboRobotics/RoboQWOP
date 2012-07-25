@@ -1,42 +1,46 @@
 <?php
 include 'config.php';
 session_start();
-if (!isset($_SESSION['id'])) {
-	// INSERT INTO DATABASE 
-	$mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-	if (mysqli_connect_errno()) {
-		printf("Connect failed: %s\n", mysqli_connect_error());
-		exit();
-	}
-	if ($stmt = $mysqli->prepare("INSERT INTO sessions (session_id, last_active, active) values (?, CURRENT_TIMESTAMP, ?)")) {
-		$stmt->bind_param('si', $session_id_val, $active_val);
-		$session_id_val = session_id();
-		$active_val = 0;
-		$stmt->execute();
-		$_SESSION['id'] = $stmt->insert_id;
-		$stmt->close();
-	}	
+if (!isset( $_SESSION['user_id'] )) {
+	header('Location: index.php');	
 } else {
-	$mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-        if (mysqli_connect_errno()) {
-                printf("Connect failed: %s\n", mysqli_connect_error());
-                exit();
+    $user_id = $_SESSION['user_id'];
+    $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+    if (!mysqli_connect_errno()) {
+        // Create or update the queue record.
+        if ($result = $mysqli->query("SELECT id FROM queue WHERE user_id = " . $user_id )) {
+            $row_cnt = $result -> num_rows;
+            $result -> close();
+            if ($row_cnt == 0) {
+                // Check the controllers.  We don't want to add a queue if the user is currently controlling the Robot.
+                if ($result = $mysqli->query("SELECT id FROM controllers WHERE user_id = " . $user_id )) {
+                    $row_cnt = $result -> num_rows;
+                    $result -> close();
+                }
+                if ($row_cnt == 0) {
+                    $robot_number = 0;
+                    if (isset( $_SESSION['robot'] )) {
+                        $robot_number = $_SESSION['robot'];
+                    }
+                    $sql = "INSERT INTO queue (created, last_active, user_id, robot_number)
+                        values (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?)";
+                    if ($stmt = $mysqli -> prepare($sql)) {
+                        $stmt -> bind_param('ii', $user_id, $robot_number);
+                        $stmt -> execute();
+                        $_SESSION['queue_id'] = $stmt -> insert_id;
+                        $stmt -> close();
+                    }
+                }
+            } else {
+                if ($stmt = $mysqli->prepare("UPDATE queue SET last_active = CURRENT_TIMESTAMP where user_id = ?")) {
+                    $stmt->bind_param('i', $user_id);
+                    $stmt->execute();
+                    $stmt->close();
+                }
+            }
         }
-	if ($result = $mysqli->query("SELECT session_id FROM sessions WHERE id = " . $_SESSION['id'] )) {
-		/* determine number of rows result set */
-		$row_cnt = $result->num_rows;
-		$result->close();
-		if ($row_cnt == 0) {
-			if ($stmt = $mysqli->prepare("INSERT INTO sessions (session_id, last_active, active) values (?, CURRENT_TIMESTAMP, ?)")) {
-                		$stmt->bind_param('si', $session_id_val, $active_val);
-                		$session_id_val = session_id();
-                		$active_val = 0;
-                		$stmt->execute();
-                		$_SESSION['id'] = $stmt->insert_id;
-                		$stmt->close();
-       	 		}
-		}
-	}
+    }
+    $mysqli->close();
 }
 ?>
 <!doctype html>
@@ -64,72 +68,188 @@ if (!isset($_SESSION['id'])) {
             <p id="status">
                 Retrieving status information.
             </p>
-            <table class="controls">
-                <thead>
-                    <tr>
-                        <th>Direction</th>
-                        <th>Face Plate / Joint 1</th>
-                        <th>Body Joint / Joint 2</th>
-                        <th>Body Joint / Joint 3</th>
-                        <th>Face Plate / Joint 4</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Forward</td>
-                        <td class="red"><input class="key-button" type="button" onmousedown="handleKeyEvent(87, true);" value="W" /></td>
-                        <td class="red"><input class="key-button" type="button" onmousedown="handleKeyEvent(82, true);" value="R" /></td>
-                        <td class="green"><input class="key-button" type="button" onmousedown="handleKeyEvent(73, true);" value="I" /></td>
-                        <td class="green"><input class="key-button" type="button" onmousedown="handleKeyEvent(79, true);" value="O" /></td>
-                    </tr>
-                    <tr>
-                        <td>Backwards</td>
-                        <td class="red"><input class="key-button" type="button" onmousedown="handleKeyEvent(81, true);" value="Q" /></td>
-                        <td class="red"><input class="key-button" type="button" onmousedown="handleKeyEvent(69, true);" value="E" /></td>
-                        <td class="green"><input class="key-button" type="button" onmousedown="handleKeyEvent(85, true);" value="U" /></td>
-                        <td class="green"><input class="key-button" type="button" onmousedown="handleKeyEvent(80, true);" value="P" /></td>
-                    </tr>
-                </tbody>
-            </table>
-            <p>
-                Speed Slider
-                <div id="slider" style="width: 250px; margin: 10px 0;"></div>
-            </p>
-		<table>
-<tr><th rowspan="2">Orientation</th><td><input type="button" value="Red is on left" id="on_left_is_red" class="button active" /></td><td><input type="button" value="Green is on left" id="on_left_is_green" class="button" /></td></tr>
-<tr><td><input type="button" id="facing_north_south" value="Facing North/South" class="button active" /></td><td><input type="button" id="facing_east_west" value="Facing East/West" class="button" /></td></tr>
-</table>
-<table id="left_is_red_face_north_south" class="quad">
-<tr><th rowspan="4">Controls</th><td><input type="button" value="Spin clockwise" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" /></td><td><input type="button" value="Spin counter clockwise"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" /></td></tr>
-
-<tr><td><input type="button" value="North" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" /></td><td><input type="button" value="South" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" /></td></tr>
-<tr><td><input type="button" value="Northeast" onmousedown="handleKeyEvent(82, true);" class="red" /></td><td><input type="button" value="Northwest" onmousedown="handleKeyEvent(85, true);" class="green" /></td></tr>
-<tr><td><input type="button" value="Southeast" onmousedown="handleKeyEvent(69, true);" class="red" /></td><td><input type="button" value="Southwest" onmousedown="handleKeyEvent(73, true);" class="green" /></td></tr>
-</table>
-<table id="left_is_green_face_north_south" class="quad">
-<tr><th rowspan="4">Controls</th><td><input type="button" value="Spin clockwise" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" /></td><td><input type="button" value="Spin counter clockwise"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" /></td></tr>
-
-<tr><td><input type="button" value="North" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" /></td><td><input type="button" value="South" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" /></td></tr>
-<tr><td><input type="button" value="Northwest" onmousedown="handleKeyEvent(73, true);" class="green" /></td><td><input type="button" value="Northeast" onmousedown="handleKeyEvent(69, true);" class="red" /></td></tr>
-<tr><td><input type="button" value="Southwest" onmousedown="handleKeyEvent(85, true);" class="green" /></td><td><input type="button" value="Southeast" onmousedown="handleKeyEvent(82, true);" class="red" /></td></tr>
-</table>
-
-<table id="bottom_is_green_face_east_west" class="quad">
-<tr><th rowspan="4">Controls</th><td><input type="button" value="Spin clockwise" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" /></td><td><input type="button" value="Spin counter clockwise"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" /></td></tr>
-
-<tr><td><input type="button" value="West" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" /></td><td><input type="button" value="East" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" /></td></tr>
-
-<tr><td><input type="button" value="Southwest" onmousedown="handleKeyEvent(82, true);" class="red" /></td><td><input type="button" value="Southeast" onmousedown="handleKeyEvent(69, true);" class="red" /></td></tr>
-<tr><td><input type="button" value="Northwest" onmousedown="handleKeyEvent(85, true);" class="green" /></td><td><input type="button" value="Northeast" onmousedown="handleKeyEvent(73, true);" class="green" /></td></tr>
-</table>
-<table id="bottom_is_red_face_east_west" class="quad">
-<tr><th rowspan="4">Controls</th><td><input type="button" value="Spin clockwise" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" /></td><td><input type="button" value="Spin counter clockwise"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" /></td></tr>
-
-<tr><td><input type="button" value="West" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" /></td><td><input type="button" value="East" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" /></td></tr>
-
-<tr><td><input type="button" value="Southwest" onmousedown="handleKeyEvent(73, true);" class="green" /></td><td><input type="button" value="Southeast" onmousedown="handleKeyEvent(85, true);" class="green" /></td></tr>
-<tr><td><input type="button" value="Northwest" onmousedown="handleKeyEvent(69, true);" class="red" /></td><td><input type="button" value="Northeast" onmousedown="handleKeyEvent(82, true);" class="red" /></td></tr>
-</table>
+            <div id="control-tabs">
+                <ul>
+                    <li><a href="#default-controls">Default Controls</a></li>
+                    <li><a href="#oriented-controls">Oriented Controls</a></li>
+                </ul>
+                <div id="default-controls">
+                    <table class="controls">
+                        <thead>
+                            <tr>
+                                <th>Direction</th>
+                                <th>Face Plate / Joint 1</th>
+                                <th>Body Joint / Joint 2</th>
+                                <th>Body Joint / Joint 3</th>
+                                <th>Face Plate / Joint 4</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Forward</td>
+                                <td class="red"><input class="key-button" type="button" onmousedown="handleKeyEvent(87, true);" value="W" /></td>
+                                <td class="red"><input class="key-button" type="button" onmousedown="handleKeyEvent(82, true);" value="R" /></td>
+                                <td class="green"><input class="key-button" type="button" onmousedown="handleKeyEvent(73, true);" value="I" /></td>
+                                <td class="green"><input class="key-button" type="button" onmousedown="handleKeyEvent(79, true);" value="O" /></td>
+                            </tr>
+                            <tr>
+                                <td>Backwards</td>
+                                <td class="red"><input class="key-button" type="button" onmousedown="handleKeyEvent(81, true);" value="Q" /></td>
+                                <td class="red"><input class="key-button" type="button" onmousedown="handleKeyEvent(69, true);" value="E" /></td>
+                                <td class="green"><input class="key-button" type="button" onmousedown="handleKeyEvent(85, true);" value="U" /></td>
+                                <td class="green"><input class="key-button" type="button" onmousedown="handleKeyEvent(80, true);" value="P" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>Speed Slider</p>
+                    <div id="slider" style="width: 250px; margin: 10px 0;"></div>
+                </div>
+                <div id="oriented-controls">
+                    <table>
+                        <tr>
+                            <th rowspan="2">Orientation</th><td>
+                            <input type="button" value="Red is on left" id="on_left_is_red" class="button active" />
+                            </td><td>
+                            <input type="button" value="Green is on left" id="on_left_is_green" class="button" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            <input type="button" id="facing_north_south" value="Facing North/South" class="button active" />
+                            </td><td>
+                            <input type="button" id="facing_east_west" value="Facing East/West" class="button" />
+                            </td>
+                        </tr>
+                    </table>
+                    <table id="left_is_red_face_north_south" class="quad">
+                        <tr>
+                            <th rowspan="4">Controls</th><td>
+                            <input type="button" value="Spin clockwise" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" />
+                            </td><td>
+                            <input type="button" value="Spin counter clockwise"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" />
+                            </td>
+                        </tr>
+                    
+                        <tr>
+                            <td>
+                            <input type="button" value="North" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" />
+                            </td><td>
+                            <input type="button" value="South" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            <input type="button" value="Northeast" onmousedown="handleKeyEvent(82, true);" class="red" />
+                            </td><td>
+                            <input type="button" value="Northwest" onmousedown="handleKeyEvent(85, true);" class="green" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            <input type="button" value="Southeast" onmousedown="handleKeyEvent(69, true);" class="red" />
+                            </td><td>
+                            <input type="button" value="Southwest" onmousedown="handleKeyEvent(73, true);" class="green" />
+                            </td>
+                        </tr>
+                    </table>
+                    <table id="left_is_green_face_north_south" class="quad">
+                        <tr>
+                            <th rowspan="4">Controls</th><td>
+                            <input type="button" value="Spin clockwise" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" />
+                            </td><td>
+                            <input type="button" value="Spin counter clockwise"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" />
+                            </td>
+                        </tr>
+                    
+                        <tr>
+                            <td>
+                            <input type="button" value="North" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" />
+                            </td><td>
+                            <input type="button" value="South" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            <input type="button" value="Northwest" onmousedown="handleKeyEvent(73, true);" class="green" />
+                            </td><td>
+                            <input type="button" value="Northeast" onmousedown="handleKeyEvent(69, true);" class="red" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            <input type="button" value="Southwest" onmousedown="handleKeyEvent(85, true);" class="green" />
+                            </td><td>
+                            <input type="button" value="Southeast" onmousedown="handleKeyEvent(82, true);" class="red" />
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <table id="bottom_is_green_face_east_west" class="quad">
+                        <tr>
+                            <th rowspan="4">Controls</th><td>
+                            <input type="button" value="Spin clockwise" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" />
+                            </td><td>
+                            <input type="button" value="Spin counter clockwise"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" />
+                            </td>
+                        </tr>
+                    
+                        <tr>
+                            <td>
+                            <input type="button" value="West" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" />
+                            </td><td>
+                            <input type="button" value="East" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" />
+                            </td>
+                        </tr>
+                    
+                        <tr>
+                            <td>
+                            <input type="button" value="Southwest" onmousedown="handleKeyEvent(82, true);" class="red" />
+                            </td><td>
+                            <input type="button" value="Southeast" onmousedown="handleKeyEvent(69, true);" class="red" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            <input type="button" value="Northwest" onmousedown="handleKeyEvent(85, true);" class="green" />
+                            </td><td>
+                            <input type="button" value="Northeast" onmousedown="handleKeyEvent(73, true);" class="green" />
+                            </td>
+                        </tr>
+                    </table>
+                    <table id="bottom_is_red_face_east_west" class="quad">
+                        <tr>
+                            <th rowspan="4">Controls</th><td>
+                            <input type="button" value="Spin clockwise" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" />
+                            </td><td>
+                            <input type="button" value="Spin counter clockwise"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" />
+                            </td>
+                        </tr>
+                    
+                        <tr>
+                            <td>
+                            <input type="button" value="West" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" />
+                            </td><td>
+                            <input type="button" value="East" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" />
+                            </td>
+                        </tr>
+                    
+                        <tr>
+                            <td>
+                            <input type="button" value="Southwest" onmousedown="handleKeyEvent(73, true);" class="green" />
+                            </td><td>
+                            <input type="button" value="Southeast" onmousedown="handleKeyEvent(85, true);" class="green" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            <input type="button" value="Northwest" onmousedown="handleKeyEvent(69, true);" class="red" />
+                            </td><td>
+                            <input type="button" value="Northeast" onmousedown="handleKeyEvent(82, true);" class="red" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
             <div class="social-widget" style="margin-top: 50px;">
                 <a target="_blank" href="http://twitter.com/BaroboRobotics"> <img src="img/icons/twitter.png" alt="Twitter" width="40" /> </a>
                 <a target="_blank" href="http://www.facebook.com/barobo"> <img src="img/icons/facebook.png" alt="Facebook" width="40" /> </a>
@@ -137,7 +257,7 @@ if (!isset($_SESSION['id'])) {
                 <a target="_blank" href="http://www.youtube.com/BaroboRobotics"> <img src="img/icons/youtube.png" alt="Youtube" width="40" /> </a>
             </div>
         </div>
-
+        <audio id="soundHandle" style="display: none;"></audio>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
         <script>
             window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')
@@ -202,7 +322,7 @@ if (!isset($_SESSION['id'])) {
                         break;
                 }
             }
-            old_active = false;
+
             function executeAction() {
                 count += 100;
                 if (send && active) {
@@ -214,7 +334,6 @@ if (!isset($_SESSION['id'])) {
                     };
                     $.ajax({
                         type : 'POST',
-                        //url: '../cgi-bin/weblistener.cgi',
                         url : 'action.php',
                         data : data,
                         success : function() {
@@ -222,10 +341,15 @@ if (!isset($_SESSION['id'])) {
                         dataType : 'html'
                     });
                 }
-                if (count >= 10000) {
+                if (count >= 5000) {
                     count = 0;
                     $.getJSON('status.php', function(data) {
                         $('#status').html(data.status);
+                        if (!active && data.active) {
+                            soundHandle = document.getElementById('soundHandle');
+                            soundHandle.src = 'sounds/beep.mp3';
+                            soundHandle.play();
+                        }
                         active = data.active;
                         if (active) {
                             $('#status').css({'color':'red', 'font-weight':'bold'});
@@ -242,19 +366,21 @@ if (!isset($_SESSION['id'])) {
                 handleKeyEvent(event.keyCode, false);
             });
             $(function() {
+                $( "#control-tabs" ).tabs();
                 $("#slider").slider({
                     "max" : 120,
                     "min" : 15,
-                    "value" : 45
+                    "value" : 120
                 });
+                
                 $.getJSON('status.php', function(data) {
                     $('#status').html(data.status);
+                    if (!active && data.active) {
+                        soundHandle = document.getElementById('soundHandle');
+                        soundHandle.src = 'sounds/beep.mp3';
+                        soundHandle.play();
+                    }
                     active = data.active;
-					// time_limit = $.load('
-					if (oldactive != active) {
-                        $.playSound('/sounds/beep.mp3');
-					}
-                    oldactive = active;					
                     if (active) {
                         $('#status').css({'color':'red', 'font-weight':'bold'});
                     } else {
@@ -262,60 +388,66 @@ if (!isset($_SESSION['id'])) {
                     }
                     setInterval(executeAction, 100);
                 });
-				    
+
+                $("#left_is_red_face_north_south").show();
+                $("#on_left_is_red").click(function() {
+                    $("#on_left_is_red").addClass('active');
+                    $("#on_left_is_green").removeClass('active');
+                    $(".quad").hide();
+                    if ($("#facing_north_south").is('.active')) {
+                        $("#left_is_red_face_north_south").show();
+                    } else {
+                        $("#bottom_is_red_face_east_west").show();
+                    }
+                });
+                $("#on_left_is_green").click(function() {
+                    $("#on_left_is_green").addClass('active');
+                    $("#on_left_is_red").removeClass('active');
+                    $(".quad").hide();
+                    if ($("#facing_north_south").is('.active')) {
+                        $("#left_is_green_face_north_south").show();
+                    } else {
+                        $("#bottom_is_green_face_east_west").show();
+                    }
+                });
+                $("#facing_north_south").click(function() {
+                    $("#facing_north_south").addClass('active');
+                    $("#facing_east_west").removeClass('active');
+                    $("#on_left_is_red").prop('value', 'Red is on left');
+                    $("#on_left_is_green").prop('value', 'Green is on left');
+                    $(".quad").hide();
+                    if ($("#on_left_is_red").is('.active')) {
+                        $("#left_is_red_face_north_south").show();
+                    } else {
+                        $("#left_is_green_face_north_south").show();
+                    }
+                });
+                $("#facing_east_west").click(function() {
+                    $("#facing_east_west").addClass('active');
+                    $("#facing_north_south").removeClass('active');
+                    $("#on_left_is_red").prop('value', 'Red is on bottom');
+                    $("#on_left_is_green").prop('value', 'Green is on bottom');
+                    $(".quad").hide();
+                    if ($("#on_left_is_red").is('.active')) {
+                        $("#bottom_is_red_face_east_west").show();
+                    } else {
+                        $("#bottom_is_green_face_east_west").show();
+                    }
+                });
             });
+
             $(document).mouseup(function(event) {
-                q = 0; w = 0; o = 0; p = 0;
-                u = 0; i = 0; e = 0; r = 0;
+                q = 0;
+                w = 0;
+                o = 0;
+                p = 0;
+                u = 0;
+                i = 0;
+                e = 0;
+                r = 0;
                 send = true;
             });
-$(document).ready(function(){
-    $("#left_is_red_face_north_south").show();
-	$("#on_left_is_red").click(function(){
-	   $("#on_left_is_red").addClass('active');
-	   $("#on_left_is_green").removeClass('active');
-	   $(".quad").hide();
-	   if ($("#facing_north_south").is('.active')) {
-          $("#left_is_red_face_north_south").show();
-       } else {
-          $("#bottom_is_red_face_east_west").show();
-       }
-	});
-	$("#on_left_is_green").click(function(){
-	   $("#on_left_is_green").addClass('active');
-	   $("#on_left_is_red").removeClass('active');
-	   $(".quad").hide();
-	   if ($("#facing_north_south").is('.active')) {
-          $("#left_is_green_face_north_south").show();
-       } else {
-          $("#bottom_is_green_face_east_west").show();
-       }
-	});
-	$("#facing_north_south").click(function(){
-	   $("#facing_north_south").addClass('active');
-	   $("#facing_east_west").removeClass('active');
-	   $("#on_left_is_red").prop('value', 'Red is on left');
-	   $("#on_left_is_green").prop('value', 'Green is on left');
-	   $(".quad").hide();
-	   if ($("#on_left_is_red").is('.active')) {
-          $("#left_is_red_face_north_south").show();
-       } else {
-          $("#left_is_green_face_north_south").show();
-       }
-	});
-	$("#facing_east_west").click(function(){
-	   $("#facing_east_west").addClass('active');
-	   $("#facing_north_south").removeClass('active');
-	   $("#on_left_is_red").prop('value', 'Red is on bottom');
-	   $("#on_left_is_green").prop('value', 'Green is on bottom');
-	   $(".quad").hide();
-	   if ($("#on_left_is_red").is('.active')) {
-          $("#bottom_is_red_face_east_west").show();
-       } else {
-          $("#bottom_is_green_face_east_west").show();
-       }	   
-	});
-});
+
         </script>
     </body>
 </html>
