@@ -1,5 +1,6 @@
 #include "mobot.h"
 #include "server.h"
+#include <pthread.h>
 #include <iostream>
 #include <fstream>
 #include <stdio.h>
@@ -27,16 +28,40 @@ using namespace std;
 
 CMobot mobot[ROBOTS];
 char *addresses[ROBOTS];
+int *robot_ids[ROBOTS];
 int max_mobot_index = 0;
-double last_speed = -1.0;
+double last_speed[ROBOTS];
 
 int main(int arc, char **argv) {
+	pthread_t threads[ROBOTS];
+	int i;
+	void *status;
+
+	init_mobots();
+
+	for (i = 0; i <= max_mobot_index; i++) {
+		robot_ids[i] = (int *) malloc(sizeof(int));
+		*robot_ids[i] = i;
+		if (pthread_create(&threads[i], NULL, comm_thread, (void *) robot_ids[i]) != 0) {
+			error("ERROR unable to create thread.");
+		}
+	}
+	for (i = 0; i <= max_mobot_index; i++) {
+		if (pthread_join(threads[i], &status) != 0) {
+			error("ERROR attempting to join thread.");
+		}
+	}
+	return 0;
+}
+
+void *comm_thread(void *robot_id_val) {
 	int server_sock, client_sock;
 	unsigned short server_port = 8082;
 	unsigned int client_len;
 	struct sockaddr_in server_addr, client_addr;
-
-	init_mobots();
+	int *robot_id_ptr, robot_id;
+	robot_id_ptr = (int *) robot_id_val;
+	robot_id = *robot_id_ptr;
 
 	server_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (server_sock < 0) {
@@ -46,7 +71,7 @@ int main(int arc, char **argv) {
 	memset(&server_addr, 0, sizeof(server_addr));
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	server_addr.sin_port = htons(server_port);
+	server_addr.sin_port = htons(server_port + robot_id);
 
 	if (bind(server_sock, (struct sockaddr *) &server_addr, sizeof(server_addr)) < 0) {
 		error("ERROR binding to the local address.");
@@ -65,7 +90,7 @@ int main(int arc, char **argv) {
 		printf("Message received from client %s\n", inet_ntoa(client_addr.sin_addr));
 		handle_message(client_sock);
 	}
-	return 0;
+	pthread_exit(NULL);
 }
 
 void init_mobots() {
@@ -97,6 +122,7 @@ void init_mobots() {
 				error("ERROR connecting to the Mobot.");
 			}
 			printf("Connected successfully\n");
+			last_speed[index] = -1;
 			mobot[index].moveToZero();
 			max_mobot_index = index;
 		}
@@ -159,8 +185,8 @@ int process_command(char *commands, int length) {
 	}
 	switch (cmd_type) {
 	case CMD_MV_CONT:
-		if (last_speed != values[4]) {
-			last_speed = values[4];
+		if (last_speed[mobot_num] != values[4]) {
+			last_speed[mobot_num] = values[4];
 			mobot[mobot_num].setJointSpeeds(values[4], values[4], values[4], values[4]);
 		}
 		mobot[mobot_num].moveContinuousNB(get_state(values[0]),
