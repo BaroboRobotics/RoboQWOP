@@ -459,8 +459,10 @@ if (!isset( $_SESSION['user_id'] )) {
 					active = data.active;
 					if (active) {
 						$('#status').css({'color':'red', 'font-weight':'bold'});
+						$('#control-tabs').show();
 					} else {
 						$('#status').css({'color':'black', 'font-weight':'normal'});
+						$('#control-tabs').hide();
 					}
 				});
 			}
