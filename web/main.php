@@ -336,6 +336,7 @@ if (!isset( $_SESSION['user_id'] )) {
             }
             function updateStatus() {
 			    $.getJSON('status.php', function(data) {
+				    $('#status').html(data.status);
 				    var robotNames = [];
 					var len = data.control.length;
 				    var sub_queues = [];
