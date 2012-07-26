@@ -344,7 +344,7 @@ if (!isset( $_SESSION['user_id'] )) {
 					//alert(data.queue.length);
 					$('#debug').text('');
 					$('#debug').append('Length of data.queue: '+data.queue.length+'<br/>');
-					$('#debug').hide();
+					//$('#debug').hide();
 					var lens = [];
 					//var len
 					//var maxLen = Math.max.apply(Math, lens);
@@ -358,10 +358,14 @@ if (!isset( $_SESSION['user_id'] )) {
 					}
 					var robotNames = robotNames.sort();
 					for (var i = 0; i < len; i++) {
+					    sub_queues[i] = [];
 						for (var j = 0; j < subLen; j++) {
-						    sub_queues[i] = [];
+						    
+							equals = (data.queue[j].robot_name == robotNames[i]);
+							$('#debug').append(j+'   '+data.queue[j].robot_name + '   ' + robotNames[i] +'   '+equals+'<br/>');
 						    if (data.queue[j].robot_name == robotNames[i]) {
-							    sub_queues[i].push(0);
+							    $('#debug').append(j+'Abc   '+data.queue[j].robot_name + '   ' + robotNames[i] +'   '+equals+'<br/>');
+							    sub_queues[i][sub_queues[i].length] = j;
 							}
 							lens[i] = sub_queues[i].length;
 						}
@@ -372,6 +376,8 @@ if (!isset( $_SESSION['user_id'] )) {
 					}
 					
 					var maxLen = Math.max.apply(Math, lens);
+					$('#debug').append('data.queue: '+JSON.stringify(data.queue)+'<br/>');
+					$('#debug').append('sub_queues: '+sub_queues+'<br/>');
 					$('#debug').append('Lens: '+lens+'<br/>');
 					$('#debug').append('maxLen: '+maxLen+'<br/>');
 				    $('#queue').css('width', 200 * len + len + 1);
