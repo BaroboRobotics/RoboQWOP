@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS controllers (
     id INT NOT NULL AUTO_INCREMENT,
     PRIMARY KEY(id),
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	last_active TIMESTAMP NULL DEFAULT NULL,
     control_time INT DEFAULT 60,
     user_id INT NOT NULL,
     robot_number INT NOT NULL DEFAULT 0,

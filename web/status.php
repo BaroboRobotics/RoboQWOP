@@ -19,6 +19,7 @@ try {
     $mysqli->autocommit(FALSE);
     // Update the last active time for the current user.
     $mysqli->query("UPDATE queue SET last_active = CURRENT_TIMESTAMP WHERE user_id = " . $_SESSION['user_id']);
+	$mysqli->query("UPDATE controllers SET last_active = CURRENT_TIMESTAMP WHERE user_id = " . $_SESSION['user_id']);
     // Remove any controllers that are over their timelimit.
     $sql = "SELECT id, user_id, robot_number
         FROM controllers where created < (NOW() - INTERVAL control_time SECOND)";
@@ -44,8 +45,22 @@ try {
     if (isset( $_SESSION['robot'] )) {
         $robot_number = $_SESSION['robot'];
     }
-    // Remove inactive users from the queue.
-    $mysqli->query("DELETE FROM queue WHERE last_active < (NOW() - INTERVAL 1 MINUTE)");
+    // Remove inactive users from the queue and/or controlling entry.
+	$sql = "SELECT user_id FROM queue WHERE last_active < (NOW() - INTERVAL 5 SECOND)";
+    if ($result = $mysqli->query($sql)) {
+        while ($row = $result->fetch_object()) {
+            $user_id = $row->user_id;
+            
+            // Delete the controller entry.
+            $mysqli->query("DELETE FROM controllers WHERE user_id = " . $user_id);
+            $mysqli->query("DELETE FROM queue WHERE user_id = " . $user_id);
+        }
+        // Free result set
+        $result->close();
+    }
+	
+	$mysqli->query("DELETE FROM queue WHERE last_active < (NOW() - INTERVAL 5 SECOND)");
+    
     // Find out how many robots are available and make sure the controllers are set.
     if ($stmt = $mysqli->prepare("SELECT count(*) from controllers where robot_number = ?")) {
         $stmt->bind_param('i', $robot_number);
@@ -54,6 +69,14 @@ try {
         $stmt->fetch();
         $stmt->close();
     }
+	if ($stmt = $mysqli->prepare("SELECT count(*) from queue where robot_number = ?")) {
+        $stmt->bind_param('i', $robot_number);
+        $stmt->execute();
+        $stmt->bind_result($total_in_queue);
+        $stmt->fetch();
+        $stmt->close();
+    }
+	
     if ($total_users == 0) {
         // Insert a controller record for the user on the top of the queue for the user's robot number
         $sql = "SELECT q.id, q.user_id, u.control_time FROM queue q
@@ -63,7 +86,11 @@ try {
         if ($sub_results = $mysqli -> query($sql)) {
             
             while ($sub_row = $sub_results->fetch_object()) {
-                $control_time = $sub_row->control_time;
+			    if (($total_in_queue < 1) or ($total_in_queue > 5)) {
+                    $control_time = $sub_row->control_time;
+			    } else {
+				    $control_time = 180 - (($total_in_queue + 1) * 20);
+				}
                 $queue_id = $sub_row->id;
                 $user_id = $sub_row->user_id;
                 if ($stmt = $mysqli -> prepare("INSERT INTO controllers (created, control_time, user_id, robot_number) values (CURRENT_TIMESTAMP, ?, ?, ?)")) {
