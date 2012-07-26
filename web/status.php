@@ -85,12 +85,14 @@ try {
     $status = "Error retrieving status information";
     // Get the users in the queue.
     $queue_result = '"queue":[';
-    $sql = "SELECT q.user_id, u.first_name, u.last_name, u.country
-        FROM queue q INNER JOIN users AS u on u.id = q.user_id WHERE q.robot_number = ? ORDER BY q.created asc";
+    $sql = "SELECT q.user_id, u.first_name, u.last_name, u.country, r.name
+        FROM queue q INNER JOIN users AS u on u.id = q.user_id 
+        INNER JOIN robots AS r on r.number = q.robot_number
+        WHERE q.robot_number = ? ORDER BY q.created asc";
     if ($stmt = $mysqli->prepare($sql)) {
         $stmt->bind_param('i', $robot_number);
         $stmt->execute();
-        $stmt->bind_result($r_user_id, $r_first_name, $r_last_name, $r_country);
+        $stmt->bind_result($r_user_id, $r_first_name, $r_last_name, $r_country, $r_robotname);
         $position = 1;
         $comma = false;
         while ($stmt->fetch()) {
@@ -101,7 +103,7 @@ try {
             }
             $queue_result .= '{ "user_id":' . $r_user_id . ',"first_name":"' . $r_first_name
                  . '", "last_name":"' . $r_last_name . '", "country":"' . $r_country
-                 . '", "position":' . $position . ' }';
+                 . '", "position":' . $position . ', "robot_name":"' . $r_robotname . '" }';
             if ($r_user_id == $_SESSION['user_id']) {
                 if ($position == 1) {
                     $status = "There is 1 user in front of you.";
@@ -118,7 +120,7 @@ try {
     
     // Get the users controlling the Mobot.
     $control_result = '"control":[';
-    $sql = "SELECT c.user_id, u.first_name, u.last_name, u.country, r.name
+    $sql = "SELECT c.created, c.control_time, c.user_id, u.first_name, u.last_name, u.country, r.name
         FROM controllers c
         INNER JOIN users AS u on u.id = c.user_id
         INNER JOIN robots AS r on r.number = c.robot_number";
@@ -132,9 +134,15 @@ try {
             } else {
                 $comma = true;
             }
+            // Calculate the number of seconds left to control the mobot.
+            $created_date = new DateTime($row->created);
+            $created_date->add(new DateInterval("PT" . $row->control_time . "S"));
+            $now_date = new DateTime();
+            $interval = $created_date->diff($now_date);
+
             $control_result .= '{ "user_id":' . $row->user_id . ',"first_name":"' . $row->first_name
                  . '", "last_name":"' . $row->last_name . '", "country":"' . $row->country
-                 . '", "robot_name":"' . $row->name . '" }';
+                 . '", "robot_name":"' . $row->name . '","timeleft":' . $interval->format('%s') . ' }';
             
             if ($row->user_id == $_SESSION['user_id']) {
                 $active = true;
