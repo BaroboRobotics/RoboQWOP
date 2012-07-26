@@ -269,6 +269,7 @@ if (!isset( $_SESSION['user_id'] )) {
         <script type="text/javascript">
             var q = 0; var w = 0; var o = 0; var p = 0;
             var u = 0; var i = 0; var e = 0; var r = 0;
+			playsound = false; // prevent sound from playing when open page
 			var time_left = 61;
 			var countdown = false;
             var send = false;
@@ -452,10 +453,13 @@ if (!isset( $_SESSION['user_id'] )) {
 					    time_left = 61;
 						countdown = true;
 					    
-						soundHandle = document.getElementById('soundHandle');
-						soundHandle.src = 'sounds/beep.mp3';
-						soundHandle.play();
+						if (playsound == true) {
+							soundHandle = document.getElementById('soundHandle');
+							soundHandle.src = 'sounds/beep.mp3';
+							soundHandle.play();
+						}
 					}
+					playsound = true;
 					active = data.active;
 					if (active) {
 						$('#status').css({'color':'red', 'font-weight':'bold'});
