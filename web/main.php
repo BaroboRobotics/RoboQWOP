@@ -344,7 +344,7 @@ if (!isset( $_SESSION['user_id'] )) {
 					//alert(data.queue.length);
 					$('#debug').text('');
 					$('#debug').append('Length of data.queue: '+data.queue.length+'<br/>');
-					$('#debug').hide();
+					//$('#debug').hide();
 					var lens = [];
 					//var len
 					//var maxLen = Math.max.apply(Math, lens);
@@ -360,12 +360,15 @@ if (!isset( $_SESSION['user_id'] )) {
 					for (var i = 0; i < len; i++) {
 						for (var j = 0; j < subLen; j++) {
 						    sub_queues[i] = [];
-						    if (data.queue[j].robot_name == robotNames[j]) {
+						    if (data.queue[j].robot_name == robotNames[i]) {
 							    sub_queues[i].push(0);
 							}
 							lens[i] = sub_queues[i].length;
 						}
-						html = html + '<th colspan="2">'+data.control[i].robot_name+"</th>";
+						//html = html + '<th colspan="2">'+data.control[i].robot_name+"</th>";
+					}
+					for (var i = 0; i < len; i++) {
+					    html = html + '<th colspan="2">'+robotNames[i]+"</th>";
 					}
 					
 					var maxLen = Math.max.apply(Math, lens);
@@ -376,9 +379,21 @@ if (!isset( $_SESSION['user_id'] )) {
 					$('#queue th').css('width', 200);
 				    //alert(lens);
 					html = html + '</tr><tr>';
+					newOrder = [];
 					for (var i = 0; i < len; i++) {
-						
-						html = html + '<td>1</td><td>'+data.control[i].first_name+" "+data.control[i].last_name+"<br/>("+data.control[i].timeleft+" seconds left)</td>";
+					    for (var j = 0; j < len; j++) {
+						    if (robotNames[i] == data.control[j].robot_name) {
+							    newOrder[i] = j
+							}
+						}
+					    
+					}
+					for (var i = 0; i < len; i++) {
+						if (lens[i] == 0) {
+						    html = html + '<td>1</td><td>'+data.control[newOrder[i]].first_name+" "+data.control[newOrder[i]].last_name+"</td>";
+						} else {
+						    html = html + '<td>1</td><td>'+data.control[newOrder[i]].first_name+" "+data.control[newOrder[i]].last_name+"<br/>("+data.control[newOrder[i]].timeleft+" seconds left)</td>";
+					    }
 					}
 					html = html + '</tr>';
 					for (var i = 0; i < maxLen; i++) {
