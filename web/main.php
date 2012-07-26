@@ -342,9 +342,9 @@ if (!isset( $_SESSION['user_id'] )) {
 					var len = data.control.length;
 				    var sub_queues = [];
 					//alert(data.queue.length);
-					//$('#debug').text('');
+					$('#debug').text('');
 					$('#debug').append('Length of data.queue: '+data.queue.length+'<br/>');
-					//$('#debug').hide();
+					$('#debug').hide();
 					var lens = [];
 					//var len
 					//var maxLen = Math.max.apply(Math, lens);
