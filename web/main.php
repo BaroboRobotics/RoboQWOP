@@ -360,7 +360,7 @@ if (!isset( $_SESSION['user_id'] )) {
 					for (var i = 0; i < len; i++) {
 						for (var j = 0; j < subLen; j++) {
 						    sub_queues[i] = [];
-						    if (data.queue[j].robot_name == data.control[i].robot_name) {
+						    if (data.queue[j].robot_name == robotNames[j]) {
 							    sub_queues[i].push(0);
 							}
 							lens[i] = sub_queues[i].length;
@@ -395,7 +395,7 @@ if (!isset( $_SESSION['user_id'] )) {
 							        
 							    }
 							} else {
-							    html = html + '<td colspan="2" style="border:0;"></td>'
+							    html = html + '<td colspan="2" style="border:0;background:#c2e8f1;"></td>'
 							}
 						}
 						html = html + '</tr>';
