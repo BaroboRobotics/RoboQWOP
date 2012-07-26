@@ -482,7 +482,7 @@ if (!isset( $_SESSION['user_id'] )) {
                 
                 updateStatus();
 				setInterval(executeAction, 100);
-				setInterval(countDown, 1000);
+				//setInterval(countDown, 1000);
 
                 $("#left_is_red_face_north_south").show();
                 $("#on_left_is_red").click(function() {
