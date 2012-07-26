@@ -460,7 +460,7 @@ if (!isset( $_SESSION['user_id'] )) {
 					    
 						if (playsound == true) {
 							soundHandle = document.getElementById('soundHandle');
-							soundHandle.src = 'sounds/beep.mp3';
+							soundHandle.src = 'sounds/beep.ogg';
 							soundHandle.play();
 						}
 					}
