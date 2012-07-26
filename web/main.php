@@ -258,6 +258,7 @@ if (!isset( $_SESSION['user_id'] )) {
                 <a target="_blank" href="http://www.youtube.com/BaroboRobotics"> <img src="img/icons/youtube.png" alt="Youtube" width="40" /> </a>
             </div>
         </div>
+		<div id="notactiveerror"><strong>Error:</strong> Your command did not go through because someone else is controlling the robot.</div>
         <audio id="soundHandle" style="display: none;"></audio>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
         <script>
@@ -291,48 +292,52 @@ if (!isset( $_SESSION['user_id'] )) {
 				}
 			}
             function handleKeyEvent(keyCode, down) {
-                var oldval;
-                switch (keyCode) {
-                    case 81:
-                        oldval = q;
-                        q = (down) ? 1 : 0;
-                        enableSend(oldval, q);
-                        break;
-                    case 87:
-                        oldval = w;
-                        w = (down) ? 1 : 0;
-                        enableSend(oldval, w);
-                        break;
-                    case 69:
-                        oldval = e;
-                        e = (down) ? 1 : 0;
-                        enableSend(oldval, e);
-                        break;
-                    case 82:
-                        oldval = r;
-                        r = (down) ? 1 : 0;
-                        enableSend(oldval, r);
-                        break;
-                    case 85:
-                        oldval = u;
-                        u = (down) ? 1 : 0;
-                        enableSend(oldval, u);
-                        break;
-                    case 73:
-                        oldval = i;
-                        i = (down) ? 1 : 0;
-                        enableSend(oldval, i);
-                        break;
-                    case 79:
-                        oldval = o;
-                        o = (down) ? 1 : 0;
-                        enableSend(oldval, o);
-                        break;
-                    case 80:
-                        oldval = p;
-                        p = (down) ? 1 : 0;
-                        enableSend(oldval, p);
-                        break;
+			    if (active == false) {
+				    $('#notactiveerror').show().delay(5000).fadeOut();
+				} else {
+					var oldval;
+					switch (keyCode) {
+						case 81:
+							oldval = q;
+							q = (down) ? 1 : 0;
+							enableSend(oldval, q);
+							break;
+						case 87:
+							oldval = w;
+							w = (down) ? 1 : 0;
+							enableSend(oldval, w);
+							break;
+						case 69:
+							oldval = e;
+							e = (down) ? 1 : 0;
+							enableSend(oldval, e);
+							break;
+						case 82:
+							oldval = r;
+							r = (down) ? 1 : 0;
+							enableSend(oldval, r);
+							break;
+						case 85:
+							oldval = u;
+							u = (down) ? 1 : 0;
+							enableSend(oldval, u);
+							break;
+						case 73:
+							oldval = i;
+							i = (down) ? 1 : 0;
+							enableSend(oldval, i);
+							break;
+						case 79:
+							oldval = o;
+							o = (down) ? 1 : 0;
+							enableSend(oldval, o);
+							break;
+						case 80:
+							oldval = p;
+							p = (down) ? 1 : 0;
+							enableSend(oldval, p);
+							break;
+					}
                 }
             }
             function updateStatus() {

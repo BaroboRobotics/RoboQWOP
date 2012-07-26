@@ -218,3 +218,14 @@ color:#FFF;
 #oriented-controls .key {
 float:right;
 }
+
+#notactiveerror {
+display:none;
+background:red;
+text-align:center;
+color:#FFF;
+padding:5px;
+top:0; right:0;
+left:0;
+position:absolute;
+}
