@@ -136,13 +136,15 @@ try {
             }
             // Calculate the number of seconds left to control the mobot.
             $created_date = new DateTime($row->created);
+			$control_time = $row->control_time;
             $created_date->add(new DateInterval("PT" . $row->control_time . "S"));
             $now_date = new DateTime();
             $interval = $created_date->diff($now_date);
-
+			//$interval = 60 - $interval;
+            //$interval = $control_time - $interval;
             $control_result .= '{ "user_id":' . $row->user_id . ',"first_name":"' . $row->first_name
                  . '", "last_name":"' . $row->last_name . '", "country":"' . $row->country
-                 . '", "robot_name":"' . $row->name . '","timeleft":' . $interval->format('%s') . ' }';
+                 . '", "robot_name":"' . $row->name . '","controltime":"' . $control_time . '","timeleft":' . $interval->format('%s') . ' }';
             
             if ($row->user_id == $_SESSION['user_id']) {
                 $active = true;

@@ -167,7 +167,7 @@ table.controls .green {
     padding:5px;
 }
 #oriented-controls .green, #oriented-controls .red, #oriented-controls .button {
-    width:200px;
+    width:300px;
     color:#FFF;
 }
 #oriented-controls input {
@@ -195,19 +195,37 @@ table.controls .green {
     background:#000;
 }
 
-#queue {
+#queue table {
 float:right;
-width:200px;
 border-collapse:collapse;
 }
 
-#queue td {
+#queue td, #queue th {
 background:#FFF;
 padding:5px;
 border:1px solid orange;
 }
 
+#queue th {
+width:200px;
+}
+
 .in_control td {
 background:orange;
 color:#FFF;
+}
+
+#oriented-controls .key {
+float:right;
+}
+
+#notactiveerror {
+display:none;
+background:red;
+text-align:center;
+color:#FFF;
+padding:5px;
+top:0; right:0;
+left:0;
+position:absolute;
 }
