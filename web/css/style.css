@@ -195,16 +195,19 @@ table.controls .green {
     background:#000;
 }
 
-#queue {
+#queue table {
 float:right;
-width:200px;
 border-collapse:collapse;
 }
 
-#queue td {
+#queue td, #queue th {
 background:#FFF;
 padding:5px;
 border:1px solid orange;
+}
+
+#queue th {
+width:200px;
 }
 
 .in_control td {

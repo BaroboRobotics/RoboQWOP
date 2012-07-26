@@ -62,7 +62,8 @@ if (!isset( $_SESSION['user_id'] )) {
     </head>
     <body>
         <div role="main" id="page">
-		    <table id="queue"></table>
+		    <div id="queue"></div>
+			<div id="debug"></div>
             <a style="margin: 0 auto; display: block;" href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
             <h1>Robo QWOP</h1>
             <img src="img/imobot_diagram.png" alt="Mobot Diagram" title="Mobot Diagram" />
@@ -335,19 +336,92 @@ if (!isset( $_SESSION['user_id'] )) {
             }
             function updateStatus() {
 			    $.getJSON('status.php', function(data) {
+				    var robotNames = [];
+					var len = data.control.length;
+				    var sub_queues = [];
+					//alert(data.queue.length);
+					$('#debug').text('');
+					$('#debug').append('Length of data.queue: '+data.queue.length+'<br/>');
+					$('#debug').hide();
+					var lens = [];
+					//var len
+					//var maxLen = Math.max.apply(Math, lens);
+					//var maxLen = lens.max();
+					var html = '<table><tr>'
+					subLen = data.queue.length;
+					//alert(maxLen);
+					//alert(subLen);
+					for (var i = 0; i < len; i++) {
+						robotNames.push(data.control[i].robot_name);
+						
+						for (var j = 0; j < subLen; j++) {
+						    sub_queues[i] = [];
+						    if (data.queue[j].robot_name == data.control[i].robot_name) {
+							    sub_queues[i].push(0);
+							}
+							lens[i] = sub_queues[i].length;
+						}
+						html = html + '<th colspan="2">'+data.control[i].robot_name+"</th>";
+					}
+					var maxLen = Math.max.apply(Math, lens);
+					$('#debug').append('Lens: '+lens+'<br/>');
+					$('#debug').append('maxLen: '+maxLen+'<br/>');
+				    $('#queue').css('width', 200 * len + len + 1);
+					$('#queue').css('float', 'right');
+					$('#queue th').css('width', 200);
+				    //alert(lens);
+					html = html + '</tr><tr>';
+					for (var i = 0; i < len; i++) {
+						
+						html = html + '<td>1</td><td>'+data.control[i].first_name+" "+data.control[i].last_name+"</td>";
+					}
+					html = html + '</tr>';
+					for (var i = 0; i < maxLen; i++) {
+						
+						html = html + '<tr>';
+						for (var j = 0; j < len; j++) {
+						    position = i + 2;
+							
+						    if (i < lens[j]) {
+							    for (var k = 0; k < subLen; k++) {
+								    if (((i + 1) == data.queue[k].position) && (robotNames[j] == data.queue[k].robot_name)) {
+									    html = html + '<td>'+position+'</td><td>'+data.queue[k].first_name+" "+data.queue[k].last_name+'</td>'
+									}
+							        
+							    }
+							} else {
+							    html = html + '<td colspan="2" style="border:0;"></td>'
+							}
+						}
+						html = html + '</tr>';
+					}
+					html = html + '</table>';
+					$('#queue').html(html);
+					//alert(html);
+					//alert($('#queue').html());
+					/*
 					$('#status').html(data.status);
-					$('#queue').html(' ');
+					$('#queue').html('<tr>');
+					$.each(data.control, function(i, dataq) {
+					   
+					   var queue_data = "<th colspan='2'>"+dataq.robot_name+"</th>";
+					   
+					   $(queue_data).appendTo("#queue");
+					});
+					$('#queue').append('</tr>')
 					$.each(data.control, function(i, dataq) {
 					   var queue_data = "<tr><td>1</td><td>"+dataq.first_name+" "+dataq.last_name+"</td></tr>";
 					   
 					   $(queue_data).appendTo("#queue");
 					});
+					
 					$.each(data.queue, function(i, dataq) {
 					   var position = dataq.position + 1;
 					   var queue_data = "<tr><td>"+position+"</td><td>"+dataq.first_name+" "+dataq.last_name+"</td></tr>";
 					   
 					   $(queue_data).appendTo("#queue");
 					});
+					*/
 					if (!active && data.active) {
 					    time_left = 61;
 						countdown = true;
