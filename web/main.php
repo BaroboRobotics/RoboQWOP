@@ -404,7 +404,8 @@ if (!isset( $_SESSION['user_id'] )) {
 						if (lens[i] == 0) {
 						    html = html + '<td>1</td><td>'+data.control[newOrder[i]].first_name+" "+data.control[newOrder[i]].last_name+"</td>";
 						} else {
-						    html = html + '<td>1</td><td>'+data.control[newOrder[i]].first_name+" "+data.control[newOrder[i]].last_name+"<br/>("+data.control[newOrder[i]].timeleft+" seconds left)</td>";
+						    timeleft = data.control[newOrder[i]].controltime - data.control[newOrder[i]].timeleft;
+						    html = html + '<td>1</td><td>'+data.control[newOrder[i]].first_name+" "+data.control[newOrder[i]].last_name+"<br/>("+timeleft+" seconds left)</td>";
 					    }
 					}
 					html = html + '</tr>';
