@@ -338,12 +338,13 @@ if (!isset( $_SESSION['user_id'] )) {
 			    $.getJSON('status.php', function(data) {
 				    $('#status').html(data.status);
 				    var robotNames = [];
+					
 					var len = data.control.length;
 				    var sub_queues = [];
 					//alert(data.queue.length);
 					$('#debug').text('');
 					$('#debug').append('Length of data.queue: '+data.queue.length+'<br/>');
-					$('#debug').hide();
+					//$('#debug').hide();
 					var lens = [];
 					//var len
 					//var maxLen = Math.max.apply(Math, lens);
@@ -364,6 +365,7 @@ if (!isset( $_SESSION['user_id'] )) {
 						}
 						html = html + '<th colspan="2">'+data.control[i].robot_name+"</th>";
 					}
+					var robotNames = robotNames.sort();
 					var maxLen = Math.max.apply(Math, lens);
 					$('#debug').append('Lens: '+lens+'<br/>');
 					$('#debug').append('maxLen: '+maxLen+'<br/>');
@@ -374,7 +376,7 @@ if (!isset( $_SESSION['user_id'] )) {
 					html = html + '</tr><tr>';
 					for (var i = 0; i < len; i++) {
 						
-						html = html + '<td>1</td><td>'+data.control[i].first_name+" "+data.control[i].last_name+"</td>";
+						html = html + '<td>1</td><td>'+data.control[i].first_name+" "+data.control[i].last_name+"<br/>("+data.control[i].timeleft+" seconds left)</td>";
 					}
 					html = html + '</tr>';
 					for (var i = 0; i < maxLen; i++) {
