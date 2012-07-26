@@ -401,7 +401,7 @@ if (!isset( $_SESSION['user_id'] )) {
 					    
 					}
 					for (var i = 0; i < len; i++) {
-						if (lens[i] == 0) {
+						if ((lens[i] == 0) || (data.queue.length == 0)) {
 						    html = html + '<td>1</td><td>'+data.control[newOrder[i]].first_name+" "+data.control[newOrder[i]].last_name+"</td>";
 						} else {
 						    timeleft = data.control[newOrder[i]].controltime - data.control[newOrder[i]].timeleft;
