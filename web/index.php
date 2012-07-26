@@ -31,7 +31,7 @@
                     } else {
                         if ($results = $mysqli->query("SELECT name, number FROM robots")) {
                             while ($row = $results->fetch_object()) {
-                                echo '<a href="authenticate.php?robot=' . $row->number . '">Connect to the ' . $row->name . '</a> ';
+                                echo '<p><a href="authenticate.php?robot=' . $row->number . '">Connect to the ' . $row->name . '</a></p> ';
                             }
                             // Free result set
                             $results->close();

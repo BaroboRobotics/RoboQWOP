@@ -72,6 +72,7 @@ try {
             $robot_number = $_SESSION['robot'];
         }
         $_SESSION['robot_number'] = $robot_number;
+        $mysqli->query("DELETE from controllers WHERE user_id = " . $user_id);
         // Create or update the queue record.
         if ($result = $mysqli->query("SELECT id FROM queue WHERE user_id = " . $user_id )) {
             $row_cnt = $result -> num_rows;
@@ -84,8 +85,8 @@ try {
                     $stmt -> close();
                 }
             } else {
-                if ($stmt = $mysqli->prepare("UPDATE queue SET last_active = CURRENT_TIMESTAMP where user_id = ?")) {
-                    $stmt->bind_param('i', $user_id);
+                if ($stmt = $mysqli->prepare("UPDATE queue SET last_active = CURRENT_TIMESTAMP, robot_number = ? where user_id = ?")) {
+                    $stmt->bind_param('ii', $robot_number, $user_id);
                     $stmt->execute();
                     $stmt->close();
                 }
