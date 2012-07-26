@@ -344,7 +344,7 @@ if (!isset( $_SESSION['user_id'] )) {
 					//alert(data.queue.length);
 					$('#debug').text('');
 					$('#debug').append('Length of data.queue: '+data.queue.length+'<br/>');
-					//$('#debug').hide();
+					$('#debug').hide();
 					var lens = [];
 					//var len
 					//var maxLen = Math.max.apply(Math, lens);
