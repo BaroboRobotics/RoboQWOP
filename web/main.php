@@ -342,7 +342,7 @@ if (!isset( $_SESSION['user_id'] )) {
 					var len = data.control.length;
 				    var sub_queues = [];
 					//alert(data.queue.length);
-					$('#debug').text('');
+					//$('#debug').text('');
 					$('#debug').append('Length of data.queue: '+data.queue.length+'<br/>');
 					//$('#debug').hide();
 					var lens = [];
@@ -355,7 +355,9 @@ if (!isset( $_SESSION['user_id'] )) {
 					//alert(subLen);
 					for (var i = 0; i < len; i++) {
 						robotNames.push(data.control[i].robot_name);
-						
+					}
+					var robotNames = robotNames.sort();
+					for (var i = 0; i < len; i++) {
 						for (var j = 0; j < subLen; j++) {
 						    sub_queues[i] = [];
 						    if (data.queue[j].robot_name == data.control[i].robot_name) {
@@ -365,7 +367,7 @@ if (!isset( $_SESSION['user_id'] )) {
 						}
 						html = html + '<th colspan="2">'+data.control[i].robot_name+"</th>";
 					}
-					var robotNames = robotNames.sort();
+					
 					var maxLen = Math.max.apply(Math, lens);
 					$('#debug').append('Lens: '+lens+'<br/>');
 					$('#debug').append('maxLen: '+maxLen+'<br/>');
@@ -459,7 +461,7 @@ if (!isset( $_SESSION['user_id'] )) {
                         dataType : 'html'
                     });
                 }
-                if (count >= 5000) {
+                if (count >= 1000) {
                     count = 0;
                     updateStatus();
                 }
