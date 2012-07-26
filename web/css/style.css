@@ -194,3 +194,20 @@ table.controls .green {
 #oriented-controls .active, #oriented-controls .active:hover {
     background:#000;
 }
+
+#queue {
+float:right;
+width:200px;
+border-collapse:collapse;
+}
+
+#queue td {
+background:#FFF;
+padding:5px;
+border:1px solid orange;
+}
+
+.in_control td {
+background:orange;
+color:#FFF;
+}
