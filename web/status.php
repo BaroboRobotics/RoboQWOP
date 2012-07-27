@@ -30,7 +30,9 @@ try {
             // Delete the controller entry.
             $mysqli->query("DELETE FROM controllers where id = " . $id);
             // Move the controller entry to back to the queue.
-            if ($stmt = $mysqli -> prepare("INSERT INTO queue (created, last_active, user_id, robot_number) values (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?)")) {
+            $sql = "INSERT INTO queue (created, last_active, user_id, robot_number)
+                values (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?)";
+            if ($stmt = $mysqli -> prepare($sql)) {
                 $stmt -> bind_param('ii', $user_id, $robot_num);
                 $stmt -> execute();
                 $_SESSION['queue_id'] = $stmt -> insert_id;
@@ -45,7 +47,7 @@ try {
         $robot_number = $_SESSION['robot'];
     }
     // Remove inactive users from the queue.
-    $mysqli->query("DELETE FROM queue WHERE last_active < (NOW() - INTERVAL 1 MINUTE)");
+    $mysqli->query("DELETE FROM queue WHERE last_active < (NOW() - INTERVAL 30 SECOND)");
     // Find out how many robots are available and make sure the controllers are set.
     if ($stmt = $mysqli->prepare("SELECT count(*) from controllers where robot_number = ?")) {
         $stmt->bind_param('i', $robot_number);
@@ -66,7 +68,9 @@ try {
                 $control_time = $sub_row->control_time;
                 $queue_id = $sub_row->id;
                 $user_id = $sub_row->user_id;
-                if ($stmt = $mysqli -> prepare("INSERT INTO controllers (created, control_time, user_id, robot_number) values (CURRENT_TIMESTAMP, ?, ?, ?)")) {
+                $sql = "INSERT INTO controllers (created, control_time, user_id, robot_number)
+                    values (CURRENT_TIMESTAMP, ?, ?, ?)";
+                if ($stmt = $mysqli -> prepare($sql)) {
                     $stmt -> bind_param('iii', $control_time, $user_id, $robot_number);
                     $stmt -> execute();
                     $stmt -> close();
@@ -119,6 +123,7 @@ try {
     $queue_result .= ']';
     
     // Get the users controlling the Mobot.
+    $timeleft = 0;
     $control_result = '"control":[';
     $sql = "SELECT c.created, c.control_time, c.user_id, u.first_name, u.last_name, u.country, r.name
         FROM controllers c
@@ -136,19 +141,19 @@ try {
             }
             // Calculate the number of seconds left to control the mobot.
             $created_date = new DateTime($row->created);
-			$control_time = $row->control_time;
             $created_date->add(new DateInterval("PT" . $row->control_time . "S"));
             $now_date = new DateTime();
-            $interval = $created_date->diff($now_date);
-			//$interval = 60 - $interval;
-            //$interval = $control_time - $interval;
+            $interval = $now_date->diff($created_date);
+
             $control_result .= '{ "user_id":' . $row->user_id . ',"first_name":"' . $row->first_name
                  . '", "last_name":"' . $row->last_name . '", "country":"' . $row->country
-                 . '", "robot_name":"' . $row->name . '","controltime":"' . $control_time . '","timeleft":' . $interval->format('%s') . ' }';
+                 . '", "robot_name":"' . $row->name . '","timeleft":' . $interval->format('%s') 
+                 . ',"controltime":' . $row->control_time . ' }';
             
             if ($row->user_id == $_SESSION['user_id']) {
                 $active = true;
                 $status = "You are controlling the Robot.";
+                $timeleft = $interval->format('%s');
             }
         }
         // Free result set
@@ -157,7 +162,8 @@ try {
     $control_result .= ']';
     $mysqli->commit();
     $mysqli->close();
-    $ret_val = '{"active":' . (($active) ? 'true' : 'false') . ', "status":"' . $status . '", ' . $queue_result . ', ' . $control_result . '}';
+    $ret_val = '{"active":' . (($active) ? 'true' : 'false') . ', "status":"' . $status . '", ' . $queue_result
+        . ', ' . $control_result . ', "timeleft":"' . $timeleft . '"}';
 } catch (Exception $e) {
     $mysqli->rollback();
     $ret_val = '{"active":false,"status":' . $e->getMessage() . '}';

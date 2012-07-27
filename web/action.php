@@ -68,7 +68,7 @@ if ($_POST["e"] == "1") {
         $bj2 = 1;
 }
 $host = "localhost";
-$port = 8082;
+$port = 8082 + $robot_number;
 
 if (!$fp = fsockopen($host, $port, $errno, $errstr, 2)) {
     echo '{"result":"error", "msg": "' . $errstr . '"}';
