@@ -62,7 +62,8 @@ if (!isset( $_SESSION['user_id'] )) {
     </head>
     <body>
         <div role="main" id="page">
-		    <table id="queue"></table>
+		    <div id="queue"></div>
+			<div id="debug"></div>
             <a style="margin: 0 auto; display: block;" href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
             <h1>Robo QWOP</h1>
             <img src="img/imobot_diagram.png" alt="Mobot Diagram" title="Mobot Diagram" />
@@ -121,62 +122,62 @@ if (!isset( $_SESSION['user_id'] )) {
                     <table id="left_is_red_face_north_south" class="quad">
                         <tr>
                             <th rowspan="4">Controls</th><td>
-                            <input type="button" value="Spin clockwise" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" />
+                            <input type="button" value="Spin clockwise P&W" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" />
                             </td><td>
-                            <input type="button" value="Spin counter clockwise"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" />
+                            <input type="button" value="Spin counter clockwise Q&O"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" />
                             </td>
                         </tr>
                     
                         <tr>
                             <td>
-                            <input type="button" value="North" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" />
+                            <input type="button" value="North W&O" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" />
                             </td><td>
-                            <input type="button" value="South" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" />
+                            <input type="button" value="South O&P" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" />
                             </td>
                         </tr>
                         <tr>
                             <td>
-                            <input type="button" value="Northeast" onmousedown="handleKeyEvent(82, true);" class="red" />
+                            <input type="button" value="Northeast R" onmousedown="handleKeyEvent(82, true);" class="red" />
                             </td><td>
-                            <input type="button" value="Northwest" onmousedown="handleKeyEvent(85, true);" class="green" />
+                            <input type="button" value="Northwest U" onmousedown="handleKeyEvent(85, true);" class="green" />
                             </td>
                         </tr>
                         <tr>
                             <td>
-                            <input type="button" value="Southeast" onmousedown="handleKeyEvent(69, true);" class="red" />
+                            <input type="button" value="Southeast E" onmousedown="handleKeyEvent(69, true);" class="red" />
                             </td><td>
-                            <input type="button" value="Southwest" onmousedown="handleKeyEvent(73, true);" class="green" />
+                            <input type="button" value="Southwest I" onmousedown="handleKeyEvent(73, true);" class="green" />
                             </td>
                         </tr>
                     </table>
                     <table id="left_is_green_face_north_south" class="quad">
                         <tr>
                             <th rowspan="4">Controls</th><td>
-                            <input type="button" value="Spin clockwise" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" />
+                            <input type="button" value="Spin clockwise P&W" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" />
                             </td><td>
-                            <input type="button" value="Spin counter clockwise"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" />
+                            <input type="button" value="Spin counter clockwise Q&O"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" />
                             </td>
                         </tr>
                     
                         <tr>
                             <td>
-                            <input type="button" value="North" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" />
+                            <input type="button" value="North Q&P" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" />
                             </td><td>
-                            <input type="button" value="South" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" />
+                            <input type="button" value="South W&O" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" />
                             </td>
                         </tr>
                         <tr>
                             <td>
-                            <input type="button" value="Northwest" onmousedown="handleKeyEvent(73, true);" class="green" />
+                            <input type="button" value="Northwest I" onmousedown="handleKeyEvent(73, true);" class="green" />
                             </td><td>
-                            <input type="button" value="Northeast" onmousedown="handleKeyEvent(69, true);" class="red" />
+                            <input type="button" value="Northeast E" onmousedown="handleKeyEvent(69, true);" class="red" />
                             </td>
                         </tr>
                         <tr>
                             <td>
-                            <input type="button" value="Southwest" onmousedown="handleKeyEvent(85, true);" class="green" />
+                            <input type="button" value="Southwest U" onmousedown="handleKeyEvent(85, true);" class="green" />
                             </td><td>
-                            <input type="button" value="Southeast" onmousedown="handleKeyEvent(82, true);" class="red" />
+                            <input type="button" value="Southeast R" onmousedown="handleKeyEvent(82, true);" class="red" />
                             </td>
                         </tr>
                     </table>
@@ -184,64 +185,64 @@ if (!isset( $_SESSION['user_id'] )) {
                     <table id="bottom_is_green_face_east_west" class="quad">
                         <tr>
                             <th rowspan="4">Controls</th><td>
-                            <input type="button" value="Spin clockwise" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" />
+                            <input type="button" value="Spin clockwise P&W" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" />
                             </td><td>
-                            <input type="button" value="Spin counter clockwise"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" />
+                            <input type="button" value="Spin counter clockwise Q&O"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" />
                             </td>
                         </tr>
                     
                         <tr>
                             <td>
-                            <input type="button" value="West" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" />
+                            <input type="button" value="West Q&P" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" />
                             </td><td>
-                            <input type="button" value="East" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" />
+                            <input type="button" value="East W&O" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" />
                             </td>
                         </tr>
                     
                         <tr>
                             <td>
-                            <input type="button" value="Southwest" onmousedown="handleKeyEvent(82, true);" class="red" />
+                            <input type="button" value="Southwest R" onmousedown="handleKeyEvent(82, true);" class="red" />
                             </td><td>
-                            <input type="button" value="Southeast" onmousedown="handleKeyEvent(69, true);" class="red" />
+                            <input type="button" value="Southeast E" onmousedown="handleKeyEvent(69, true);" class="red" />
                             </td>
                         </tr>
                         <tr>
                             <td>
-                            <input type="button" value="Northwest" onmousedown="handleKeyEvent(85, true);" class="green" />
+                            <input type="button" value="Northwest U" onmousedown="handleKeyEvent(85, true);" class="green" />
                             </td><td>
-                            <input type="button" value="Northeast" onmousedown="handleKeyEvent(73, true);" class="green" />
+                            <input type="button" value="Northeast I" onmousedown="handleKeyEvent(73, true);" class="green" />
                             </td>
                         </tr>
                     </table>
                     <table id="bottom_is_red_face_east_west" class="quad">
                         <tr>
                             <th rowspan="4">Controls</th><td>
-                            <input type="button" value="Spin clockwise" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" />
+                            <input type="button" value="Spin clockwise P&W" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" />
                             </td><td>
-                            <input type="button" value="Spin counter clockwise"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" />
+                            <input type="button" value="Spin counter clockwise Q&O"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" />
                             </td>
                         </tr>
                     
                         <tr>
                             <td>
-                            <input type="button" value="West" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" />
+                            <input type="button" value="West Q&P" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" />
                             </td><td>
-                            <input type="button" value="East" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" />
+                            <input type="button" value="East W&O" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" />
                             </td>
                         </tr>
                     
                         <tr>
                             <td>
-                            <input type="button" value="Southwest" onmousedown="handleKeyEvent(73, true);" class="green" />
+                            <input type="button" value="Southwest R" onmousedown="handleKeyEvent(73, true);" class="green" />
                             </td><td>
-                            <input type="button" value="Southeast" onmousedown="handleKeyEvent(85, true);" class="green" />
+                            <input type="button" value="Southeast E" onmousedown="handleKeyEvent(85, true);" class="green" />
                             </td>
                         </tr>
                         <tr>
                             <td>
-                            <input type="button" value="Northwest" onmousedown="handleKeyEvent(69, true);" class="red" />
+                            <input type="button" value="Northwest U" onmousedown="handleKeyEvent(69, true);" class="red" />
                             </td><td>
-                            <input type="button" value="Northeast" onmousedown="handleKeyEvent(82, true);" class="red" />
+                            <input type="button" value="Northeast I" onmousedown="handleKeyEvent(82, true);" class="red" />
                             </td>
                         </tr>
                     </table>
@@ -257,6 +258,7 @@ if (!isset( $_SESSION['user_id'] )) {
                 <a target="_blank" href="http://www.youtube.com/BaroboRobotics"> <img src="img/icons/youtube.png" alt="Youtube" width="40" /> </a>
             </div>
         </div>
+		<div id="notactiveerror"><strong>Error:</strong> Your command did not go through because someone else is controlling the robot.</div>
         <audio id="soundHandle" style="display: none;"></audio>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
         <script>
@@ -268,6 +270,7 @@ if (!isset( $_SESSION['user_id'] )) {
         <script type="text/javascript">
             var q = 0; var w = 0; var o = 0; var p = 0;
             var u = 0; var i = 0; var e = 0; var r = 0;
+			playsound = false; // prevent sound from playing when open page
 			var time_left = 61;
 			var countdown = false;
             var send = false;
@@ -289,78 +292,187 @@ if (!isset( $_SESSION['user_id'] )) {
 				}
 			}
             function handleKeyEvent(keyCode, down) {
-                var oldval;
-                switch (keyCode) {
-                    case 81:
-                        oldval = q;
-                        q = (down) ? 1 : 0;
-                        enableSend(oldval, q);
-                        break;
-                    case 87:
-                        oldval = w;
-                        w = (down) ? 1 : 0;
-                        enableSend(oldval, w);
-                        break;
-                    case 69:
-                        oldval = e;
-                        e = (down) ? 1 : 0;
-                        enableSend(oldval, e);
-                        break;
-                    case 82:
-                        oldval = r;
-                        r = (down) ? 1 : 0;
-                        enableSend(oldval, r);
-                        break;
-                    case 85:
-                        oldval = u;
-                        u = (down) ? 1 : 0;
-                        enableSend(oldval, u);
-                        break;
-                    case 73:
-                        oldval = i;
-                        i = (down) ? 1 : 0;
-                        enableSend(oldval, i);
-                        break;
-                    case 79:
-                        oldval = o;
-                        o = (down) ? 1 : 0;
-                        enableSend(oldval, o);
-                        break;
-                    case 80:
-                        oldval = p;
-                        p = (down) ? 1 : 0;
-                        enableSend(oldval, p);
-                        break;
+			    if (active == false) {
+				    $('#notactiveerror').show().delay(5000).fadeOut();
+				} else {
+					var oldval;
+					switch (keyCode) {
+						case 81:
+							oldval = q;
+							q = (down) ? 1 : 0;
+							enableSend(oldval, q);
+							break;
+						case 87:
+							oldval = w;
+							w = (down) ? 1 : 0;
+							enableSend(oldval, w);
+							break;
+						case 69:
+							oldval = e;
+							e = (down) ? 1 : 0;
+							enableSend(oldval, e);
+							break;
+						case 82:
+							oldval = r;
+							r = (down) ? 1 : 0;
+							enableSend(oldval, r);
+							break;
+						case 85:
+							oldval = u;
+							u = (down) ? 1 : 0;
+							enableSend(oldval, u);
+							break;
+						case 73:
+							oldval = i;
+							i = (down) ? 1 : 0;
+							enableSend(oldval, i);
+							break;
+						case 79:
+							oldval = o;
+							o = (down) ? 1 : 0;
+							enableSend(oldval, o);
+							break;
+						case 80:
+							oldval = p;
+							p = (down) ? 1 : 0;
+							enableSend(oldval, p);
+							break;
+					}
                 }
             }
             function updateStatus() {
 			    $.getJSON('status.php', function(data) {
+				    $('#status').html(data.status);
+				    var robotNames = [];
+					
+					var len = data.control.length;
+				    var sub_queues = [];
+					//alert(data.queue.length);
+					$('#debug').text('');
+					$('#debug').append('Length of data.queue: '+data.queue.length+'<br/>');
+					$('#debug').hide();
+					var lens = [];
+					//var len
+					//var maxLen = Math.max.apply(Math, lens);
+					//var maxLen = lens.max();
+					var html = '<table><tr>'
+					subLen = data.queue.length;
+					//alert(maxLen);
+					//alert(subLen);
+					for (var i = 0; i < len; i++) {
+						robotNames.push(data.control[i].robot_name);
+					}
+					var robotNames = robotNames.sort();
+					for (var i = 0; i < len; i++) {
+					    sub_queues[i] = [];
+						for (var j = 0; j < subLen; j++) {
+						    
+							equals = (data.queue[j].robot_name == robotNames[i]);
+							$('#debug').append(j+'   '+data.queue[j].robot_name + '   ' + robotNames[i] +'   '+equals+'<br/>');
+						    if (data.queue[j].robot_name == robotNames[i]) {
+							    $('#debug').append(j+'Abc   '+data.queue[j].robot_name + '   ' + robotNames[i] +'   '+equals+'<br/>');
+							    sub_queues[i][sub_queues[i].length] = j;
+							}
+							lens[i] = sub_queues[i].length;
+						}
+						//html = html + '<th colspan="2">'+data.control[i].robot_name+"</th>";
+					}
+					for (var i = 0; i < len; i++) {
+					    html = html + '<th colspan="2">'+robotNames[i]+"</th>";
+					}
+					
+					var maxLen = Math.max.apply(Math, lens);
+					$('#debug').append('data.queue: '+JSON.stringify(data.queue)+'<br/>');
+					$('#debug').append('sub_queues: '+sub_queues+'<br/>');
+					$('#debug').append('Lens: '+lens+'<br/>');
+					$('#debug').append('maxLen: '+maxLen+'<br/>');
+				    $('#queue').css('width', 200 * len + len + 1);
+					$('#queue').css('float', 'right');
+					$('#queue th').css('width', 200);
+				    //alert(lens);
+					html = html + '</tr><tr>';
+					newOrder = [];
+					for (var i = 0; i < len; i++) {
+					    for (var j = 0; j < len; j++) {
+						    if (robotNames[i] == data.control[j].robot_name) {
+							    newOrder[i] = j
+							}
+						}
+					    
+					}
+					for (var i = 0; i < len; i++) {
+						if ((lens[i] == 0) || (data.queue.length == 0)) {
+						    html = html + '<td>1</td><td>'+data.control[newOrder[i]].first_name+" "+data.control[newOrder[i]].last_name+"</td>";
+						} else {
+						    timeleft = data.control[newOrder[i]].controltime - data.control[newOrder[i]].timeleft;
+						    html = html + '<td>1</td><td>'+data.control[newOrder[i]].first_name+" "+data.control[newOrder[i]].last_name+"<br/>("+timeleft+" seconds left)</td>";
+					    }
+					}
+					html = html + '</tr>';
+					for (var i = 0; i < maxLen; i++) {
+						
+						html = html + '<tr>';
+						for (var j = 0; j < len; j++) {
+						    position = i + 2;
+							
+						    if (i < lens[j]) {
+							    for (var k = 0; k < subLen; k++) {
+								    if (((i + 1) == data.queue[k].position) && (robotNames[j] == data.queue[k].robot_name)) {
+									    html = html + '<td>'+position+'</td><td>'+data.queue[k].first_name+" "+data.queue[k].last_name+'</td>'
+									}
+							        
+							    }
+							} else {
+							    html = html + '<td colspan="2" style="border:0;background:#c2e8f1;"></td>'
+							}
+						}
+						html = html + '</tr>';
+					}
+					html = html + '</table>';
+					$('#queue').html(html);
+					//alert(html);
+					//alert($('#queue').html());
+					/*
 					$('#status').html(data.status);
-					$('#queue').html(' ');
+					$('#queue').html('<tr>');
+					$.each(data.control, function(i, dataq) {
+					   
+					   var queue_data = "<th colspan='2'>"+dataq.robot_name+"</th>";
+					   
+					   $(queue_data).appendTo("#queue");
+					});
+					$('#queue').append('</tr>')
 					$.each(data.control, function(i, dataq) {
 					   var queue_data = "<tr><td>1</td><td>"+dataq.first_name+" "+dataq.last_name+"</td></tr>";
 					   
 					   $(queue_data).appendTo("#queue");
 					});
+					
 					$.each(data.queue, function(i, dataq) {
 					   var position = dataq.position + 1;
 					   var queue_data = "<tr><td>"+position+"</td><td>"+dataq.first_name+" "+dataq.last_name+"</td></tr>";
 					   
 					   $(queue_data).appendTo("#queue");
 					});
+					*/
 					if (!active && data.active) {
 					    time_left = 61;
 						countdown = true;
 					    
-						soundHandle = document.getElementById('soundHandle');
-						soundHandle.src = 'sounds/beep.mp3';
-						soundHandle.play();
+						if (playsound == true) {
+							soundHandle = document.getElementById('soundHandle');
+							soundHandle.src = 'sounds/beep.ogg';
+							soundHandle.play();
+						}
 					}
+					playsound = true;
 					active = data.active;
 					if (active) {
 						$('#status').css({'color':'red', 'font-weight':'bold'});
+						$('#control-tabs').show();
 					} else {
 						$('#status').css({'color':'black', 'font-weight':'normal'});
+						$('#control-tabs').hide();
 					}
 				});
 			}
@@ -382,7 +494,7 @@ if (!isset( $_SESSION['user_id'] )) {
                         dataType : 'html'
                     });
                 }
-                if (count >= 5000) {
+                if (count >= 1000) {
                     count = 0;
                     updateStatus();
                 }
@@ -403,7 +515,7 @@ if (!isset( $_SESSION['user_id'] )) {
                 
                 updateStatus();
 				setInterval(executeAction, 100);
-				setInterval(countDown, 1000);
+				//setInterval(countDown, 1000);
 
                 $("#left_is_red_face_north_south").show();
                 $("#on_left_is_red").click(function() {
