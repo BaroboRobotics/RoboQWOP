@@ -61,7 +61,6 @@ if (!isset( $_SESSION['user_id'] )) {
         <script src="js/libs/modernizr-2.5.3.min.js"></script>
     </head>
     <body>
-	
         <div role="main" id="page">
 		    <table id="queue"></table>
             <a style="margin: 0 auto; display: block;" href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
@@ -419,7 +418,6 @@ if (!isset( $_SESSION['user_id'] )) {
             function updateStatus() {
 			    $.getJSON('status.php', function(data) {
 					$('#status').html(data.status);
-					alert(data.controling_robot_id);
 					buildQueue(data);
 					time_left = data.timeleft;
 					if (time_left > 0  && countDownThread == null) {
