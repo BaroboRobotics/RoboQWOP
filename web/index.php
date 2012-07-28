@@ -17,6 +17,7 @@
     </head>
     <body>
         <div role="main" id="page" class="homepage">
+		    <table id="queue"></table>
             <a href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
             <h1>Robo QWOP</h1>
             <p>
@@ -54,5 +55,85 @@
         <script src="js/libs/jquery-ui-1.8.21.custom.min.js"></script>
         <script src="js/plugins.js"></script>
         <script src="js/script.js"></script>
+		        <script src="js/libs/jquery-ui-1.8.21.custom.min.js"></script>
+        <script src="js/plugins.js"></script>
+        <script src="js/script.js"></script>
+        <script type="text/javascript">
+            
+            function queueBox() {
+			    $.getJSON('queue_box.php', function(data) {
+					var robotNames = [];
+					var len = data.control.length;
+					var sub_queues = [];
+					var lens = [];
+					var html = '<table><tr>'
+					var subLen = data.queue.length;
+					for (var i = 0; i < len; i++) {
+						robotNames.push(data.control[i].robot_name);
+					}
+					var robotNames = robotNames.sort();
+					for (var i = 0; i < len; i++) {
+						sub_queues[i] = [];
+						for (var j = 0; j < subLen; j++) {
+							equals = (data.queue[j].robot_name == robotNames[i]);
+							if (data.queue[j].robot_name == robotNames[i]) {
+								sub_queues[i][sub_queues[i].length] = j;
+							}
+							lens[i] = sub_queues[i].length;
+						}
+					}
+					for (var i = 0; i < len; i++) {
+						html = html + '<th colspan="2">'+robotNames[i]+"</th>";
+					}
+					
+					var maxLen = Math.max.apply(Math, lens);
+					$('#queue').css('width', 200 * len + len + 1);
+					$('#queue').css('float', 'right');
+					$('#queue th').css('width', 200);
+					html = html + '</tr><tr>';
+					var newOrder = [];
+					for (var i = 0; i < len; i++) {
+						for (var j = 0; j < len; j++) {
+							if (robotNames[i] == data.control[j].robot_name) {
+								newOrder[i] = j
+							}
+						}
+					}
+					for (var i = 0; i < len; i++) {
+						if ((lens[i] == 0) || (data.queue.length == 0)) {
+							html = html + '<td>1</td><td>'+data.control[newOrder[i]].first_name+" "+data.control[newOrder[i]].last_name+"</td>";
+						} else {
+							var timeleft = data.control[newOrder[i]].timeleft;
+							html = html + '<td>1</td><td>'+data.control[newOrder[i]].first_name+" "+data.control[newOrder[i]].last_name+"<br/>("+timeleft+" seconds left)</td>";
+						}
+					}
+					html = html + '</tr>';
+					for (var i = 0; i < maxLen; i++) {
+						html = html + '<tr>';
+						for (var j = 0; j < len; j++) {
+							var position = i + 2;
+							if (i < lens[j]) {
+								for (var k = 0; k < subLen; k++) {
+									if (((i + 1) == data.queue[k].position) && (robotNames[j] == data.queue[k].robot_name)) {
+										html = html + '<td>'+position+'</td><td>'+data.queue[k].first_name+" "+data.queue[k].last_name+'</td>'
+									}
+											
+								}
+							} else {
+								html = html + '<td colspan="2" style="border:0;background:#c2e8f1;"></td>'
+							}
+						}
+						html = html + '</tr>';
+					}
+					html = html + '</table>';
+					$('#queue').html(html);
+				});
+            }
+
+            $(function() {
+				setInterval(queueBox, 1000);
+		    });
+
+        </script>
     </body>
 </html>
