@@ -62,6 +62,7 @@ if (!isset( $_SESSION['user_id'] )) {
     </head>
     <body>
         <div role="main" id="page">
+		    <div id="switch_robot"></div>
 		    <table id="queue"></table>
             <a style="margin: 0 auto; display: block;" href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
             <h1>Robo QWOP</h1>
@@ -418,6 +419,11 @@ if (!isset( $_SESSION['user_id'] )) {
             function updateStatus() {
 			    $.getJSON('status.php', function(data) {
 					$('#status').html(data.status);
+					$('#switch_robot').html('');
+					for (var i = 0; i < data.other_robots.length; i++) {
+					    $('#switch_robot').append('<a href="authenticate.php?robot='+data.other_robots[i].id+'">Switch to '+data.other_robots[i].name+' team</a><br/>');
+					}
+					$('#switch_robot').append()
 					buildQueue(data);
 					time_left = data.timeleft;
 					if (time_left > 0  && countDownThread == null) {

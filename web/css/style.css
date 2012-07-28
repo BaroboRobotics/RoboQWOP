@@ -195,8 +195,9 @@ table.controls .green {
     background:#000;
 }
 
-#queue table {
+#queue {
 float:right;
+clear:right;
 border-collapse:collapse;
 }
 
@@ -228,4 +229,10 @@ padding:5px;
 top:0; right:0;
 left:0;
 position:absolute;
+}
+
+#switch_robot {
+width:200px;
+float:right;
+text-align:right;
 }

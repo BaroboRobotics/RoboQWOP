@@ -125,7 +125,7 @@ try {
     // Get the users controlling the Mobot.
     $timeleft = 0;
     $control_result = '"control":[';
-    $sql = "SELECT c.created, c.control_time, c.user_id, u.first_name, u.last_name, u.country, r.name
+    $sql = "SELECT c.created, c.control_time, c.user_id, u.first_name, u.last_name, u.country, r.id, r.name
         FROM controllers c
         INNER JOIN users AS u on u.id = c.user_id
         INNER JOIN robots AS r on r.number = c.robot_number";
@@ -152,6 +152,7 @@ try {
             
             if ($row->user_id == $_SESSION['user_id']) {
                 $active = true;
+				$controlling_robot_id = $row->id;
                 $status = "You are controlling the Robot.";
                 $timeleft = $interval->format('%s');
             }
@@ -160,10 +161,30 @@ try {
         $result->close();
     }
     $control_result .= ']';
+	$other_robots = '"other_robots":[';
+    $sql = "SELECT number, name FROM robots WHERE id NOT IN (?)";
+    if ($stmt = $mysqli->prepare($sql)) {
+        $stmt->bind_param('i', $controlling_robot_id);
+        $stmt->execute();
+        $stmt->bind_result($r_id, $r_name);
+        $position = 1;
+        $comma = false;
+        while ($stmt->fetch()) {
+            if ($comma) {
+                $other_robots = $queue_result . ',';
+            } else {
+                $comma = true;
+            }
+            $other_robots .= '{ "id":' . $r_id . ',"name":"' . $r_name . '" }';
+        }
+        // Free result set
+        $stmt->close();
+    }
+    $other_robots .= ']';
     $mysqli->commit();
     $mysqli->close();
     $ret_val = '{"active":' . (($active) ? 'true' : 'false') . ', "status":"' . $status . '", ' . $queue_result
-        . ', ' . $control_result . ', "timeleft":"' . $timeleft . '"}';
+        . ', ' . $control_result . ', "timeleft":"' . $timeleft . '", ' . $other_robots . '}';
 } catch (Exception $e) {
     $mysqli->rollback();
     $ret_val = '{"active":false,"status":' . $e->getMessage() . '}';
