@@ -62,6 +62,7 @@ if (!isset( $_SESSION['user_id'] )) {
     </head>
     <body>
         <div role="main" id="page">
+		    <a href="logout.php" style="float:right;">Logout</a>
 		    <div id="switch_robot"></div>
 		    <table id="queue"></table>
             <a style="margin: 0 auto; display: block;" href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
