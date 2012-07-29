@@ -362,96 +362,99 @@ if (!isset( $_SESSION['user_id'] )) {
                         break;
                 }
             }
-            function buildQueue(data) {
-                var robotNames = [];
-                var number_of_columns = data.control.length;
-                var sub_queues = [];
-                var number_of_rows_in_each_column = [];
-                var html = '<table><tr>'
-                var queue_len = data.queue.length;
-				
-				// store robot names
-                for (var column = 0; column < number_of_columns; column++) {
-                    robotNames.push(data.control[column].robot_name);
-                }
-				console.log(robotNames);
-				// ensure the queue box columns are the same robot each time by sorting alphabetically
-                var robotNames = robotNames.sort();
-				
-				// because of sorting need to create control var
-				var control = [];
-				for (var column = 0; column < number_of_columns; column++) {
-				    for (var canidate = 0; canidate < number_of_columns; canidate++) {
-					    if (data.control[canidate].robot_name == robotNames[column]) {
-						    control.push(data.control[canidate])
+            function queueBox() {
+			    $.getJSON('queue_box.php', function(data) {
+					var robotNames = [];
+					var number_of_columns = data.control.length;
+					var sub_queues = [];
+					var number_of_rows_in_each_column = [];
+					var html = '<table><tr>'
+					var queue_len = data.queue.length;
+					
+					// store robot names
+					for (var column = 0; column < number_of_columns; column++) {
+						robotNames.push(data.control[column].robot_name);
+					}
+					console.log(robotNames);
+					// ensure the queue box columns are the same robot each time by sorting alphabetically
+					var robotNames = robotNames.sort();
+					
+					// because of sorting need to create control var
+					var control = [];
+					for (var column = 0; column < number_of_columns; column++) {
+						for (var canidate = 0; canidate < number_of_columns; canidate++) {
+							if (data.control[canidate].robot_name == robotNames[column]) {
+								control.push(data.control[canidate])
+							}
 						}
 					}
-				}
-				
-				// count number of rows in each column
-                for (var column = 0; column < number_of_columns; column++) {
-                    sub_queues[column] = [];
-                    for (var row = 0; row < queue_len; row++) {
-                        equals = (data.queue[row].robot_name == robotNames[column]);
-                        if (data.queue[row].robot_name == robotNames[column]) {
-                            sub_queues[column][sub_queues[column].length] = row;
-                        }
-                        number_of_rows_in_each_column[column] = sub_queues[column].length;
-                    }
-                }
-				
-				
-				console.log(JSON.stringify(data));
-				console.log(data.queue);
-				console.log(number_of_rows_in_each_column);
-				// print robot names
-                for (var column = 0; column < number_of_columns; column++) {
-                    html = html + '<th colspan="2">'+robotNames[column]+"</th>";
-                }
-                
-                var number_of_rows = Math.max.apply(Math, number_of_rows_in_each_column);
-                $('#queue').css('width', 200 * number_of_columns + number_of_columns + 1);
-                $('#queue').css('float', 'right');
-                $('#queue th').css('width', 200);
-                html = html + '</tr><tr>';
-                
-				// print users controlling each robot
-                for (var column = 0; column < number_of_columns; column++) {
-                    // don't show the time left if no one else is in the queue
-    				if ((number_of_rows_in_each_column[column] == 0) || (data.queue.length == 0)) {
-                        html = html + '<td>1</td><td>'+control[column].first_name+" "+control[column].last_name+"</td>";
-                    } else {
-                        var timeleft = control[column].timeleft;
-                        html = html + '<td>1</td><td>'+control[column].first_name+" "+control[column].last_name+"<br/>("+timeleft+" seconds left)</td>";
-                    }
-                }
-                html = html + '</tr>';
-				// show the users in the queue for each robot
-                for (var row = 0; row < number_of_rows; row++) {
-                    html = html + '<tr>';
-					var position = row + 2;
-                    for (var column = 0; column < number_of_columns; column++) {
-                        
-                        if (row < number_of_rows_in_each_column[column]) {
-						    console.log("Robot column: %s", robotNames[column]);
-                            for (var canidate = 0; canidate < queue_len; canidate++) {
-                                if (((row + 1) == data.queue[canidate].position) && (robotNames[column] == data.queue[canidate].robot_name)) {
-                                    html = html + '<td>'+position+'</td><td>'+data.queue[canidate].first_name+" "+data.queue[canidate].last_name+'</td>'
-                                }
-								if (data.queue[canidate].first_name == 'Timothy') {
-								    console.log("%d %d %s", row + 1, data.queue[canidate].position, robotNames[column], data.queue[canidate].robot_name);
-								}
-                                            
-                            }
+					
+					// count number of rows in each column
+					for (var column = 0; column < number_of_columns; column++) {
+						sub_queues[column] = [];
+						for (var row = 0; row < queue_len; row++) {
+							equals = (data.queue[row].robot_name == robotNames[column]);
+							if (data.queue[row].robot_name == robotNames[column]) {
+								sub_queues[column][sub_queues[column].length] = row;
+							}
+							number_of_rows_in_each_column[column] = sub_queues[column].length;
+						}
+					}
+					
+					
+					console.log(JSON.stringify(data));
+					console.log(data.queue);
+					console.log(number_of_rows_in_each_column);
+					// print robot names
+					for (var column = 0; column < number_of_columns; column++) {
+						html = html + '<th colspan="2">'+robotNames[column]+"</th>";
+					}
+					
+					var number_of_rows = Math.max.apply(Math, number_of_rows_in_each_column);
+					$('#queue').css('width', 200 * number_of_columns + number_of_columns + 1);
+					$('#queue').css('float', 'right');
+					$('#queue th').css('width', 200);
+					html = html + '</tr><tr>';
+					
+					// print users controlling each robot
+					for (var column = 0; column < number_of_columns; column++) {
+						// don't show the time left if no one else is in the queue
+						if ((number_of_rows_in_each_column[column] == 0) || (data.queue.length == 0)) {
+							html = html + '<td>1</td><td>'+control[column].first_name+" "+control[column].last_name+"</td>";
+						} else {
+							var timeleft = control[column].timeleft;
+							html = html + '<td>1</td><td>'+control[column].first_name+" "+control[column].last_name+"<br/>("+timeleft+" seconds left)</td>";
+						}
+					}
+					html = html + '</tr>';
+					// show the users in the queue for each robot
+					for (var row = 0; row < number_of_rows; row++) {
+						html = html + '<tr>';
+						var position = row + 2;
+						for (var column = 0; column < number_of_columns; column++) {
 							
-                        } else {
-                            html = html + '<td colspan="2" style="border:0;background:#c2e8f1;"></td>'
-                        }
-                    }
-                    html = html + '</tr>';
-                }
-                html = html + '</table>';
-                $('#queue').html(html);
+							if (row < number_of_rows_in_each_column[column]) {
+								console.log("Robot column: %s", robotNames[column]);
+								for (var canidate = 0; canidate < queue_len; canidate++) {
+									if (((row + 1) == data.queue[canidate].position) && (robotNames[column] == data.queue[canidate].robot_name)) {
+										html = html + '<td>'+position+'</td><td>'+data.queue[canidate].first_name+" "+data.queue[canidate].last_name+'</td>'
+									}
+									if (data.queue[canidate].first_name == 'Timothy') {
+										console.log("%d %d %s", row + 1, data.queue[canidate].position, robotNames[column], data.queue[canidate].robot_name);
+									}
+												
+								}
+								
+							} else {
+								html = html + '<td colspan="2" style="border:0;background:#c2e8f1;"></td>'
+							}
+						}
+						html = html + '</tr>';
+					}
+					html = html + '</table>';
+					$('#queue').html(html);
+            
+				});
             }
 
             function updateStatus() {
@@ -462,7 +465,6 @@ if (!isset( $_SESSION['user_id'] )) {
 					    $('#switch_robot').append('<a href="authenticate.php?robot='+data.other_robots[i].id+'">Switch to '+data.other_robots[i].name+' team</a><br/>');
 					}
 					$('#switch_robot').append()
-					buildQueue(data);
 					time_left = data.timeleft;
 					if (time_left > 0  && countDownThread == null) {
 					    startCountDown();
@@ -528,7 +530,8 @@ if (!isset( $_SESSION['user_id'] )) {
                 
                 updateStatus();
 				setInterval(executeAction, 100);
-
+                setInterval(queueBox, 1000);
+				
                 $("#left_is_red_face_north_south").show();
                 $("#on_left_is_red").click(function() {
                     $("#on_left_is_red").addClass('active');
