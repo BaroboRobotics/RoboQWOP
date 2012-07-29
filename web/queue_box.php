@@ -14,25 +14,38 @@ try {
     $status = "Error retrieving status information";
     // Get the users in the queue.
     $queue_result = '"queue":[';
-    $sql = "SELECT q.user_id, u.first_name, u.last_name, u.country, r.name
-        FROM queue q INNER JOIN users AS u on u.id = q.user_id 
-        INNER JOIN robots AS r on r.number = q.robot_number
-        ORDER BY q.created asc";
+    $sql = "SELECT number FROM robots";
     if ($stmt = $mysqli->prepare($sql)) {
         $stmt->execute();
-        $stmt->bind_result($r_user_id, $r_first_name, $r_last_name, $r_country, $r_robotname);
- 
+        $stmt->bind_result($robot_number);
         $comma = false;
         while ($stmt->fetch()) {
-            if ($comma) {
-                $queue_result = $queue_result . ',';
-            } else {
-                $comma = true;
-            }
-            $queue_result .= '{ "user_id":' . $r_user_id . ',"first_name":"' . $r_first_name
-                 . '", "last_name":"' . $r_last_name . '", "country":"' . $r_country
-                 . '", "position":' . $position . ', "robot_name":"' . $r_robotname . '" }';
-            
+		    //echo "$robot_number";
+			$mysqli2 = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+            $sql2 = "SELECT q.user_id, u.first_name, u.last_name, u.country, r.name
+				FROM queue q INNER JOIN users AS u on u.id = q.user_id 
+				INNER JOIN robots AS r on r.number = q.robot_number
+				WHERE q.robot_number = ? ORDER BY q.created asc";
+			if ($stmt2 = $mysqli2->prepare($sql2)) {
+			    $stmt2->bind_param('i', $robot_number);
+				$stmt2->execute();
+				$stmt2->bind_result($r_user_id, $r_first_name, $r_last_name, $r_country, $r_robotname);
+				$position = 1;
+				while ($stmt2->fetch()) {
+					if ($comma) {
+						$queue_result = $queue_result . ',';
+					} else {
+						$comma = true;
+					}
+					$queue_result .= '{ "user_id":' . $r_user_id . ',"first_name":"' . $r_first_name
+						 . '", "last_name":"' . $r_last_name . '", "country":"' . $r_country
+						 . '", "position":' . $position . ', "robot_name":"' . $r_robotname . '" }';
+					
+					$position += 1;
+				}
+				// Free result set
+				$stmt2->close();
+			}
         }
         // Free result set
         $stmt->close();
