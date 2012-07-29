@@ -194,9 +194,9 @@ table.controls .green {
 #oriented-controls .active, #oriented-controls .active:hover {
     background:#000;
 }
-
-#queue table {
-float:right;
+ 
+#queue {
+clear:right;
 border-collapse:collapse;
 }
 
@@ -229,3 +229,15 @@ top:0; right:0;
 left:0;
 position:absolute;
 }
+
+#switch_robot {
+width:200px;
+float:right;
+text-align:right;
+clear:right;
+}
+
+table.center {
+    margin-left:auto; 
+    margin-right:auto;
+  }
