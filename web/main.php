@@ -77,7 +77,7 @@ if (!isset( $_SESSION['user_id'] )) {
     }
     $mysqli->close();	?></strong> | <a href="logout.php" style="">Logout</a></p>
 		    <div id="switch_robot"></div>
-		    <table id="queue"></table>
+		    <table id="queue" style="float:right"></table>
             <a style="margin: 0 auto; display: block;" href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
             <h1>Robo QWOP</h1>
             <img src="img/imobot_diagram.png" alt="Mobot Diagram" title="Mobot Diagram" />

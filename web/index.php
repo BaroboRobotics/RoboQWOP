@@ -17,30 +17,13 @@
     </head>
     <body>
         <div role="main" id="page" class="homepage">
-		    <table id="queue"></table>
             <a href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
             <h1>Robo QWOP</h1>
             <p>
                 Best way to play with a mobot without owning one.
             </p>
-            <p>
-                <?php
-                    require 'config.php';
-                    $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-                    if (mysqli_connect_errno()) {
-                        echo 'The database is Offline: ' . mysqli_connect_error();
-                    } else {
-                        if ($results = $mysqli->query("SELECT name, number FROM robots")) {
-                            while ($row = $results->fetch_object()) {
-                                echo '<p><a href="authenticate.php?robot=' . $row->number . '">Connect to the ' . $row->name . '</a></p> ';
-                            }
-                            // Free result set
-                            $results->close();
-                        }
-                        $mysqli->close();
-                    }
-                ?>
-            </p>
+            
+                <table id="queue" class="center"></table><br/>
             <div class="social-widget">
                 <a target="_blank" href="http://twitter.com/BaroboRobotics"> <img src="img/icons/twitter.png" alt="Twitter" width="40" /> </a>
                 <a target="_blank" href="http://www.facebook.com/barobo"> <img src="img/icons/facebook.png" alt="Facebook" width="40" /> </a>
@@ -76,13 +59,14 @@
 					console.log(robotNames);
 					// ensure the queue box columns are the same robot each time by sorting alphabetically
 					var robotNames = robotNames.sort();
-					
+					var robotIds = [];
 					// because of sorting need to create control var
 					var control = [];
 					for (var column = 0; column < number_of_columns; column++) {
 						for (var canidate = 0; canidate < number_of_columns; canidate++) {
 							if (data.control[canidate].robot_name == robotNames[column]) {
-								control.push(data.control[canidate])
+								control.push(data.control[canidate]);
+								robotIds.push(data.control[canidate].robot_id);
 							}
 						}
 					}
@@ -105,12 +89,11 @@
 					console.log(number_of_rows_in_each_column);
 					// print robot names
 					for (var column = 0; column < number_of_columns; column++) {
-						html = html + '<th colspan="2">'+robotNames[column]+"</th>";
+						html = html + '<th colspan="2"><a href="authenticate.php?robot='+robotIds[column]+'">Connect to the '+robotNames[column]+"</a></th>";
 					}
 					
 					var number_of_rows = Math.max.apply(Math, number_of_rows_in_each_column);
 					$('#queue').css('width', 200 * number_of_columns + number_of_columns + 1);
-					$('#queue').css('float', 'right');
 					$('#queue th').css('width', 200);
 					html = html + '</tr><tr>';
 					
@@ -163,6 +146,7 @@
             }
 
             $(function() {
+			    queueBox();
 				setInterval(queueBox, 1000);
 		    });
 

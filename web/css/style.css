@@ -194,9 +194,8 @@ table.controls .green {
 #oriented-controls .active, #oriented-controls .active:hover {
     background:#000;
 }
-
+ 
 #queue {
-float:right;
 clear:right;
 border-collapse:collapse;
 }
@@ -237,3 +236,8 @@ float:right;
 text-align:right;
 clear:right;
 }
+
+table.center {
+    margin-left:auto; 
+    margin-right:auto;
+  }
