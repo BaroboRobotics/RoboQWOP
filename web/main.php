@@ -418,13 +418,19 @@ if (!isset( $_SESSION['user_id'] )) {
 					
 					// print users controlling each robot
 					for (var column = 0; column < number_of_columns; column++) {
-						// don't show the time left if no one else is in the queue
-						if ((number_of_rows_in_each_column[column] == 0) || (data.queue.length == 0)) {
-							html = html + '<td>1</td><td>'+control[column].first_name+" "+control[column].last_name+"</td>";
+					    // make sure someone is controlling the given robot before trying to print name
+						if (control[column].exists == "no") {
+						    html = html + '<td colspan="2" style="border:0;background:#c2e8f1;"></td>'
 						} else {
-							var timeleft = control[column].timeleft;
-							html = html + '<td>1</td><td>'+control[column].first_name+" "+control[column].last_name+"<br/>("+timeleft+" seconds left)</td>";
+						    // don't show the time left if no one else is in the queue
+							if ((number_of_rows_in_each_column[column] == 0) || (data.queue.length == 0)) {
+								html = html + '<td>1</td><td>'+control[column].first_name+" "+control[column].last_name+"</td>";
+							} else {
+								var timeleft = control[column].timeleft;
+								html = html + '<td>1</td><td>'+control[column].first_name+" "+control[column].last_name+"<br/>("+timeleft+" seconds left)</td>";
+							}
 						}
+						
 					}
 					html = html + '</tr>';
 					// show the users in the queue for each robot

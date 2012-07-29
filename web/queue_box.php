@@ -55,35 +55,60 @@ try {
     // Get the users controlling the Mobot.
     $timeleft = 0;
     $control_result = '"control":[';
-    $sql = "SELECT c.created, c.control_time, c.user_id, u.first_name, u.last_name, u.country, r.id, r.name
-        FROM controllers c
-        INNER JOIN users AS u on u.id = c.user_id
-        INNER JOIN robots AS r on r.number = c.robot_number";
-    if ($result = $mysqli->query($sql)) {
-        $count = mysqli_num_rows($result);
+    $sql = "SELECT number, name FROM robots";
+    if ($result = $mysqli->prepare($sql)) {
+		$result->execute();
+		$result->bind_result($robot_number, $robot_name);
         // Cycle through results
         $comma = false;
-        while ($row = $result->fetch_object()) {
-            if ($comma) {
-                $control_result = $control_result . ',';
-            } else {
-                $comma = true;
-            }
-            // Calculate the number of seconds left to control the mobot.
-            $created_date = new DateTime($row->created);
-            $created_date->add(new DateInterval("PT" . $row->control_time . "S"));
-            $now_date = new DateTime();
-            $interval = $now_date->diff($created_date);
-
-            $control_result .= '{ "user_id":' . $row->user_id . ',"first_name":"' . $row->first_name
-                 . '", "last_name":"' . $row->last_name . '", "country":"' . $row->country
-                 . '", "robot_name":"' . $row->name . '","timeleft":' . $interval->format('%s') 
-                 . ',"controltime":' . $row->control_time . ' }';
+        while ($row = $result->fetch()) {
+            $exists = "no";
+            $mysqli2 = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+			$sql2 = "SELECT c.created, c.control_time, c.user_id, u.first_name, u.last_name, u.country, r.name
+				FROM controllers c
+				INNER JOIN users AS u on u.id = c.user_id
+				INNER JOIN robots AS r on r.number = c.robot_number and c.robot_number = ?";
+			if ($result2 = $mysqli2->prepare($sql2)) {
+			    $result2->bind_param('i', $robot_number);
+				$result2->execute();
+				$result2->bind_result($c_created, $c_control_time, $c_user_id, $u_first_name, $u_last_name, $u_country, $r_name);
+				// Cycle through results
+				while ($row2 = $result2->fetch()) {
+					if ($comma) {
+						$control_result = $control_result . ',';
+					} else {
+						$comma = true;
+					}
+					// Calculate the number of seconds left to control the mobot.
+					$created_date = new DateTime($c_created);
+					$created_date->add(new DateInterval("PT" . $c_control_time . "S"));
+					$now_date = new DateTime();
+					$interval = $now_date->diff($created_date);
+                    $exists = "yes";
+					$control_result .= '{ "exists":"yes", "user_id":' . $c_user_id . ',"first_name":"' . $u_first_name
+						 . '", "last_name":"' . $u_last_name . '", "country":"' . $u_country
+						 . '", "robot_name":"' . $r_name . '","timeleft":' . $interval->format('%s') 
+						 . ',"controltime":' . $c_control_time . ' }';
+					
+				}
+				// Free result set
+				$result2->close();
+				
+			}
+			if ($exists == "no") {
+				if ($comma) {
+					$control_result = $control_result . ',';
+				} else {
+					$comma = true;
+				}
+				$control_result .= '{ "exists":"no", "robot_name":"' . $robot_name . '"}';
+			}
             
         }
         // Free result set
         $result->close();
     }
+
     $control_result .= ']';
 
     $mysqli->commit();
