@@ -62,7 +62,22 @@ if (!isset( $_SESSION['user_id'] )) {
     </head>
     <body>
         <div role="main" id="page">
-		    <table id="queue"></table>
+		    <p style="float:right"><strong><?php 
+	// the user's name is printed to help debuggers track which user they are logged into when they have multiple windows open with different users
+    // use Google Chrome profiles feature to how many windows opened with different Google accounts	
+	$mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+	$sql = "SELECT first_name, last_name FROM users WHERE id = ?";
+    if ($stmt = $mysqli->prepare($sql)) {
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $stmt->bind_result($first_name, $last_name);
+		while ($stmt->fetch()) {
+            echo "$first_name $last_name";	
+        }
+    }
+    $mysqli->close();	?></strong> | <a href="logout.php" style="">Logout</a></p>
+		    <div id="switch_robot"></div>
+		    <table id="queue" style="float:right"></table>
             <a style="margin: 0 auto; display: block;" href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
             <h1>Robo QWOP</h1>
             <img src="img/imobot_diagram.png" alt="Mobot Diagram" title="Mobot Diagram" />
@@ -347,78 +362,115 @@ if (!isset( $_SESSION['user_id'] )) {
                         break;
                 }
             }
-            function buildQueue(data) {
-                var robotNames = [];
-                var len = data.control.length;
-                var sub_queues = [];
-                var lens = [];
-                var html = '<table><tr>'
-                var subLen = data.queue.length;
-                for (var i = 0; i < len; i++) {
-                    robotNames.push(data.control[i].robot_name);
-                }
-                var robotNames = robotNames.sort();
-                for (var i = 0; i < len; i++) {
-                    sub_queues[i] = [];
-                    for (var j = 0; j < subLen; j++) {
-                        equals = (data.queue[j].robot_name == robotNames[i]);
-                        if (data.queue[j].robot_name == robotNames[i]) {
-                            sub_queues[i][sub_queues[i].length] = j;
-                        }
-                        lens[i] = sub_queues[i].length;
-                    }
-                }
-                for (var i = 0; i < len; i++) {
-                    html = html + '<th colspan="2">'+robotNames[i]+"</th>";
-                }
-                
-                var maxLen = Math.max.apply(Math, lens);
-                $('#queue').css('width', 200 * len + len + 1);
-                $('#queue').css('float', 'right');
-                $('#queue th').css('width', 200);
-                html = html + '</tr><tr>';
-                var newOrder = [];
-                for (var i = 0; i < len; i++) {
-                    for (var j = 0; j < len; j++) {
-                        if (robotNames[i] == data.control[j].robot_name) {
-                            newOrder[i] = j
-                        }
-                    }
-                }
-                for (var i = 0; i < len; i++) {
-                    if ((lens[i] == 0) || (data.queue.length == 0)) {
-                        html = html + '<td>1</td><td>'+data.control[newOrder[i]].first_name+" "+data.control[newOrder[i]].last_name+"</td>";
-                    } else {
-                        var timeleft = data.control[newOrder[i]].timeleft;
-                        html = html + '<td>1</td><td>'+data.control[newOrder[i]].first_name+" "+data.control[newOrder[i]].last_name+"<br/>("+timeleft+" seconds left)</td>";
-                    }
-                }
-                html = html + '</tr>';
-                for (var i = 0; i < maxLen; i++) {
-                    html = html + '<tr>';
-                    for (var j = 0; j < len; j++) {
-                        var position = i + 2;
-                        if (i < lens[j]) {
-                            for (var k = 0; k < subLen; k++) {
-                                if (((i + 1) == data.queue[k].position) && (robotNames[j] == data.queue[k].robot_name)) {
-                                    html = html + '<td>'+position+'</td><td>'+data.queue[k].first_name+" "+data.queue[k].last_name+'</td>'
-                                }
-                                        
-                            }
-                        } else {
-                            html = html + '<td colspan="2" style="border:0;background:#c2e8f1;"></td>'
-                        }
-                    }
-                    html = html + '</tr>';
-                }
-                html = html + '</table>';
-                $('#queue').html(html);
+            function queueBox() {
+			    $.getJSON('queue_box.php', function(data) {
+					var robotNames = [];
+					var number_of_columns = data.control.length;
+					var sub_queues = [];
+					var number_of_rows_in_each_column = [];
+					var html = '<table><tr>'
+					var queue_len = data.queue.length;
+					
+					// store robot names
+					for (var column = 0; column < number_of_columns; column++) {
+						robotNames.push(data.control[column].robot_name);
+					}
+					console.log(robotNames);
+					// ensure the queue box columns are the same robot each time by sorting alphabetically
+					var robotNames = robotNames.sort();
+					
+					// because of sorting need to create control var
+					var control = [];
+					for (var column = 0; column < number_of_columns; column++) {
+						for (var canidate = 0; canidate < number_of_columns; canidate++) {
+							if (data.control[canidate].robot_name == robotNames[column]) {
+								control.push(data.control[canidate])
+							}
+						}
+					}
+					
+					// count number of rows in each column
+					for (var column = 0; column < number_of_columns; column++) {
+						sub_queues[column] = [];
+						for (var row = 0; row < queue_len; row++) {
+							equals = (data.queue[row].robot_name == robotNames[column]);
+							if (data.queue[row].robot_name == robotNames[column]) {
+								sub_queues[column][sub_queues[column].length] = row;
+							}
+							number_of_rows_in_each_column[column] = sub_queues[column].length;
+						}
+					}
+					
+					
+					console.log(JSON.stringify(data));
+					console.log(data.queue);
+					console.log(number_of_rows_in_each_column);
+					// print robot names
+					for (var column = 0; column < number_of_columns; column++) {
+						html = html + '<th colspan="2">'+robotNames[column]+"</th>";
+					}
+					
+					var number_of_rows = Math.max.apply(Math, number_of_rows_in_each_column);
+					$('#queue').css('width', 200 * number_of_columns + number_of_columns + 1);
+					$('#queue').css('float', 'right');
+					$('#queue th').css('width', 200);
+					html = html + '</tr><tr>';
+					
+					// print users controlling each robot
+					for (var column = 0; column < number_of_columns; column++) {
+					    // make sure someone is controlling the given robot before trying to print name
+						if (control[column].exists == "no") {
+						    html = html + '<td colspan="2" style="border:0;background:#c2e8f1;"></td>'
+						} else {
+						    // don't show the time left if no one else is in the queue
+							if ((number_of_rows_in_each_column[column] == 0) || (data.queue.length == 0)) {
+								html = html + '<td>1</td><td>'+control[column].first_name+" "+control[column].last_name+"</td>";
+							} else {
+								var timeleft = control[column].timeleft;
+								html = html + '<td>1</td><td>'+control[column].first_name+" "+control[column].last_name+"<br/>("+timeleft+" seconds left)</td>";
+							}
+						}
+						
+					}
+					html = html + '</tr>';
+					// show the users in the queue for each robot
+					for (var row = 0; row < number_of_rows; row++) {
+						html = html + '<tr>';
+						var position = row + 2;
+						for (var column = 0; column < number_of_columns; column++) {
+							
+							if (row < number_of_rows_in_each_column[column]) {
+								console.log("Robot column: %s", robotNames[column]);
+								for (var canidate = 0; canidate < queue_len; canidate++) {
+									if (((row + 1) == data.queue[canidate].position) && (robotNames[column] == data.queue[canidate].robot_name)) {
+										html = html + '<td>'+position+'</td><td>'+data.queue[canidate].first_name+" "+data.queue[canidate].last_name+'</td>'
+									}
+									if (data.queue[canidate].first_name == 'Timothy') {
+										console.log("%d %d %s", row + 1, data.queue[canidate].position, robotNames[column], data.queue[canidate].robot_name);
+									}
+												
+								}
+								
+							} else {
+								html = html + '<td colspan="2" style="border:0;background:#c2e8f1;"></td>'
+							}
+						}
+						html = html + '</tr>';
+					}
+					html = html + '</table>';
+					$('#queue').html(html);
+            
+				});
             }
 
             function updateStatus() {
 			    $.getJSON('status.php', function(data) {
 					$('#status').html(data.status);
-					buildQueue(data);
+					$('#switch_robot').html('');
+					for (var i = 0; i < data.other_robots.length; i++) {
+					    $('#switch_robot').append('<a href="authenticate.php?robot='+data.other_robots[i].id+'">Switch to '+data.other_robots[i].name+' team</a><br/>');
+					}
+					$('#switch_robot').append()
 					time_left = data.timeleft;
 					if (time_left > 0  && countDownThread == null) {
 					    startCountDown();
@@ -484,7 +536,8 @@ if (!isset( $_SESSION['user_id'] )) {
                 
                 updateStatus();
 				setInterval(executeAction, 100);
-
+                setInterval(queueBox, 1000);
+				
                 $("#left_is_red_face_north_south").show();
                 $("#on_left_is_red").click(function() {
                     $("#on_left_is_red").addClass('active');
