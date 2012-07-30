@@ -297,22 +297,6 @@ if (!isset( $_SESSION['user_id'] )) {
                     send = true;
                 }
             }
-            function countDown() {
-                time_left = time_left - 1;
-                if (time_left <= 0) {
-                    $('#time_left').hide();
-                    clearInterval(countDownThread);
-                    countDownThread = null;
-                } else {
-                    $('#time_left').text('You have ' + time_left + ' seconds left.').show();
-                }
-			}
-			function startCountDown() {
-			    if (countDownThread !== null) {
-			        clearInterval(countDownThread);
-			    }
-                countDownThread = setInterval(countDown, 1000);
-            }
             function handleKeyEvent(keyCode, down) {
                 if (active) {
                     executeKeyEvent(keyCode, down);
@@ -437,6 +421,9 @@ if (!isset( $_SESSION['user_id'] )) {
 							} else {
 								var timeleft = control[column].timeleft;
 								html = html + '<td>1</td><td>'+control[column].first_name+" "+control[column].last_name+"<br/>("+timeleft+" seconds left)</td>";
+								if ((current_robot == robotIds[column]) && (active == true)) {
+								    $('#time_left').text('You have '+timeleft+' seconds left.');
+								}
 							}
 						}
 						
@@ -474,18 +461,17 @@ if (!isset( $_SESSION['user_id'] )) {
 
             function updateStatus() {
 			    $.getJSON('status.php', function(data) {
-					time_left = data.timeleft;
-					if (time_left > 0  && countDownThread == null) {
-					    startCountDown();
-					}
+					$('#status').html(data.status);
 					if (!active && data.active) {
 						playSound();
 					}
 					active = data.active;
 					if (active) {
 						$('#status').css({'color':'red', 'font-weight':'bold'});
+						$('#time_left').show();
 					} else {
 						$('#status').css({'color':'black', 'font-weight':'normal'});
+						$('#time_left').hide();
 					}
 				});
 			}
