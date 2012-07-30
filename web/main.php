@@ -292,6 +292,15 @@ if (!isset( $_SESSION['user_id'] )) {
             var send = false;
             var active = false;
             var count = 0;
+			function oc(a)
+			{
+			  var o = {};
+			  for(var i=0;i<a.length;i++)
+			  {
+				o[a[i]]='';
+			  }
+			  return o;
+			}
             function enableSend(oldval, newval) {
                 if (oldval !== newval) {
                     send = true;
@@ -301,8 +310,11 @@ if (!isset( $_SESSION['user_id'] )) {
                 if (active) {
                     executeKeyEvent(keyCode, down);
                 } else {
-                    $('#action-errors').html('<p><strong>Error:</strong> You are not in control of the robot.</p>').show().delay(10000).fadeOut(); // show error message for ten seconds
-                }
+				    // only show error if the key pressed is one of the control keys not arrow or CTRL buttons
+					if (keyCode in oc([81, 87, 69, 82, 85, 73, 79, 80])) {
+                        $('#action-errors').html('<p><strong>Error:</strong> You are not in control of the robot.</p>').show().delay(10000).fadeOut(); // show error message for ten seconds
+                    }  
+    			}
             }
             function executeKeyEvent(keyCode, down) {
                 var oldval;
