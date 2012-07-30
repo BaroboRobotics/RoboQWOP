@@ -64,7 +64,7 @@ if (!isset( $_SESSION['user_id'] )) {
         <div role="main" id="page">
 		    <p style="float:right"><strong><?php 
 	// the user's name is printed to help debuggers track which user they are logged into when they have multiple windows open with different users
-    // use Google Chrome profiles feature to how many windows opened with different Google accounts	
+    // use Google Chrome profiles feature to have many windows opened with different Google accounts	
 	$mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 	$sql = "SELECT first_name, last_name FROM users WHERE id = ?";
     if ($stmt = $mysqli->prepare($sql)) {
@@ -76,7 +76,6 @@ if (!isset( $_SESSION['user_id'] )) {
         }
     }
     $mysqli->close();	?></strong> | <a href="logout.php" style="">Logout</a></p>
-		    <div id="switch_robot"></div>
 		    <table id="queue" style="float:right"></table>
             <a style="margin: 0 auto; display: block;" href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
             <h1>Robo QWOP</h1>
@@ -281,6 +280,10 @@ if (!isset( $_SESSION['user_id'] )) {
         <script src="js/libs/jquery-ui-1.8.21.custom.min.js"></script>
         <script src="js/plugins.js"></script>
         <script src="js/script.js"></script>
+		<script type="text/javascript">
+		    var current_robot = <?php echo $_SESSION['robot']; ?>;
+			console.log("current robot id: %d", current_robot);
+		</script>
         <script type="text/javascript">
             var q = 0; var w = 0; var o = 0; var p = 0;
             var u = 0; var i = 0; var e = 0; var r = 0;
@@ -378,13 +381,14 @@ if (!isset( $_SESSION['user_id'] )) {
 					console.log(robotNames);
 					// ensure the queue box columns are the same robot each time by sorting alphabetically
 					var robotNames = robotNames.sort();
-					
+					var robotIds = [];
 					// because of sorting need to create control var
 					var control = [];
 					for (var column = 0; column < number_of_columns; column++) {
 						for (var canidate = 0; canidate < number_of_columns; canidate++) {
 							if (data.control[canidate].robot_name == robotNames[column]) {
-								control.push(data.control[canidate])
+								control.push(data.control[canidate]);
+								robotIds.push(data.control[canidate].robot_id);
 							}
 						}
 					}
@@ -407,7 +411,12 @@ if (!isset( $_SESSION['user_id'] )) {
 					console.log(number_of_rows_in_each_column);
 					// print robot names
 					for (var column = 0; column < number_of_columns; column++) {
-						html = html + '<th colspan="2">'+robotNames[column]+"</th>";
+					    console.log("robot id: %d", robotIds[column]);
+					    if (robotIds[column] == current_robot) {
+						    html = html + '<th colspan="2">'+robotNames[column]+"</th>";
+						} else {
+						    html = html + '<th colspan="2"><a href="authenticate.php?robot='+robotIds[column]+'">Switch to the '+robotNames[column]+"</a></th>";
+					    }
 					}
 					
 					var number_of_rows = Math.max.apply(Math, number_of_rows_in_each_column);
@@ -465,12 +474,6 @@ if (!isset( $_SESSION['user_id'] )) {
 
             function updateStatus() {
 			    $.getJSON('status.php', function(data) {
-					$('#status').html(data.status);
-					$('#switch_robot').html('');
-					for (var i = 0; i < data.other_robots.length; i++) {
-					    $('#switch_robot').append('<a href="authenticate.php?robot='+data.other_robots[i].id+'">Switch to '+data.other_robots[i].name+' team</a><br/>');
-					}
-					$('#switch_robot').append()
 					time_left = data.timeleft;
 					if (time_left > 0  && countDownThread == null) {
 					    startCountDown();

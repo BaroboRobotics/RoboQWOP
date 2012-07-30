@@ -64,7 +64,7 @@ try {
         while ($row = $result->fetch()) {
             $exists = "no";
             $mysqli2 = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-			$sql2 = "SELECT c.created, c.control_time, c.user_id, u.first_name, u.last_name, u.country, r.name, r.id
+			$sql2 = "SELECT c.created, c.control_time, c.user_id, u.first_name, u.last_name, u.country, r.name, r.number
 				FROM controllers c
 				INNER JOIN users AS u on u.id = c.user_id
 				INNER JOIN robots AS r on r.number = c.robot_number and c.robot_number = ?";
@@ -101,7 +101,7 @@ try {
 				} else {
 					$comma = true;
 				}
-				$control_result .= '{ "exists":"no", "robot_name":"' . $robot_name . '"}';
+				$control_result .= '{ "exists":"no", "robot_name":"' . $robot_name . '", "robot_id": ' . $robot_number . '}';
 			}
             
         }
