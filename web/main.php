@@ -264,6 +264,7 @@ if (!isset( $_SESSION['user_id'] )) {
                 </div>
 				<p>Speed Slider</p>
                 <div id="slider" style="width: 250px; margin: 10px 0;"></div>
+				<p>Execute many commands: <input type="text" id="commands" /><input id="execute_commands" type="button" value="Execute Commands" /></p>
             </div>
             <div class="social-widget" style="margin-top: 50px;">
                 <a target="_blank" href="http://twitter.com/BaroboRobotics"> <img src="img/icons/twitter.png" alt="Twitter" width="40" /> </a>
@@ -317,6 +318,8 @@ if (!isset( $_SESSION['user_id'] )) {
     			}
             }
             function executeKeyEvent(keyCode, down) {
+			    console.log('Keycode: %d', keyCode);
+				alert(keyCode);
                 var oldval;
                 switch (keyCode) {
                     case 81:
@@ -469,6 +472,7 @@ if (!isset( $_SESSION['user_id'] )) {
 					$('#queue').html(html);
             
 				});
+				
             }
 
             function updateStatus() {
@@ -522,9 +526,11 @@ if (!isset( $_SESSION['user_id'] )) {
                 }
             }
             $(document).keydown(function(event) {
+			    if($("#commands").is(":focus")) return; //Will fail if already focused. 
                 handleKeyEvent(event.keyCode, true);
             });
             $(document).keyup(function(event) {
+			    if($("#commands").is(":focus")) return; //Will fail if already focused. 
                 handleKeyEvent(event.keyCode, false);
             });
             $(function() {
@@ -584,6 +590,43 @@ if (!isset( $_SESSION['user_id'] )) {
                         $("#bottom_is_green_face_east_west").show();
                     }
                 });
+				$('#execute_commands').click(function() {
+				    if (!active) {
+                        $('#action-errors').html('<p><strong>Error:</strong> You are not in control of the robot.</p>').show().delay(10000).fadeOut(); // show error message for ten seconds
+						return; 
+					}
+					var commands = $('#commands').val().split(''); // get commands as array
+					
+					for (var command = 0; command < commands.length; command++) {
+					    switch (commands[command]) {
+						    case 'q':
+							    executeKeyEvent(81, false); 
+								break;
+						    case 'w':
+							    executeKeyEvent(87, false); 
+								break;
+							case 'e':
+							    executeKeyEvent(69, false); 
+								break;
+							case 'r':
+							    executeKeyEvent(82, false); 
+								break;
+							case 'u':
+							    executeKeyEvent(85, false); 
+								break;
+							case 'i':
+							    executeKeyEvent(73, false); 
+								break;
+							case 'o':
+							    executeKeyEvent(79, false); 
+								break;
+							case 'p':
+							    executeKeyEvent(80, false); 
+								break;
+						}
+						
+					}
+				});
             });
 
             $(document).mouseup(function(event) {
