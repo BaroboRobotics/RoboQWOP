@@ -301,7 +301,7 @@ if (!isset( $_SESSION['user_id'] )) {
                 if (active) {
                     executeKeyEvent(keyCode, down);
                 } else {
-                    $('#action-errors').html('<p><strong>Error:</strong> You not in control of the robot.</p>').show();
+                    $('#action-errors').html('<p><strong>Error:</strong> You are not in control of the robot.</p>').show().delay(10000).fadeOut(); // show error message for ten seconds
                 }
             }
             function executeKeyEvent(keyCode, down) {
