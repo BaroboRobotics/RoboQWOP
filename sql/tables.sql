@@ -51,3 +51,10 @@ CREATE TABLE IF NOT EXISTS robot_arena (
     name VARCHAR(100),
     unique(name)
 ) ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS admins (
+    id INT NOT NULL AUTO_INCREMENT,
+	PRIMARY KEY(id),
+	user_id INT NOT NULL,
+	unique(user_id)
+) ENGINE = InnoDB;
