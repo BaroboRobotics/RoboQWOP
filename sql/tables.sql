@@ -44,3 +44,10 @@ CREATE TABLE IF NOT EXISTS controllers (
     robot_number INT NOT NULL DEFAULT 0,
     unique(user_id)
 ) ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS robot_arena (
+    id INT NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY(id),
+    name VARCHAR(100),
+    unique(name)
+) ENGINE = InnoDB;
