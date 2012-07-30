@@ -1,3 +1,84 @@
+<?php
+require 'includes/lightopenid/openid.php';
+include 'config.php';
+session_start();
+$mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+
+if (!mysqli_connect_errno()) {
+	// Check for admin users if no admins create one
+	if ($result = $mysqli->query("SELECT id FROM admins")) {
+		$row_cnt = $result -> num_rows;
+		
+		
+		if ($row_cnt == 0) {
+			if (!isset( $_SESSION['user_id'] )) { // if not logged in then log the user in 
+				$openid = new LightOpenID($_SERVER['HTTP_HOST']);
+
+				if(!$openid->mode) {
+					//do the login
+					
+					//The google openid url
+					$openid->identity = 'https://www.google.com/accounts/o8/id';
+						
+					//Get additional google account information about the user , name , email , country
+					$openid->required = array('contact/email' , 'namePerson/first' , 'namePerson/last' , 'pref/language' , 'contact/country/home'); 
+						
+					//start discovery
+					header('Location: ' . $openid->authUrl());
+				} else if($openid->mode == 'cancel') {
+					header('Location: index.php');
+				} else if ($openid->validate()) {
+					//User logged in
+					$d = $openid->getAttributes();
+					
+					$first_name = $d['namePerson/first'];
+					$last_name = $d['namePerson/last'];
+					$email = $d['contact/email'];
+					$language_code = $d['pref/language'];
+					$country_code = $d['contact/country/home'];
+					$user_id = NULL;
+					// See if there is an existing user record.
+					if ($stmt = $mysqli->prepare("SELECT id FROM users WHERE email = ?")) {
+						$stmt->bind_param('s', $email);
+						$stmt->execute();
+						$stmt->bind_result($user_id);
+						$stmt->fetch();
+						$stmt->close();
+					}
+					// Create or update a user record.
+					if (is_null($user_id) || $user_id <= 0) {
+						// New user record.
+						if ($stmt = $mysqli->prepare("INSERT INTO users (email, first_name, last_name, country, created, last_seen) values (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)")) {
+							$stmt->bind_param('ssss', $email, $first_name, $last_name, $country_code);
+							$stmt->execute();
+							$user_id = $stmt->insert_id;
+							$_SESSION['user_id'] = $user_id;
+							$stmt->close();
+						}
+					} else {
+						// Existing user record.
+						if ($stmt = $mysqli->prepare("UPDATE users SET email = ?, first_name = ?, last_name = ?, country = ?, last_seen = CURRENT_TIMESTAMP where email = ?")) {
+							$stmt->bind_param('sssss', $email, $first_name, $last_name, $country_code, $email);
+							$stmt->execute();
+							$_SESSION['user_id'] = $user_id;
+							$stmt->close();
+						}
+					}
+				}	
+			}
+		    $user_id = $_SESSION['user_id'];
+			$sql = "INSERT INTO admins (user_id) values (?)";
+            if ($stmt = $mysqli -> prepare($sql)) {
+                $stmt -> bind_param('i', $user_id);
+                $stmt -> execute();
+                $stmt -> close();
+            }   
+		}
+
+	}
+}
+$mysqli->close();
+?>
 <!doctype html>
 <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
 <!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->

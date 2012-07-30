@@ -64,7 +64,7 @@ if (!isset( $_SESSION['user_id'] )) {
         <div role="main" id="page">
 		    <p style="float:right"><strong><?php 
 	// the user's name is printed to help debuggers track which user they are logged into when they have multiple windows open with different users
-    // use Google Chrome profiles feature to how many windows opened with different Google accounts	
+    // use Google Chrome profiles feature to have many windows opened with different Google accounts	
 	$mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 	$sql = "SELECT first_name, last_name FROM users WHERE id = ?";
     if ($stmt = $mysqli->prepare($sql)) {
@@ -76,7 +76,6 @@ if (!isset( $_SESSION['user_id'] )) {
         }
     }
     $mysqli->close();	?></strong> | <a href="logout.php" style="">Logout</a></p>
-		    <div id="switch_robot"></div>
 		    <table id="queue" style="float:right"></table>
             <a style="margin: 0 auto; display: block;" href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
             <h1>Robo QWOP</h1>
@@ -265,6 +264,7 @@ if (!isset( $_SESSION['user_id'] )) {
                 </div>
 				<p>Speed Slider</p>
                 <div id="slider" style="width: 250px; margin: 10px 0;"></div>
+				<p>Execute many commands: <input type="text" id="commands" /><input id="execute_commands" type="button" value="Execute Commands" /></p>
             </div>
             <div class="social-widget" style="margin-top: 50px;">
                 <a target="_blank" href="http://twitter.com/BaroboRobotics"> <img src="img/icons/twitter.png" alt="Twitter" width="40" /> </a>
@@ -281,6 +281,10 @@ if (!isset( $_SESSION['user_id'] )) {
         <script src="js/libs/jquery-ui-1.8.21.custom.min.js"></script>
         <script src="js/plugins.js"></script>
         <script src="js/script.js"></script>
+		<script type="text/javascript">
+		    var current_robot = <?php echo $_SESSION['robot']; ?>;
+			console.log("current robot id: %d", current_robot);
+		</script>
         <script type="text/javascript">
             var q = 0; var w = 0; var o = 0; var p = 0;
             var u = 0; var i = 0; var e = 0; var r = 0;
@@ -289,35 +293,33 @@ if (!isset( $_SESSION['user_id'] )) {
             var send = false;
             var active = false;
             var count = 0;
+			function oc(a)
+			{
+			  var o = {};
+			  for(var i=0;i<a.length;i++)
+			  {
+				o[a[i]]='';
+			  }
+			  return o;
+			}
             function enableSend(oldval, newval) {
                 if (oldval !== newval) {
                     send = true;
                 }
             }
-            function countDown() {
-                time_left = time_left - 1;
-                if (time_left <= 0) {
-                    $('#time_left').hide();
-                    clearInterval(countDownThread);
-                    countDownThread = null;
-                } else {
-                    $('#time_left').text('You have ' + time_left + ' seconds left.').show();
-                }
-			}
-			function startCountDown() {
-			    if (countDownThread !== null) {
-			        clearInterval(countDownThread);
-			    }
-                countDownThread = setInterval(countDown, 1000);
-            }
             function handleKeyEvent(keyCode, down) {
                 if (active) {
                     executeKeyEvent(keyCode, down);
                 } else {
-                    $('#action-errors').html('<p><strong>Error:</strong> You not in control of the robot.</p>').show();
-                }
+				    // only show error if the key pressed is one of the control keys not arrow or CTRL buttons
+					if (keyCode in oc([81, 87, 69, 82, 85, 73, 79, 80])) {
+                        $('#action-errors').html('<p><strong>Error:</strong> You are not in control of the robot.</p>').show().delay(10000).fadeOut(); // show error message for ten seconds
+                    }  
+    			}
             }
             function executeKeyEvent(keyCode, down) {
+			    console.log('Keycode: %d', keyCode);
+				alert(keyCode);
                 var oldval;
                 switch (keyCode) {
                     case 81:
@@ -378,13 +380,14 @@ if (!isset( $_SESSION['user_id'] )) {
 					console.log(robotNames);
 					// ensure the queue box columns are the same robot each time by sorting alphabetically
 					var robotNames = robotNames.sort();
-					
+					var robotIds = [];
 					// because of sorting need to create control var
 					var control = [];
 					for (var column = 0; column < number_of_columns; column++) {
 						for (var canidate = 0; canidate < number_of_columns; canidate++) {
 							if (data.control[canidate].robot_name == robotNames[column]) {
-								control.push(data.control[canidate])
+								control.push(data.control[canidate]);
+								robotIds.push(data.control[canidate].robot_id);
 							}
 						}
 					}
@@ -407,7 +410,12 @@ if (!isset( $_SESSION['user_id'] )) {
 					console.log(number_of_rows_in_each_column);
 					// print robot names
 					for (var column = 0; column < number_of_columns; column++) {
-						html = html + '<th colspan="2">'+robotNames[column]+"</th>";
+					    console.log("robot id: %d", robotIds[column]);
+					    if (robotIds[column] == current_robot) {
+						    html = html + '<th colspan="2">'+robotNames[column]+"</th>";
+						} else {
+						    html = html + '<th colspan="2"><a href="authenticate.php?robot='+robotIds[column]+'">Switch to the '+robotNames[column]+"</a></th>";
+					    }
 					}
 					
 					var number_of_rows = Math.max.apply(Math, number_of_rows_in_each_column);
@@ -428,6 +436,9 @@ if (!isset( $_SESSION['user_id'] )) {
 							} else {
 								var timeleft = control[column].timeleft;
 								html = html + '<td>1</td><td>'+control[column].first_name+" "+control[column].last_name+"<br/>("+timeleft+" seconds left)</td>";
+								if ((current_robot == robotIds[column]) && (active == true)) {
+								    $('#time_left').text('You have '+timeleft+' seconds left.');
+								}
 							}
 						}
 						
@@ -461,28 +472,22 @@ if (!isset( $_SESSION['user_id'] )) {
 					$('#queue').html(html);
             
 				});
+				
             }
 
             function updateStatus() {
 			    $.getJSON('status.php', function(data) {
 					$('#status').html(data.status);
-					$('#switch_robot').html('');
-					for (var i = 0; i < data.other_robots.length; i++) {
-					    $('#switch_robot').append('<a href="authenticate.php?robot='+data.other_robots[i].id+'">Switch to '+data.other_robots[i].name+' team</a><br/>');
-					}
-					$('#switch_robot').append()
-					time_left = data.timeleft;
-					if (time_left > 0  && countDownThread == null) {
-					    startCountDown();
-					}
 					if (!active && data.active) {
 						playSound();
 					}
 					active = data.active;
 					if (active) {
 						$('#status').css({'color':'red', 'font-weight':'bold'});
+						$('#time_left').show();
 					} else {
 						$('#status').css({'color':'black', 'font-weight':'normal'});
+						$('#time_left').hide();
 					}
 				});
 			}
@@ -521,9 +526,11 @@ if (!isset( $_SESSION['user_id'] )) {
                 }
             }
             $(document).keydown(function(event) {
+			    if($("#commands").is(":focus")) return; //Will fail if already focused. 
                 handleKeyEvent(event.keyCode, true);
             });
             $(document).keyup(function(event) {
+			    if($("#commands").is(":focus")) return; //Will fail if already focused. 
                 handleKeyEvent(event.keyCode, false);
             });
             $(function() {
@@ -583,6 +590,43 @@ if (!isset( $_SESSION['user_id'] )) {
                         $("#bottom_is_green_face_east_west").show();
                     }
                 });
+				$('#execute_commands').click(function() {
+				    if (!active) {
+                        $('#action-errors').html('<p><strong>Error:</strong> You are not in control of the robot.</p>').show().delay(10000).fadeOut(); // show error message for ten seconds
+						return; 
+					}
+					var commands = $('#commands').val().split(''); // get commands as array
+					
+					for (var command = 0; command < commands.length; command++) {
+					    switch (commands[command]) {
+						    case 'q':
+							    executeKeyEvent(81, false); 
+								break;
+						    case 'w':
+							    executeKeyEvent(87, false); 
+								break;
+							case 'e':
+							    executeKeyEvent(69, false); 
+								break;
+							case 'r':
+							    executeKeyEvent(82, false); 
+								break;
+							case 'u':
+							    executeKeyEvent(85, false); 
+								break;
+							case 'i':
+							    executeKeyEvent(73, false); 
+								break;
+							case 'o':
+							    executeKeyEvent(79, false); 
+								break;
+							case 'p':
+							    executeKeyEvent(80, false); 
+								break;
+						}
+						
+					}
+				});
             });
 
             $(document).mouseup(function(event) {
