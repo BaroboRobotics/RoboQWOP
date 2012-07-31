@@ -9,7 +9,7 @@ LIBS = -lmobot ${shell mysql_config --libs}
 	$(CC) -c -o $@ $< $(CFLAGS) $(INCLUDES)
 
 mobot_server: $(OBJ)
-	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^ $(LIBS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
 clean:
 	rm *.o mobot_server
 

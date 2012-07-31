@@ -196,48 +196,50 @@ table.controls .green {
 }
  
 #queue {
-clear:right;
-border-collapse:collapse;
+    clear:right;
+    border-collapse:collapse;
 }
 
 #queue td, #queue th {
-background:#FFF;
-padding:5px;
-border:1px solid orange;
+    background:#FFF;
+    padding:5px;
+    border:1px solid orange;
 }
 
 #queue th {
-width:200px;
+    width:200px;
 }
 
 .in_control td {
-background:orange;
-color:#FFF;
+    background:orange;
+    color:#FFF;
 }
 
 #oriented-controls .key {
-float:right;
-}
-
-#notactiveerror {
-display:none;
-background:red;
-text-align:center;
-color:#FFF;
-padding:5px;
-top:0; right:0;
-left:0;
-position:absolute;
+    float:right;
 }
 
 #switch_robot {
-width:200px;
-float:right;
-text-align:right;
-clear:right;
+    width:200px;
+    float:right;
+    text-align:right;
+    clear:right;
 }
 
 table.center {
     margin-left:auto; 
     margin-right:auto;
-  }
+}
+
+/* Info Display */
+#info-display table {
+    float: left;
+    margin-left: 2px;
+    width:200px;
+}
+
+#info-display table td, #info-display table th {
+    background:#FFF;
+    padding:5px;
+    border:1px solid orange;
+}

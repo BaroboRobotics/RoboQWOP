@@ -3,20 +3,22 @@ include 'config.php';
 header('Content-type: application/json');
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    echo '{ "result":"error","msg":"invalid session id" }';
+    echo '{ "active":false,"status":"invalid session id" }';
     exit();
 }
 $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 if (mysqli_connect_errno()) {
-    echo '{ "result":"error","msg":"Connection failed" }';
+    echo '{ "active":false,"status":"Connection failed" }';
     exit();
 }
 
 $ret_val = '{"active":false,"status":"Error occurred retrieving status."}';
 
 try {
+     // Update the last active time for the current user.
+    $mysqli->query("UPDATE queue SET last_active = CURRENT_TIMESTAMP WHERE user_id = " . $_SESSION['user_id']);
+    /*
     // Manage queue and controllers.
-    $mysqli->autocommit(FALSE);
     // Update the last active time for the current user.
     $mysqli->query("UPDATE queue SET last_active = CURRENT_TIMESTAMP WHERE user_id = " . $_SESSION['user_id']);
     // Remove any controllers that are over their timelimit.
@@ -83,70 +85,70 @@ try {
             $mysqli->query("DELETE FROM queue where id = " . $queue_id);
         } 
     }
-    
+    */
+
     // Get the statistics, used to show users the status of the queue and their position.
+    $timeleft = 0;
     $active = false;
     $status = "Error retrieving status information";
     // Get the users in the queue.
-    $queue_result = '"queue":[';
-    $sql = "SELECT number FROM robots";
-    if ($stmt = $mysqli->prepare($sql)) {
-        $stmt->execute();
-        $stmt->bind_result($robot_number);
+    $robots_val = "[";
+    $queue_val = "[";
+    $controllers_val = "[";
+    $sql = "SELECT name, number, address FROM robots";
+    if ($result = $mysqli->query($sql)) {
         $comma = false;
-        while ($stmt->fetch()) {
-		    //echo "$robot_number";
-			$mysqli2 = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-            $sql2 = "SELECT q.user_id, u.first_name, u.last_name, u.country, r.name
-				FROM queue q INNER JOIN users AS u on u.id = q.user_id 
-				INNER JOIN robots AS r on r.number = q.robot_number
-				WHERE q.robot_number = ? ORDER BY q.created asc";
-			if ($stmt2 = $mysqli2->prepare($sql2)) {
-			    $stmt2->bind_param('i', $robot_number);
-				$stmt2->execute();
-				$stmt2->bind_result($r_user_id, $r_first_name, $r_last_name, $r_country, $r_robotname);
-				$position = 1;
-				while ($stmt2->fetch()) {
-					if ($comma) {
-						$queue_result = $queue_result . ',';
-					} else {
-						$comma = true;
-					}
-					$queue_result .= '{ "user_id":' . $r_user_id . ',"first_name":"' . $r_first_name
-						 . '", "last_name":"' . $r_last_name . '", "country":"' . $r_country
-						 . '", "position":' . $position . ', "robot_name":"' . $r_robotname . '" }';
-					if ($r_user_id == $_SESSION['user_id']) {
-						if ($position == 1) {
-							$status = "There is 1 user in front of you.";
-						} else {
-							$status = "There are $position users in front of you.";
-						}
-					}
-					$position += 1;
-				}
-				// Free result set
-				$stmt2->close();
-			}
+        while ($row = $result->fetch_object()) {
+            if ($comma) {
+                $robots_val .= ',';
+            } else {
+                $comma = true;
+            }
+            $robots_val .= '{"name":"' . $row->name . '", "number":' . $row->number
+                . ', "address":"' . $row->address . '" }';
         }
-        // Free result set
-        $stmt->close();
+        $result->close();
     }
-    $queue_result .= ']';
-    
-    // Get the users controlling the Mobot.
-    $timeleft = 0;
-    $control_result = '"control":[';
-    $sql = "SELECT c.created, c.control_time, c.user_id, u.first_name, u.last_name, u.country, r.id, r.name
+    // Get queue information.
+    $position = 1;
+    $sql = "SELECT q.user_id, u.first_name, u.last_name, u.country, r.name, q.robot_number
+                FROM queue q INNER JOIN users AS u on u.id = q.user_id 
+                INNER JOIN robots AS r on r.number = q.robot_number
+                ORDER BY q.robot_number, q.created asc";
+
+    if ($result = $mysqli->query($sql)) {
+        $comma = false;
+        while ($row = $result->fetch_object()) {
+            if ($comma) {
+                $queue_val .= ',';
+            } else {
+                $comma = true;
+            }
+            $queue_val .= '{"user_id":' . $row->user_id . ',"first_name":"' . $row->first_name
+                         . '", "last_name":"' . $row->last_name . '", "country":"' . $row->country
+                         . '", "robot_name":"' . $row->name . '", "robot_number":' . $row->robot_number . '}';
+            if ($row->user_id == $_SESSION['user_id']) {
+                if ($position == 1) {
+                    $status = "There is 1 user in front of you.";
+                } else {
+                    $status = "There are $position users in front of you.";
+                }
+            }
+            if ($row->robot_number == $_SESSION['robot']) {
+                $position++;
+            }
+        }
+        $result->close();
+    }
+    $sql = "SELECT c.created, c.control_time, c.user_id, u.first_name, u.last_name, u.country, r.name, c.robot_number
         FROM controllers c
         INNER JOIN users AS u on u.id = c.user_id
         INNER JOIN robots AS r on r.number = c.robot_number";
     if ($result = $mysqli->query($sql)) {
-        $count = mysqli_num_rows($result);
-        // Cycle through results
         $comma = false;
         while ($row = $result->fetch_object()) {
             if ($comma) {
-                $control_result = $control_result . ',';
+                $controllers_val .= ',';
             } else {
                 $comma = true;
             }
@@ -154,51 +156,30 @@ try {
             $created_date = new DateTime($row->created);
             $created_date->add(new DateInterval("PT" . $row->control_time . "S"));
             $now_date = new DateTime();
-            $interval = $now_date->diff($created_date);
+            $interval = $created_date->diff($now_date);
 
-            $control_result .= '{ "user_id":' . $row->user_id . ',"first_name":"' . $row->first_name
+            $controllers_val .= '{"user_id":' . $row->user_id . ',"first_name":"' . $row->first_name
                  . '", "last_name":"' . $row->last_name . '", "country":"' . $row->country
-                 . '", "robot_name":"' . $row->name . '","timeleft":' . $interval->format('%s') 
-                 . ',"controltime":' . $row->control_time . ' }';
-            
+                 . '", "robot_name":"' . $row->name . '","robot_number":' . $row->robot_number . ', "time_left":' . $interval->format('%s') 
+                 . ',"control_time":' . $row->control_time . ' }';
             if ($row->user_id == $_SESSION['user_id']) {
                 $active = true;
-				$controlling_robot_id = $row->id;
                 $status = "You are controlling the Robot.";
                 $timeleft = $interval->format('%s');
             }
         }
-        // Free result set
         $result->close();
-    }
-    $control_result .= ']';
-	$other_robots = '"other_robots":[';
-    $sql = "SELECT number, name FROM robots WHERE id NOT IN (?)";
-    if ($stmt = $mysqli->prepare($sql)) {
-        $stmt->bind_param('i', $controlling_robot_id);
-        $stmt->execute();
-        $stmt->bind_result($r_id, $r_name);
-        $comma = false;
-        while ($stmt->fetch()) {
-            if ($comma) {
-                $other_robots = $other_robots . ',';
-            } else {
-                $comma = true;
-            }
-            $other_robots .= '{ "id":' . $r_id . ',"name":"' . $r_name . '" }';
-        }
-        // Free result set
-        $stmt->close();
-    }
-    $other_robots .= ']';
-    $mysqli->commit();
-    $mysqli->close();
-    $ret_val = '{"active":' . (($active) ? 'true' : 'false') . ', "status":"' . $status . '", ' . $queue_result
-        . ', ' . $control_result . ', "timeleft":"' . $timeleft . '", ' . $other_robots . '}';
+     }
+    $robots_val .= "]";
+    $queue_val .= "]";
+    $controllers_val .= "]";
+    
+    $ret_val = '{"active":' . (($active) ? 'true' : 'false') . ', "status":"' . $status
+        . '", "timeleft":' . $timeleft . ', "robots":' . $robots_val . ', "queue":' . $queue_val
+        . ', "controllers":' . $controllers_val . '}';
 } catch (Exception $e) {
-    $mysqli->rollback();
-    $ret_val = '{"active":false,"status":' . $e->getMessage() . '}';
+    $ret_val = '{"active":false,"status":"' . $e->getMessage() . '"}';
 }
-
+$mysqli->close();
 echo $ret_val;
 ?>

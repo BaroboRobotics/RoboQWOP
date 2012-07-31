@@ -20,13 +20,11 @@ try {
         $stmt->bind_result($robot_number);
         $comma = false;
         while ($stmt->fetch()) {
-		    //echo "$robot_number";
-			$mysqli2 = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-            $sql2 = "SELECT q.user_id, u.first_name, u.last_name, u.country, r.name
+            $sql = "SELECT q.user_id, u.first_name, u.last_name, u.country, r.name
 				FROM queue q INNER JOIN users AS u on u.id = q.user_id 
 				INNER JOIN robots AS r on r.number = q.robot_number
 				WHERE q.robot_number = ? ORDER BY q.created asc";
-			if ($stmt2 = $mysqli2->prepare($sql2)) {
+			if ($stmt2 = $mysqli->prepare($sql)) {
 			    $stmt2->bind_param('i', $robot_number);
 				$stmt2->execute();
 				$stmt2->bind_result($r_user_id, $r_first_name, $r_last_name, $r_country, $r_robotname);
@@ -63,12 +61,11 @@ try {
         $comma = false;
         while ($row = $result->fetch()) {
             $exists = "no";
-            $mysqli2 = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-			$sql2 = "SELECT c.created, c.control_time, c.user_id, u.first_name, u.last_name, u.country, r.name, r.id
+			$sql = "SELECT c.created, c.control_time, c.user_id, u.first_name, u.last_name, u.country, r.name, r.id
 				FROM controllers c
 				INNER JOIN users AS u on u.id = c.user_id
 				INNER JOIN robots AS r on r.number = c.robot_number and c.robot_number = ?";
-			if ($result2 = $mysqli2->prepare($sql2)) {
+			if ($result2 = $mysqli->prepare($sql)) {
 			    $result2->bind_param('i', $robot_number);
 				$result2->execute();
 				$result2->bind_result($c_created, $c_control_time, $c_user_id, $u_first_name, $u_last_name, $u_country, $r_name, $r_id);

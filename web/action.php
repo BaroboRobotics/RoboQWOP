@@ -13,6 +13,7 @@ if (mysqli_connect_errno()) {
     echo '{ "result":"error","msg":"Connection failed" }';
     exit();
 }
+
 $robot_number = NULL;
 // Validate the active user and get the robot number.
 if ($stmt = $mysqli->prepare("SELECT robot_number FROM controllers WHERE user_id = ?")) {
@@ -28,7 +29,18 @@ if (is_null($robot_number)) {
     echo '{ "result":"error","msg":"You are not controlling the Mobot(s)" }';
     exit();
 }
-
+$host = "localhost";
+$port = 8082 + $robot_number;
+// TODO this code will need to be cleaned up.
+if (isset($_POST["reset"])) {
+    if (!$fp = fsockopen($host, $port, $errno, $errstr, 2)) {
+        echo '{"result":"error", "msg": "' . $errstr . '"}';
+        exit();
+    }
+    fputs($fp, "$robot_number,1,0\n");
+    echo '{ "result":"success" }';
+    exit();
+}
 $fp1 = 0;
 $fp2 = 0;
 $bj1 = 0;
@@ -67,8 +79,6 @@ if ($_POST["e"] == "1") {
 } else if ($_POST["r"] == "1") {
         $bj2 = 1;
 }
-$host = "localhost";
-$port = 8082 + $robot_number;
 
 if (!$fp = fsockopen($host, $port, $errno, $errstr, 2)) {
     echo '{"result":"error", "msg": "' . $errstr . '"}';
