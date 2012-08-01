@@ -31,8 +31,10 @@ CREATE TABLE IF NOT EXISTS robots (
     PRIMARY KEY(id),
     address CHAR(17),
     name VARCHAR(100),
-	color1 VARCHAR(6),
-	color2 VARCHAR(6),
+	color1_hex VARCHAR(6),
+	color2_hex VARCHAR(6),
+	color1_name VARCHAR(10),
+	color2_name VARCHAR(10),
     number INT NOT NULL,
     UNIQUE(number)
 ) ENGINE = InnoDB;

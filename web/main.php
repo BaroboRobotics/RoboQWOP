@@ -85,25 +85,23 @@ if (!isset( $_SESSION['user_id'] )) {
 			<div id="action-errors"></div>
 			<style>
 			<?php 
-	$sql = "SELECT color1, color2 FROM robots WHERE number = ?";
-    if ($stmt = $mysqli->prepare($sql)) {
-        $stmt->bind_param('i', $_SESSION['robot']);
-        $stmt->execute();
-        $stmt->bind_result($color1, $color2);
-		while ($stmt->fetch()) { ?>
+	$sql = "SELECT color1_hex, color2_hex, color1_name, color2_name FROM robots WHERE number = " . $_SESSION['robot'];
+	$result = $mysqli->query($sql);
+	$row = $result->fetch_object();
+
+	$color1_hex = $row->color1_hex;
+	$color2_hex = $row->color1_hex;
+	$color1_name = $row->color1_name;
+	$color2_name = $row->color2_name;
+	$result->close;
+		?>
             .color1 {
-			background:#<?php echo "$color1"; ?>;
+			background:#<?php echo "$color1_hex"; ?>;
 			}
 			
 			.color2 {
-			background:#<?php echo "$color2"; ?>;
+			background:#<?php echo "$color2_hex"; ?>;
 			}
-			<?php
-			
-        }
-        $stmt->close();
-    }
-    $mysqli->close(); ?>
 			
 			
 			</style>
@@ -145,9 +143,9 @@ if (!isset( $_SESSION['user_id'] )) {
                     <table>
                         <tr>
                             <th rowspan="2">Orientation</th><td>
-                            <input type="button" value="Red is on left" id="on_left_is_red" class="button active" />
+                            <input type="button" value="<?php echo "$color1_name"; ?>" id="on_left_is_red" class="button active" />
                             </td><td>
-                            <input type="button" value="Green is on left" id="on_left_is_green" class="button" />
+                            <input type="button" value="<?php echo "$color2_name"; ?>" id="on_left_is_green" class="button" />
                             </td>
                         </tr>
                         <tr>
