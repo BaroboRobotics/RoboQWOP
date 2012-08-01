@@ -315,7 +315,9 @@ int process_command(char *commands, int length) {
 				get_state(values[1]));
 		break;
 	case CMD_MOVE_TO_ZERO:
-		mobot[mobot_num].moveToZero();
+		mobot[mobot_num].moveJointTo(MOBOT_JOINT2, 0);
+		mobot[mobot_num].moveJointTo(MOBOT_JOINT3, 0);
+		// mobot[mobot_num].moveToZero();
 		break;
 	default:
 		printf("Unknown command\n");
