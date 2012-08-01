@@ -140,7 +140,6 @@ if (!isset( $_SESSION['user_id'] )) {
                             </tr>
                         </tbody>
                     </table>
-                    <p><button onclick="doReset();">Reset</button></p>
                 </div>
                 <div id="oriented-controls">
                     <table>
@@ -288,6 +287,7 @@ if (!isset( $_SESSION['user_id'] )) {
                     </table>
 					
                 </div>
+                <p><button onclick="doReset();">Reset</button></p>
 				<p>Speed Slider</p>
                 <div id="slider" style="width: 250px; margin: 10px 0;"></div>
             </div>
