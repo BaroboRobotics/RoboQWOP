@@ -76,13 +76,37 @@ if (!isset( $_SESSION['user_id'] )) {
         }
         $stmt->close();
     }
-    $mysqli->close();	?></strong> | <a href="logout.php" style="">Logout</a></p>
+	?></strong> | <a href="logout.php" style="">Logout</a></p>
 		    <div id="info-display" style="float:right; clear:both;"></div>
             <a style="margin: 0 auto; display: block;" href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
             <h1>Robo QWOP</h1>
             <img src="img/imobot_diagram.png" alt="Mobot Diagram" title="Mobot Diagram" />
 			<p><span id="status">Retrieving status information.</span> <span id="time_left"></span></p>
 			<div id="action-errors"></div>
+			<style>
+			<?php 
+	$sql = "SELECT color1, color2 FROM robots WHERE number = ?";
+    if ($stmt = $mysqli->prepare($sql)) {
+        $stmt->bind_param('i', $_SESSION['robot']);
+        $stmt->execute();
+        $stmt->bind_result($color1, $color2);
+		while ($stmt->fetch()) { ?>
+            .color1 {
+			background:#<?php echo "$color1"; ?>;
+			}
+			
+			.color2 {
+			background:#<?php echo "$color2"; ?>;
+			}
+			<?php
+			
+        }
+        $stmt->close();
+    }
+    $mysqli->close(); ?>
+			
+			
+			</style>
             <div id="control-tabs">
                 <ul>
                     <li><a href="#default-controls">Default Controls</a></li>
@@ -102,17 +126,17 @@ if (!isset( $_SESSION['user_id'] )) {
                         <tbody>
                             <tr>
                                 <td>Forward</td>
-                                <td class="red"><input class="key-button" type="button" onmousedown="handleKeyEvent(87, true);" value="W" /></td>
-                                <td class="red"><input class="key-button" type="button" onmousedown="handleKeyEvent(82, true);" value="R" /></td>
-                                <td class="green"><input class="key-button" type="button" onmousedown="handleKeyEvent(73, true);" value="I" /></td>
-                                <td class="green"><input class="key-button" type="button" onmousedown="handleKeyEvent(79, true);" value="O" /></td>
+                                <td class="color1"><input class="key-button" type="button" onmousedown="handleKeyEvent(87, true);" value="W" /></td>
+                                <td class="color1"><input class="key-button" type="button" onmousedown="handleKeyEvent(82, true);" value="R" /></td>
+                                <td class="color2"><input class="key-button" type="button" onmousedown="handleKeyEvent(73, true);" value="I" /></td>
+                                <td class="color2"><input class="key-button" type="button" onmousedown="handleKeyEvent(79, true);" value="O" /></td>
                             </tr>
                             <tr>
                                 <td>Backwards</td>
-                                <td class="red"><input class="key-button" type="button" onmousedown="handleKeyEvent(81, true);" value="Q" /></td>
-                                <td class="red"><input class="key-button" type="button" onmousedown="handleKeyEvent(69, true);" value="E" /></td>
-                                <td class="green"><input class="key-button" type="button" onmousedown="handleKeyEvent(85, true);" value="U" /></td>
-                                <td class="green"><input class="key-button" type="button" onmousedown="handleKeyEvent(80, true);" value="P" /></td>
+                                <td class="color1"><input class="key-button" type="button" onmousedown="handleKeyEvent(81, true);" value="Q" /></td>
+                                <td class="color1"><input class="key-button" type="button" onmousedown="handleKeyEvent(69, true);" value="E" /></td>
+                                <td class="color2"><input class="key-button" type="button" onmousedown="handleKeyEvent(85, true);" value="U" /></td>
+                                <td class="color2"><input class="key-button" type="button" onmousedown="handleKeyEvent(80, true);" value="P" /></td>
                             </tr>
                         </tbody>
                     </table>
@@ -153,16 +177,16 @@ if (!isset( $_SESSION['user_id'] )) {
                         </tr>
                         <tr>
                             <td>
-                            <input type="button" value="Northeast R" onmousedown="handleKeyEvent(82, true);" class="red" />
+                            <input type="button" value="Northeast R" onmousedown="handleKeyEvent(82, true);" class="color1" />
                             </td><td>
-                            <input type="button" value="Northwest U" onmousedown="handleKeyEvent(85, true);" class="green" />
+                            <input type="button" value="Northwest U" onmousedown="handleKeyEvent(85, true);" class="color2" />
                             </td>
                         </tr>
                         <tr>
                             <td>
-                            <input type="button" value="Southeast E" onmousedown="handleKeyEvent(69, true);" class="red" />
+                            <input type="button" value="Southeast E" onmousedown="handleKeyEvent(69, true);" class="color1" />
                             </td><td>
-                            <input type="button" value="Southwest I" onmousedown="handleKeyEvent(73, true);" class="green" />
+                            <input type="button" value="Southwest I" onmousedown="handleKeyEvent(73, true);" class="color2" />
                             </td>
                         </tr>
                     </table>
@@ -184,16 +208,16 @@ if (!isset( $_SESSION['user_id'] )) {
                         </tr>
                         <tr>
                             <td>
-                            <input type="button" value="Northwest I" onmousedown="handleKeyEvent(73, true);" class="green" />
+                            <input type="button" value="Northwest I" onmousedown="handleKeyEvent(73, true);" class="color2" />
                             </td><td>
-                            <input type="button" value="Northeast E" onmousedown="handleKeyEvent(69, true);" class="red" />
+                            <input type="button" value="Northeast E" onmousedown="handleKeyEvent(69, true);" class="color1" />
                             </td>
                         </tr>
                         <tr>
                             <td>
-                            <input type="button" value="Southwest U" onmousedown="handleKeyEvent(85, true);" class="green" />
+                            <input type="button" value="Southwest U" onmousedown="handleKeyEvent(85, true);" class="color2" />
                             </td><td>
-                            <input type="button" value="Southeast R" onmousedown="handleKeyEvent(82, true);" class="red" />
+                            <input type="button" value="Southeast R" onmousedown="handleKeyEvent(82, true);" class="color1" />
                             </td>
                         </tr>
                     </table>
@@ -217,16 +241,16 @@ if (!isset( $_SESSION['user_id'] )) {
                     
                         <tr>
                             <td>
-                            <input type="button" value="Southwest R" onmousedown="handleKeyEvent(82, true);" class="red" />
+                            <input type="button" value="Southwest R" onmousedown="handleKeyEvent(82, true);" class="color1" />
                             </td><td>
-                            <input type="button" value="Southeast E" onmousedown="handleKeyEvent(69, true);" class="red" />
+                            <input type="button" value="Southeast E" onmousedown="handleKeyEvent(69, true);" class="color1" />
                             </td>
                         </tr>
                         <tr>
                             <td>
-                            <input type="button" value="Northwest U" onmousedown="handleKeyEvent(85, true);" class="green" />
+                            <input type="button" value="Northwest U" onmousedown="handleKeyEvent(85, true);" class="color2" />
                             </td><td>
-                            <input type="button" value="Northeast I" onmousedown="handleKeyEvent(73, true);" class="green" />
+                            <input type="button" value="Northeast I" onmousedown="handleKeyEvent(73, true);" class="color2" />
                             </td>
                         </tr>
                     </table>
@@ -249,16 +273,16 @@ if (!isset( $_SESSION['user_id'] )) {
                     
                         <tr>
                             <td>
-                            <input type="button" value="Southwest R" onmousedown="handleKeyEvent(73, true);" class="green" />
+                            <input type="button" value="Southwest R" onmousedown="handleKeyEvent(73, true);" class="color2" />
                             </td><td>
-                            <input type="button" value="Southeast E" onmousedown="handleKeyEvent(85, true);" class="green" />
+                            <input type="button" value="Southeast E" onmousedown="handleKeyEvent(85, true);" class="color2" />
                             </td>
                         </tr>
                         <tr>
                             <td>
-                            <input type="button" value="Northwest U" onmousedown="handleKeyEvent(69, true);" class="red" />
+                            <input type="button" value="Northwest U" onmousedown="handleKeyEvent(69, true);" class="color1" />
                             </td><td>
-                            <input type="button" value="Northeast I" onmousedown="handleKeyEvent(82, true);" class="red" />
+                            <input type="button" value="Northeast I" onmousedown="handleKeyEvent(82, true);" class="color1" />
                             </td>
                         </tr>
                     </table>
