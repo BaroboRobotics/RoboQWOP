@@ -27,6 +27,7 @@ CMobot mobot[ROBOTS];
 char *addresses[ROBOTS] = { NULL };
 int max_mobot_index = 0;
 double last_speed[ROBOTS];
+int num_seconds[ROBOTS] = { 0 };
 
 int main(int arc, char **argv) {
 	pthread_t threads[ROBOTS];
@@ -101,12 +102,18 @@ void *comm_thread(void *robot_id_val) {
 void *keep_connected(void *id_val) {
 	int robots;
 	while (1) {
-		for (robots = 0; robots < max_mobot_index; robots++) {
+		for (robots = 0; robots <= max_mobot_index; robots++) {
 			while (!mobot[robots].isConnected()) {
 				printf("Lost connection to the Mobot, attempting to re-connect.\n");
 				mobot[robots].disconnect();
 				mobot[robots].connectWithAddress(addresses[robots], 1);
 			}
+			if (num_seconds[robots] >= 300) {
+				num_seconds[robots] = 0;
+				printf("Relaxing Mobot due to in-activity.\n");
+				mobot[robots].moveContinuousNB(MOBOT_NEUTRAL, MOBOT_NEUTRAL, MOBOT_NEUTRAL, MOBOT_NEUTRAL);
+			}
+			num_seconds[robots]++;
 		}
 		sleep(1);
 	}
@@ -291,6 +298,7 @@ int process_command(char *commands, int length) {
 		printf("invalid Mobot number reference");
 		return 1;
 	}
+	num_seconds[mobot_num] = 0;
 	if (!mobot[mobot_num].isConnected()) {
 		printf("Mobot is not connected, not processing command.\n");
 		return 1;
