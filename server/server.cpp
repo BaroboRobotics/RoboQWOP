@@ -145,6 +145,10 @@ int update_queue(MYSQL *conn) {
 	MYSQL_ROW row;
 	char buffer[256];
 	int id, user_id, robot_number, count, control_time, queue_id;
+	if (mysql_query(conn, "DELETE FROM controllers WHERE last_active  < (NOW() - INTERVAL 10 SECOND)") != 0) {
+		perror(mysql_error(conn));
+		return 1;
+	}
 	mysql_query(conn, "SELECT id, user_id, robot_number "
 			"FROM controllers where created < (NOW() - INTERVAL control_time SECOND)");
 	result = mysql_store_result(conn);
@@ -169,7 +173,7 @@ int update_queue(MYSQL *conn) {
 	mysql_free_result(result);
 	// Remove all queue entries that are no longer active.
 	count = 1;
-	if (mysql_query(conn, "DELETE FROM queue WHERE last_active  < (NOW() - INTERVAL 30 SECOND)") != 0) {
+	if (mysql_query(conn, "DELETE FROM queue WHERE last_active  < (NOW() - INTERVAL 10 SECOND)") != 0) {
 		perror(mysql_error(conn));
 		return 1;
 	}
@@ -197,8 +201,8 @@ int update_queue(MYSQL *conn) {
 				queue_id = atoi(row[0]);
 				user_id = atoi(row[1]);
 				control_time = atoi(row[2]);
-				sprintf(buffer, "INSERT INTO controllers (created, control_time, user_id, robot_number) "
-                    "values (CURRENT_TIMESTAMP, %i, %i, %i)", control_time, user_id, robot_number);
+				sprintf(buffer, "INSERT INTO controllers (created, control_time, user_id, robot_number, last_active) "
+                    "values (CURRENT_TIMESTAMP, %i, %i, %i, CURRENT_TIMESTAMP)", control_time, user_id, robot_number);
 				if (mysql_query(conn, buffer) != 0) {
 					perror(mysql_error(conn));
 					return 1;

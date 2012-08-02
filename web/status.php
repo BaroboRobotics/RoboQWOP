@@ -17,6 +17,7 @@ $ret_val = '{"active":false,"status":"Error occurred retrieving status."}';
 try {
      // Update the last active time for the current user.
     $mysqli->query("UPDATE queue SET last_active = CURRENT_TIMESTAMP WHERE user_id = " . $_SESSION['user_id']);
+    $mysqli->query("UPDATE controllers SET last_active = CURRENT_TIMESTAMP WHERE user_id = " . $_SESSION['user_id']);
     /*
     // Manage queue and controllers.
     // Update the last active time for the current user.
