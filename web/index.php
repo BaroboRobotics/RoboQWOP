@@ -8,8 +8,8 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Robo QWOP</title>
-        <meta name="description" content="Robo QWOP - Control a Mobot over the web">
+        <title>RoboQWOP</title>
+        <meta name="description" content="RoboQWOP - Control a Mobot over the web">
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.21.custom.css"  />
@@ -18,7 +18,7 @@
     <body>
         <div role="main" id="page" class="homepage">
             <a href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
-            <h1>Robo QWOP</h1>
+            <h1>RoboQWOP</h1>
             <p>
                 Best way to play with a mobot without owning one.
             </p>

@@ -13,7 +13,7 @@ try {
     $queue_val = "[";
     $controllers_val = "[";
     // Get robot information.
-    $sql = "SELECT name, number, address FROM robots";
+    $sql = "SELECT name, number, address FROM robots WHERE status = 1";
     if ($result = $mysqli->query($sql)) {
         $comma = false;
         while ($row = $result->fetch_object()) {

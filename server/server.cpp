@@ -230,7 +230,7 @@ void init_mobots() {
 		error_and_exit(mysql_error(conn));
 	}
 	// Query the number and address information from the robots table.
-	mysql_query(conn, "SELECT number, address FROM robots");
+	mysql_query(conn, "SELECT number, address FROM robots WHERE status = 1 ORDER BY number ASC");
 	result = mysql_store_result(conn);
 
 	// Retrieve the address information.
@@ -249,8 +249,12 @@ void init_mobots() {
 			}
 			printf("Connected successfully\n");
 			last_speed[index] = -1;
+			mobot[index].setJointSpeeds(120.0, 120.0, 120.0, 120.0);
+			mobot[index].moveJointToNB(MOBOT_JOINT2, 0);
+			mobot[index].moveJointTo(MOBOT_JOINT3, 0);
 			mobot[index].moveToZero();
 			max_mobot_index = index;
+			printf("Mobot %s is ready\n", addresses[index]);
 		}
 	}
 }
@@ -319,7 +323,7 @@ int process_command(char *commands, int length) {
 				get_state(values[1]));
 		break;
 	case CMD_MOVE_TO_ZERO:
-		mobot[mobot_num].moveJointTo(MOBOT_JOINT2, 0);
+		mobot[mobot_num].moveJointToNB(MOBOT_JOINT2, 0);
 		mobot[mobot_num].moveJointTo(MOBOT_JOINT3, 0);
 		// mobot[mobot_num].moveToZero();
 		break;

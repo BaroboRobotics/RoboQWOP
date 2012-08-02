@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS robots (
 	color1_name VARCHAR(10) DEFAULT 'Black',
 	color2_name VARCHAR(10) Default 'White',
     number INT NOT NULL,
+    status INT NOT NULL DEFAULT 1,
     UNIQUE(number)
 ) ENGINE = InnoDB;
 

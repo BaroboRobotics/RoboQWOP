@@ -96,7 +96,7 @@ try {
     $robots_val = "[";
     $queue_val = "[";
     $controllers_val = "[";
-    $sql = "SELECT name, number, address FROM robots";
+    $sql = "SELECT name, number, address FROM robots where status = 1";
     if ($result = $mysqli->query($sql)) {
         $comma = false;
         while ($row = $result->fetch_object()) {

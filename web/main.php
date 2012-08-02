@@ -53,8 +53,8 @@ if (!isset( $_SESSION['user_id'] )) {
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Robo QWOP</title>
-        <meta name="description" content="Robo QWOP - Control a Mobot over the web">
+        <title>RoboQWOP</title>
+        <meta name="description" content="RoboQWOP - Control a Mobot over the web">
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.21.custom.css"  />
@@ -79,7 +79,7 @@ if (!isset( $_SESSION['user_id'] )) {
 	?></strong> | <a href="logout.php" style="">Logout</a></p>
 		    <div id="info-display" style="float:right; clear:both;"></div>
             <a style="margin: 0 auto; display: block;" href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
-            <h1>Robo QWOP</h1>
+            <h1>RoboQWOP</h1>
             <img src="img/imobot_diagram.png" alt="Mobot Diagram" title="Mobot Diagram" />
 			<p><span id="status">Retrieving status information.</span> <span id="time_left"></span></p>
 			<div id="action-errors"></div>
