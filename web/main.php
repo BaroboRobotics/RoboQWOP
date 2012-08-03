@@ -46,7 +46,34 @@ if (!isset( $_SESSION['user_id'] )) {
 		$is_admin = $row->is_admin;
 		$result->close();
     }
+    // Get the username.
+    $user_full_name = "Unknown User";
+    $sql = "SELECT first_name, last_name FROM users WHERE id = ?";
+    if ($stmt = $mysqli->prepare($sql)) {
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $stmt->bind_result($first_name, $last_name);
+        while ($stmt->fetch()) {
+            $user_full_name = "$first_name $last_name";  
+        }
+        $stmt->close();
+    }
+    // Get the colors for the robots.
+    $color1_hex = "000000";
+    $color2_hex = "ffffff";
+    $color1_name = "Black";
+    $color2_name = "White";
+    $sql = "SELECT color1_hex, color2_hex, color1_name, color2_name FROM robots WHERE number = " . $_SESSION['robot'];
+    $result = $mysqli->query($sql);
+    $row = $result->fetch_object();
 
+    $color1_hex = $row->color1_hex;
+    $color2_hex = $row->color2_hex;
+    $color1_name = $row->color1_name;
+    $color2_name = $row->color2_name;
+    $result->close();
+    // Close the connection.
+    $mysqli->close();
 }
 ?>
 <!doctype html>
@@ -64,52 +91,27 @@ if (!isset( $_SESSION['user_id'] )) {
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.21.custom.css"  />
+        <style>
+            .color1 {
+                background:#<?=$color1_hex ?>;
+            }
+            
+            .color2 {
+                background:#<?=$color2_hex ?>;
+            }
+        </style>
         <script src="js/libs/modernizr-2.5.3.min.js"></script>
     </head>
     <body>
         <div role="main" id="page">
-		    <p style="float:right"><strong><?php 
-	// the user's name is printed to help debuggers track which user they are logged into when they have multiple windows open with different users
-    // use Google Chrome profiles feature to how many windows opened with different Google accounts	
-	$sql = "SELECT first_name, last_name FROM users WHERE id = ?";
-    if ($stmt = $mysqli->prepare($sql)) {
-        $stmt->bind_param('i', $user_id);
-        $stmt->execute();
-        $stmt->bind_result($first_name, $last_name);
-		while ($stmt->fetch()) {
-            echo "$first_name $last_name";	
-        }
-        $stmt->close();
-    }
-	?></strong> | <a href="logout.php" style="">Logout</a></p>
+		    <p style="float:right"><strong><?=$user_full_name ?></strong> | <a href="logout.php" style="">Logout</a></p>
 		    <div id="info-display" style="float:right; clear:both;"></div>
             <a style="margin: 0 auto; display: block;" href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
             <h1>RoboQWOP</h1>
             <img src="img/imobot_diagram.png" alt="Mobot Diagram" title="Mobot Diagram" />
 			<p><span id="status">Retrieving status information.</span> <span id="time_left"></span></p>
 			<div id="action-errors"></div>
-			<style>
-			<?php 
-	$sql = "SELECT color1_hex, color2_hex, color1_name, color2_name FROM robots WHERE number = " . $_SESSION['robot'];
-	$result = $mysqli->query($sql);
-	$row = $result->fetch_object();
-
-	$color1_hex = $row->color1_hex;
-	$color2_hex = $row->color2_hex;
-	$color1_name = $row->color1_name;
-	$color2_name = $row->color2_name;
-	$result->close();
-		?>
-            .color1 {
-			background:#<?php echo "$color1_hex"; ?>;
-			}
 			
-			.color2 {
-			background:#<?php echo "$color2_hex"; ?>;
-			}
-			
-			
-			</style>
             <div id="control-tabs">
                 <ul>
                     <li><a href="#default-controls">Default Controls</a></li>
@@ -149,9 +151,9 @@ if (!isset( $_SESSION['user_id'] )) {
                     <table>
                         <tr>
                             <th rowspan="2">Orientation</th><td>
-                            <input type="button" value="<?php echo "$color1_name"; ?> is on the left" id="on_left_is_red" class="button active" />
+                            <input type="button" value="<?=$color1_name ?> is on the left" id="on_left_is_red" class="button active" />
                             </td><td>
-                            <input type="button" value="<?php echo "$color2_name"; ?> is on the left" id="on_left_is_green" class="button" />
+                            <input type="button" value="<?=$color2_name ?> is on the left" id="on_left_is_green" class="button" />
                             </td>
                         </tr>
                         <tr>
