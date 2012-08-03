@@ -93,11 +93,11 @@ if (!isset( $_SESSION['user_id'] )) {
         <link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.21.custom.css"  />
         <style>
             .color1 {
-                background:#<?=$color1_hex ?>;
+                background:#<?php $color1_hex ?>;
             }
             
             .color2 {
-                background:#<?=$color2_hex ?>;
+                background:#<?php $color2_hex ?>;
             }
         </style>
         <script src="js/libs/modernizr-2.5.3.min.js"></script>
