@@ -93,11 +93,11 @@ if (!isset( $_SESSION['user_id'] )) {
         <link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.21.custom.css"  />
         <style>
             .color1 {
-                background:#<?php $color1_hex ?>;
+                background:#<?=$color1_hex ?>;
             }
             
             .color2 {
-                background:#<?php $color2_hex ?>;
+                background:#<?=$color2_hex ?>;
             }
         </style>
         <script src="js/libs/modernizr-2.5.3.min.js"></script>
@@ -151,9 +151,9 @@ if (!isset( $_SESSION['user_id'] )) {
                     <table>
                         <tr>
                             <th rowspan="2">Orientation</th><td>
-                            <input type="button" value="<?php $color1_name ?> is on the left" id="on_left_is_red" class="button active" />
+                            <input type="button" value="<?=$color1_name ?> is on the left" id="on_left_is_red" class="button active" />
                             </td><td>
-                            <input type="button" value="<?php $color2_name ?> is on the left" id="on_left_is_green" class="button" />
+                            <input type="button" value="<?=$color2_name ?> is on the left" id="on_left_is_green" class="button" />
                             </td>
                         </tr>
                         <tr>
