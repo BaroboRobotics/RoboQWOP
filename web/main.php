@@ -39,8 +39,14 @@ if (!isset( $_SESSION['user_id'] )) {
                 }
             }
         }
+		// find out if user is admin
+		$sql = "SELECT is_admin FROM users WHERE id = " . $_SESSION['user_id'];
+		$result = $mysqli->query($sql);
+		$row = $result->fetch_object();
+		$is_admin = $row->is_admin;
+		$result->close();
     }
-    $mysqli->close();
+
 }
 ?>
 <!doctype html>
@@ -65,7 +71,6 @@ if (!isset( $_SESSION['user_id'] )) {
 		    <p style="float:right"><strong><?php 
 	// the user's name is printed to help debuggers track which user they are logged into when they have multiple windows open with different users
     // use Google Chrome profiles feature to how many windows opened with different Google accounts	
-	$mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 	$sql = "SELECT first_name, last_name FROM users WHERE id = ?";
     if ($stmt = $mysqli->prepare($sql)) {
         $stmt->bind_param('i', $user_id);
@@ -90,10 +95,10 @@ if (!isset( $_SESSION['user_id'] )) {
 	$row = $result->fetch_object();
 
 	$color1_hex = $row->color1_hex;
-	$color2_hex = $row->color1_hex;
+	$color2_hex = $row->color2_hex;
 	$color1_name = $row->color1_name;
 	$color2_name = $row->color2_name;
-	$result->close;
+	$result->close();
 		?>
             .color1 {
 			background:#<?php echo "$color1_hex"; ?>;
@@ -143,9 +148,9 @@ if (!isset( $_SESSION['user_id'] )) {
                     <table>
                         <tr>
                             <th rowspan="2">Orientation</th><td>
-                            <input type="button" value="<?php echo "$color1_name"; ?>" id="on_left_is_red" class="button active" />
+                            <input type="button" value="<?php echo "$color1_name"; ?> is on the left" id="on_left_is_red" class="button active" />
                             </td><td>
-                            <input type="button" value="<?php echo "$color2_name"; ?>" id="on_left_is_green" class="button" />
+                            <input type="button" value="<?php echo "$color2_name"; ?> is on the left" id="on_left_is_green" class="button" />
                             </td>
                         </tr>
                         <tr>
@@ -305,6 +310,9 @@ if (!isset( $_SESSION['user_id'] )) {
         <script src="js/plugins.js"></script>
         <script src="js/script.js"></script>
         <script type="text/javascript">
+		    var is_admin = <?php echo $is_admin; ?>;
+			var color1_name = "<?php echo $color1_name ?>";
+			var color2_name = "<?php echo $color2_name ?>";
             var q = 0; var w = 0; var o = 0; var p = 0;
             var u = 0; var i = 0; var e = 0; var r = 0;
             var countDownThread = null;
@@ -497,8 +505,8 @@ if (!isset( $_SESSION['user_id'] )) {
                 $("#facing_north_south").click(function() {
                     $("#facing_north_south").addClass('active');
                     $("#facing_east_west").removeClass('active');
-                    $("#on_left_is_red").prop('value', 'Red is on left');
-                    $("#on_left_is_green").prop('value', 'Green is on left');
+                    $("#on_left_is_red").prop('value', color1_name + ' is on left');
+                    $("#on_left_is_green").prop('value', color2_name + ' is on left');
                     $(".quad").hide();
                     if ($("#on_left_is_red").is('.active')) {
                         $("#left_is_red_face_north_south").show();
@@ -509,8 +517,8 @@ if (!isset( $_SESSION['user_id'] )) {
                 $("#facing_east_west").click(function() {
                     $("#facing_east_west").addClass('active');
                     $("#facing_north_south").removeClass('active');
-                    $("#on_left_is_red").prop('value', 'Red is on bottom');
-                    $("#on_left_is_green").prop('value', 'Green is on bottom');
+                    $("#on_left_is_red").prop('value', color1_name + ' is on bottom');
+                    $("#on_left_is_green").prop('value', color2_name + ' is on bottom');
                     $(".quad").hide();
                     if ($("#on_left_is_red").is('.active')) {
                         $("#bottom_is_red_face_east_west").show();
