@@ -151,9 +151,9 @@ if (!isset( $_SESSION['user_id'] )) {
                     <table>
                         <tr>
                             <th rowspan="2">Orientation</th><td>
-                            <input type="button" value="<?=$color1_name ?> is on the left" id="on_left_is_red" class="button active" />
+                            <input type="button" value="<?php $color1_name ?> is on the left" id="on_left_is_red" class="button active" />
                             </td><td>
-                            <input type="button" value="<?=$color2_name ?> is on the left" id="on_left_is_green" class="button" />
+                            <input type="button" value="<?php $color2_name ?> is on the left" id="on_left_is_green" class="button" />
                             </td>
                         </tr>
                         <tr>
