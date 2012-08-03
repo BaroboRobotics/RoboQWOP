@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS users (
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_seen TIMESTAMP NULL DEFAULT NULL,
     control_time INT DEFAULT 60, /* Time to control the mobot when added to the queue */
+	is_admin BOOLEAN NOT NULL DEFAULT 0,
     UNIQUE (email)
 ) ENGINE = InnoDB;
 

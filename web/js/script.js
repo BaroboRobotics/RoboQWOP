@@ -1,7 +1,9 @@
 /* Author:
 
 */
-
+function delete_user_from_queue(user_id) {
+    $.post('delete_user_from_queue.php', 'user_id_to_delete='+user_id);
+}
 
 var RoboQWOP = {};
 
@@ -31,6 +33,9 @@ RoboQWOP.processQueue = function(json) {
 	$.each(json.queue, function(index, q) {
         body[q.robot_number] += '<tr><td>' + pos[q.robot_number] + '</td><td>';
         body[q.robot_number] += q.first_name + ' ' + q.last_name;
+		if (is_admin) {
+		    body[q.robot_number] += ' <input type="button" value="X" onclick="delete_user_from_queue(' + q.user_id + ')" />';
+		}
         body[q.robot_number] += '</td></tr>';
         pos[q.robot_number]++;
     });
