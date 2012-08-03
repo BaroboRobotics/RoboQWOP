@@ -43,6 +43,7 @@
         <script src="js/plugins.js"></script>
         <script src="js/script.js"></script>
         <script type="text/javascript">
+		    var is_admin = false;
             function infoDisplay() {
                 $.getJSON('get_info.php', function(json) {
                     if (json.error) {
