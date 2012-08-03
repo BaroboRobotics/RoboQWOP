@@ -109,6 +109,7 @@ if (!isset( $_SESSION['user_id'] )) {
                 <ul>
                     <li><a href="#default-controls">Default Controls</a></li>
                     <li><a href="#oriented-controls">Oriented Controls</a></li>
+                    <li style="display: none;"><a href="#robomancer-controls">Robomancer Controls</a></li>
                 </ul>
                 <div id="default-controls">
                     <table class="controls">
@@ -284,6 +285,54 @@ if (!isset( $_SESSION['user_id'] )) {
                         </tr>
                     </table>
 					
+                </div>
+                <div id="robomancer-controls" style="display: none;">
+                    <div class="clearfix">
+                        <img width="300" style="float:left;" src="img/mobot-diagram-robomancer.png" title="Mobot Diagram" alt="Mobot Diagram" />
+                        <div style="width: 300px; height; 400px; margin-left: 10px; float: left; background-color: red;">&nbsp;</div>
+                    </div>
+                    <div class="clearfix">
+                        <div class="box positions">
+                            <p>Joint Positions</p>
+                            <table>
+                                <thead><tr>
+                                    <th>1</th>
+                                    <th>2</th>
+                                    <th>3</th>
+                                    <th>4</th>
+                                </tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td><div id="mancer-joint-1"></div></td>
+                                        <td><div id="mancer-joint-2"></div></td>
+                                        <td><div id="mancer-joint-3"></div></td>
+                                        <td><div id="mancer-joint-4"></div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input id="mancer-joint-val-1" type="text" /></td>
+                                        <td><input id="mancer-joint-val-2" type="text" /></td>
+                                        <td><input id="mancer-joint-val-3" type="text" /></td>
+                                        <td><input id="mancer-joint-val-4" type="text" /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="box motions">
+                            <p>Motions</p>
+                            <select multiple="multiple">
+                                <option value="1">Arch</option>
+                                <option value="2">Inchworm Left</option>
+                                <option value="3">Inchworm Right</option>
+                                <option value="4">Roll Backword</option>
+                                <option value="5">Roll Forward</option>
+                                <option value="6">Skinny Pose</option>
+                                <option value="7">Stand</option>
+                                <option value="8">Turn Left</option>
+                                <option value="9">Turn Right</option>
+                            </select>
+                            <input type="button" value="Play" />
+                        </div>
+                    </div>
                 </div>
                 <p><button onclick="doReset();">Reset</button></p>
 				<p>Speed Slider</p>
@@ -468,7 +517,7 @@ if (!isset( $_SESSION['user_id'] )) {
                     "min" : 15,
                     "value" : 120
                 });
-                
+                RoboQWOP.robomancer.init();
                 updateStatus();
 				setInterval(executeAction, 100);
                 // setInterval(queueBox, 1000);

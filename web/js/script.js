@@ -41,4 +41,23 @@ RoboQWOP.processQueue = function(json) {
 	return html;
 }
 
+RoboQWOP.robomancer = {};
 
+RoboQWOP.robomancer.init = function() {
+	function initSlider(sliderId, valueId) {
+		$(sliderId ).slider({
+	        orientation: "vertical",
+	        min: -180,
+	        max: 180,
+	        value: 0,
+	        slide: function(event, ui ) {
+	            $(valueId ).val( ui.value );
+	        }
+	    });
+		$(valueId ).val( $( sliderId ).slider( "value" ) );
+	}
+	initSlider("#mancer-joint-1", "#mancer-joint-val-1");
+	initSlider("#mancer-joint-2", "#mancer-joint-val-2");
+	initSlider("#mancer-joint-3", "#mancer-joint-val-3");
+	initSlider("#mancer-joint-4", "#mancer-joint-val-4");
+}

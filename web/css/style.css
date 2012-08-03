@@ -166,7 +166,7 @@ table.controls .green {
 #oriented-controls th, #oriented-controls input {
     padding:5px;
 }
-#oriented-controls .color1, #oriented-controls .color2, #oriented-controls .button {
+#oriented-controls .green, #oriented-controls .red, #oriented-controls .button {
     width:300px;
     color:#FFF;
 }
@@ -242,4 +242,48 @@ table.center {
     background:#FFF;
     padding:5px;
     border:1px solid orange;
+}
+#robomancer-controls table {
+    
+}
+#robomancer-controls td, #robomancer-controls th {
+    text-align: center;
+}
+#mancer-joint-1, #mancer-joint-2, #mancer-joint-3, #mancer-joint-4,
+ #mancer-joint-val-1, #mancer-joint-val-2, #mancer-joint-val-3, #mancer-joint-val-4 {
+    margin: auto;
+}
+#mancer-joint-val-1, #mancer-joint-val-2, #mancer-joint-val-3, #mancer-joint-val-4 {
+    width: 35px;
+}
+#mancer-joint-1, #mancer-joint-2, #mancer-joint-3, #mancer-joint-4 {
+    height: 200px;
+}
+#robomancer-controls .motions, #robomancer-controls .positions {
+    float: left;
+}
+#robomancer-controls .motions p, #robomancer-controls .positions p {
+    text-align: center;
+    margin: 1em auto;
+}
+#robomancer-controls .motions {
+    margin-left: 60px;
+}
+#robomancer-controls .positions {
+    margin-left: 75px;
+}
+#robomancer-controls .motions input, #robomancer-controls .motions select {
+    margin: auto;
+    display: block;
+}
+#robomancer-controls .motions select {
+    height: 200px;
+    width: 175px;
+}
+#robomancer-controls .motions input {
+    margin: 1em auto;
+}
+.box {
+    border: 1px solid black;
+    padding: 20px;
 }
