@@ -166,7 +166,8 @@ table.controls .green {
 #oriented-controls th, #oriented-controls input {
     padding:5px;
 }
-#oriented-controls .green, #oriented-controls .red, #oriented-controls .button {
+
+#oriented-controls .color1, #oriented-controls .color2, #oriented-controls .button {
     width:300px;
     color:#FFF;
 }
