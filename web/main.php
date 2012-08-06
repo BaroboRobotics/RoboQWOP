@@ -116,7 +116,7 @@ if (!isset( $_SESSION['user_id'] )) {
                 <ul>
                     <li><a href="#default-controls">Default Controls</a></li>
                     <li><a href="#oriented-controls">Oriented Controls</a></li>
-                    <li style="display: none;"><a href="#robomancer-controls">Robomancer Controls</a></li>
+                    <li><a href="#robomancer-controls">Robomancer Controls</a></li>
                 </ul>
                 <div id="default-controls">
                     <table class="controls">
@@ -146,6 +146,7 @@ if (!isset( $_SESSION['user_id'] )) {
                             </tr>
                         </tbody>
                     </table>
+                    <p><button onclick="RoboQWOP.robomancer.reset();">Reset</button></p>
                 </div>
                 <div id="oriented-controls">
                     <table>
@@ -291,12 +292,24 @@ if (!isset( $_SESSION['user_id'] )) {
                             </td>
                         </tr>
                     </table>
-					
+					<p><button onclick="RoboQWOP.robomancer.reset();">Reset</button></p>
+					<p>Speed Slider</p>
+                    <div id="oriented-slider" style="width: 250px; margin: 10px 0;"></div>
                 </div>
-                <div id="robomancer-controls" style="display: none;">
+                <div id="robomancer-controls">
                     <div class="clearfix">
-                        <img width="300" style="float:left;" src="img/mobot-diagram-robomancer.png" title="Mobot Diagram" alt="Mobot Diagram" />
-                        <div style="width: 300px; height; 400px; margin-left: 10px; float: left; background-color: red;">&nbsp;</div>
+                        <img class="box" width="331" style="float:left;" src="img/mobot-diagram-robomancer.png" title="Mobot Diagram" alt="Mobot Diagram" />
+                        <div class="box arrow-controls">
+                            <div id="mancer-btngrp-1">
+                                <button id="mancer-up"><img src="img/icons/arrow-up.png" alt="Up" title="Up" width="48" height="48" /></button>
+                            </div>
+                            <div id="mancer-btngrp-2">
+                                <button id="mancer-left"><img src="img/icons/arrow-left.png" alt="Left" title="Left" width="48" height="48" /></button><button id="mancer-down"><img src="img/icons/arrow-down.png" alt="Down" title="Down" width="48" height="48" /></button><button id="mancer-right"><img src="img/icons/arrow-right.png" alt="Right" title="Right" width="48" height="48" /></button>
+                            </div>
+                            <div id="mancer-btngrp-3">
+                                <button id="mancer-reset" onclick="RoboQWOP.robomancer.reset();"><img src="img/icons/reset.png" alt="Reset" title="Reset" width="48" height="48" /></button><button id="mancer-stop" onclick=""><img src="img/icons/stop.png" alt="Stop" title="Stop" width="48" height="48" /></button>
+                            </div>
+                        </div>
                     </div>
                     <div class="clearfix">
                         <div class="box positions">
@@ -316,18 +329,22 @@ if (!isset( $_SESSION['user_id'] )) {
                                         <td><div id="mancer-joint-4"></div></td>
                                     </tr>
                                     <tr>
-                                        <td><input id="mancer-joint-val-1" type="text" /></td>
-                                        <td><input id="mancer-joint-val-2" type="text" /></td>
-                                        <td><input id="mancer-joint-val-3" type="text" /></td>
-                                        <td><input id="mancer-joint-val-4" type="text" /></td>
+                                        <td><input id="mancer-joint-val-1" type="text" readonly="readonly" /></td>
+                                        <td><input id="mancer-joint-val-2" type="text" readonly="readonly" /></td>
+                                        <td><input id="mancer-joint-val-3" type="text" readonly="readonly" /></td>
+                                        <td><input id="mancer-joint-val-4" type="text" readonly="readonly" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-top: 5px; vertical-align: middle;">Speed </td>
+                                        <td style="padding-top: 5px; vertical-align: middle;" colspan="3"><div id="mancer-speed"></div></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                         <div class="box motions">
                             <p>Motions</p>
-                            <select multiple="multiple">
-                                <option value="1">Arch</option>
+                            <select size="9">
+                                <option value="1" selected="selected">Arch</option>
                                 <option value="2">Inchworm Left</option>
                                 <option value="3">Inchworm Right</option>
                                 <option value="4">Roll Backword</option>
@@ -337,13 +354,10 @@ if (!isset( $_SESSION['user_id'] )) {
                                 <option value="8">Turn Left</option>
                                 <option value="9">Turn Right</option>
                             </select>
-                            <input type="button" value="Play" />
+                            <button id="mancer-play"><img src="img/icons/play.png" alt="Play" title="Play" width="48" height="48" /></button>
                         </div>
                     </div>
                 </div>
-                <p><button onclick="doReset();">Reset</button></p>
-				<p>Speed Slider</p>
-                <div id="slider" style="width: 250px; margin: 10px 0;"></div>
             </div>
             <div class="social-widget" style="margin-top: 50px;">
                 <a target="_blank" href="http://twitter.com/BaroboRobotics"> <img src="img/icons/twitter.png" alt="Twitter" width="40" /> </a>
@@ -490,20 +504,19 @@ if (!isset( $_SESSION['user_id'] )) {
                 count += 100;
                 if (send && active) {
                     send = false;
-                    var data = {
+                    var data = { "mode": 2,
                         "q" : q, "w" : w, "e" : e, "r" : r,
-                        "u" : u, "i" : i, "o" : o, "p" : p,
-                        "speed" : $("#slider").slider("option", "value")
+                        "u" : u, "i" : i, "o" : o, "p" : p
                     };
                     $.ajax({
-                        type : 'POST',
+                        type : 'GET',
                         url : 'action.php',
                         data : data,
                         success : function(response) {
-                            if (response.result == "error") {
-                                $('#action-errors').html('<p>Error performing action [' + response.msg + ']</p>').show();
-                            } else {
+                            if (response.success) {
                                 $('#action-errors').hide();
+                            } else {
+                                $('#action-errors').html('<p>Error performing action [' + response.msg + ']</p>').show();
                             }
                         },
                         dataType : 'json'
@@ -522,12 +535,8 @@ if (!isset( $_SESSION['user_id'] )) {
             });
             $(function() {
                 $( "#control-tabs" ).tabs();
-                $("#slider").slider({
-                    "max" : 120,
-                    "min" : 15,
-                    "value" : 120
-                });
                 RoboQWOP.robomancer.init();
+                RoboQWOP.oriented.init();
                 updateStatus();
 				setInterval(executeAction, 100);
                 // setInterval(queueBox, 1000);
@@ -579,7 +588,7 @@ if (!isset( $_SESSION['user_id'] )) {
                 });
             });
 
-            $(document).mouseup(function(event) {
+            $('#default-controls').mouseup(function(event) {
                 q = 0;
                 w = 0;
                 o = 0;

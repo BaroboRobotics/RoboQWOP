@@ -4,8 +4,13 @@
 #include <mysql.h>
 
 typedef enum {
-	CMD_MOVE_CONTINUOUS = 0,
-	CMD_MOVE_TO_ZERO
+	CMD_STATUS = 0,
+	CMD_RESET,
+	CMD_MOVE_CONTINUOUS,
+	CMD_SPEED,
+	CMD_JOINT,
+	CMD_DIRECTIONAL,
+	CMD_ACTIONS
 } command_t;
 
 /**
@@ -35,7 +40,7 @@ mobotJointState_t get_state(double val);
 /**
  * Processes commands to the mobots.
  */
-int process_command(char *commands, int length);
+int process_command(char *read, char *write);
 /**
  * Helper method to handle the communication messages.
  */

@@ -18,6 +18,7 @@ using namespace std;
 #define MAX_PENDING 5 /* Maximum number of pending connection requests */
 #define ROBOTS 4
 #define RECV_BUFFER_SIZE 256
+#define SEND_BUFFER_SIZE 256
 #define DB_HOST "localhost"
 #define DB_USER "user"
 #define DB_PASSWORD "changeme01"
@@ -276,16 +277,16 @@ mobotJointState_t get_state(double val) {
 /**
  * Processes the commands received and sends them to the Mobot.
  */
-int process_command(char *commands, int length) {
+int process_command(char *read, char *write) {
 	char *val;
 	int mobot_num = 0;
-	command_t cmd_type = CMD_MOVE_CONTINUOUS;
-	double values[6] = { 0.0 };
+	command_t cmd_type = CMD_STATUS;
+	double values[8] = { 0.0 };
 	int i = 0;
-	if (length <= 0) {
+	if (strlen(read) <= 0) {
 		return 0;
 	}
-	val = strtok(commands, " ,");
+	val = strtok(read, " ,");
 	while (val != NULL && i < 8) {
 		switch (i) {
 		case 0:
@@ -303,31 +304,41 @@ int process_command(char *commands, int length) {
 	printf("Commands [%i, %i, %lf, %lf, %lf, %lf, %lf, %lf]\n", mobot_num, cmd_type,
 			values[0], values[1], values[2], values[3], values[4], values[5]);
 	if (mobot_num > max_mobot_index) {
+		strcpy(write, "UNKNOWN COMMAND");
 		printf("invalid Mobot number reference");
 		return 1;
 	}
 	num_seconds[mobot_num] = 0;
 	if (!mobot[mobot_num].isConnected()) {
 		printf("Mobot is not connected, not processing command.\n");
+		strcpy(write, "NOT CONNECTED");
 		return 1;
 	}
+	// Process the commands.
 	switch (cmd_type) {
-	case CMD_MOVE_CONTINUOUS:
-		if (last_speed[mobot_num] != values[4]) {
-			last_speed[mobot_num] = values[4];
-			mobot[mobot_num].setJointSpeeds(values[4], values[4], values[4], values[4]);
-		}
-		mobot[mobot_num].moveContinuousNB(get_state(values[0]),
-				get_state(values[3]),
-				get_state(values[2]),
-				get_state(values[1]));
+	case CMD_STATUS:
+		mobot[mobot_num].getJointAngles(values[0], values[1], values[2], values[3]);
+		mobot[mobot_num].getJointSpeeds(values[4], values[5], values[6], values[7]);
+		sprintf(write, "%i,%i,%i,%i,%i,%i,%i,%i",
+				(int) values[0], (int) values[1], (int) values[2], (int) values[3],
+				(int) values[4], (int) values[5], (int) values[6], (int) values[7]);
 		break;
-	case CMD_MOVE_TO_ZERO:
+	case CMD_RESET:
 		mobot[mobot_num].moveJointToNB(MOBOT_JOINT2, 0);
 		mobot[mobot_num].moveJointTo(MOBOT_JOINT3, 0);
-		// mobot[mobot_num].moveToZero();
+		break;
+	case CMD_MOVE_CONTINUOUS:
+		mobot[mobot_num].moveContinuousNB(get_state(values[0]), get_state(values[3]),
+				get_state(values[2]), get_state(values[1]));
+		break;
+	case CMD_SPEED:
+		mobot[mobot_num].setJointSpeeds(values[0], values[1], values[2], values[3]);
+		break;
+	case CMD_JOINT:
+		mobot[mobot_num].moveToNB(values[0], values[1], values[2], values[3]);
 		break;
 	default:
+		strcpy(write, "UNKNOWN COMMAND");
 		printf("Unknown command\n");
 	}
 	return 0;
@@ -335,21 +346,19 @@ int process_command(char *commands, int length) {
 
 int handle_message(int client_sock) {
 	char buffer[RECV_BUFFER_SIZE];
-	int msg_size;
-
-	if ((msg_size = recv(client_sock, buffer, RECV_BUFFER_SIZE, 0)) < 0) {
-		error_and_exit("ERROR retrieving message");
+	char message[SEND_BUFFER_SIZE];
+	int recv_size;
+	strcpy(message,"SUCCESS");
+	if ((recv_size = recv(client_sock, buffer, RECV_BUFFER_SIZE, 0)) < 0) {
+		perror("ERROR retrieving message");
+		return 1;
 	}
-	if (msg_size > 0) {
-		process_command(buffer, msg_size);
+	if (recv_size > 0) {
+		process_command(buffer, message);
 	}
-	while (msg_size > 0) {
-		if ((msg_size = recv(client_sock, buffer, RECV_BUFFER_SIZE, 0)) < 0) {
-			error_and_exit("ERROR retrieving message");
-		}
-		if (msg_size > 0) {
-			process_command(buffer, msg_size);
-		}
+	if (send(client_sock, message, strlen(message), 0) < 0) {
+		perror("ERROR sending message");;
+		return 0; // we received the message so return 0;
 	}
 	close(client_sock);
 	return 0;

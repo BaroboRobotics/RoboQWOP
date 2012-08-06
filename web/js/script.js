@@ -52,11 +52,14 @@ RoboQWOP.robomancer.init = function() {
 	function initSlider(sliderId, valueId) {
 		$(sliderId ).slider({
 	        orientation: "vertical",
-	        min: -180,
-	        max: 180,
+	        min: -90,
+	        max: 90,
 	        value: 0,
-	        slide: function(event, ui ) {
+	        slide: function(event, ui) {
 	            $(valueId ).val( ui.value );
+	        },
+	        stop: function(event, ui) {
+	        	RoboQWOP.robomancer.moveJoints();
 	        }
 	    });
 		$(valueId ).val( $( sliderId ).slider( "value" ) );
@@ -65,4 +68,65 @@ RoboQWOP.robomancer.init = function() {
 	initSlider("#mancer-joint-2", "#mancer-joint-val-2");
 	initSlider("#mancer-joint-3", "#mancer-joint-val-3");
 	initSlider("#mancer-joint-4", "#mancer-joint-val-4");
+	$('#mancer-speed').slider({
+        "max" : 120,
+        "min" : 15,
+        "value" : 120,
+        stop: function(event, ui ) {
+        	RoboQWOP.robomancer.changeSpeed(event, ui)
+        }
+    });
+}
+RoboQWOP.robomancer.reset = function() {
+	$.ajax({
+        type : 'GET',
+        url : 'action.php',
+        data : {"mode":1},
+        dataType : 'json'
+    });
+}
+RoboQWOP.robomancer.moveJoints = function() {
+	$.ajax({
+        type : 'GET',
+        url : 'action.php',
+        data : {"mode":4, 
+        	"j1":$("#mancer-joint-1").slider("option", "value"),
+        	"j2":$("#mancer-joint-2").slider("option", "value"),
+        	"j3":$("#mancer-joint-3").slider("option", "value"),
+        	"j4":$("#mancer-joint-4").slider("option", "value")
+        	},
+        dataType : 'json'
+    });
+}
+RoboQWOP.robomancer.changeSpeed = function(event, ui) {
+	$.ajax({
+        type : 'GET',
+        url : 'action.php',
+        data : {"mode":3, "speed":ui.value },
+        dataType : 'json'
+    });
+}
+
+RoboQWOP.oriented = {};
+
+RoboQWOP.oriented.init = function() {
+	$('#oriented-slider').slider({
+        "max" : 120,
+        "min" : 15,
+        "value" : 120,
+        stop: function(event, ui ) {
+        	RoboQWOP.robomancer.changeSpeed(event, ui)
+        }
+    });
+	$('#oriented-controls').mouseup(function(event) {
+        q = 0;
+        w = 0;
+        o = 0;
+        p = 0;
+        u = 0;
+        i = 0;
+        e = 0;
+        r = 0;
+        send = true;
+    });
 }

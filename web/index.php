@@ -19,11 +19,9 @@
         <div role="main" id="page" class="homepage">
             <a href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
             <h1>RoboQWOP</h1>
+            <img src="img/roboqwop.jpg" style="text-align: center; margin: 0 auto;" width="640" height="480" alt="RoboQWOP" title="RoboQWOP - best way to test drive a mobot." />
             <p>
-                Best way to play with a mobot without owning one.
-            </p>
-            <p>
-                Click the team name to take a turn at controlling the robot (Mobot).
+                Click a team to control the Mobot!.
             </p>
             <div id="info-display" style="width:410px; margin:5px auto;" class="clearfix">
                 

@@ -114,7 +114,9 @@ body {
 div.homepage {
     text-align: center;
 }
-
+.box {
+    border: 1px solid black;
+}
 .social-widget a {
     text-decoration: none;
 }
@@ -227,9 +229,10 @@ table.controls .green {
     clear:right;
 }
 
-table.center {
+.center {
     margin-left:auto; 
     margin-right:auto;
+    text-align: center;
 }
 
 /* Info Display */
@@ -257,25 +260,46 @@ table.center {
 #mancer-joint-val-1, #mancer-joint-val-2, #mancer-joint-val-3, #mancer-joint-val-4 {
     width: 35px;
 }
+#mancer-speed {
+    width: 150px;
+}
 #mancer-joint-1, #mancer-joint-2, #mancer-joint-3, #mancer-joint-4 {
-    height: 200px;
+    height: 170px;
+}
+#mancer-btngrp-1, #mancer-btngrp-2, #mancer-btngrp-3 {
+    margin-left:auto; 
+    margin-right:auto;
+    text-align: center;
 }
 #robomancer-controls .motions, #robomancer-controls .positions {
     float: left;
+    margin-top: 10px;
+    padding: 5px 63px 10px;
 }
+
 #robomancer-controls .motions p, #robomancer-controls .positions p {
     text-align: center;
-    margin: 1em auto;
+    margin: 0 auto 1em;
 }
 #robomancer-controls .motions {
-    margin-left: 60px;
+    margin-left: 10px;
 }
 #robomancer-controls .positions {
-    margin-left: 75px;
+
 }
-#robomancer-controls .motions input, #robomancer-controls .motions select {
+#robomancer-controls .arrow-controls {
+    width: 260px;
+    height: 198px;
+    margin-left: 10px;
+    float: left;
+    padding: 20px;
+}
+#robomancer-controls .motions input, #robomancer-controls .motions select, #robomancer-controls #mancer-play {
     margin: auto;
     display: block;
+}
+#robomancer-controls #mancer-play {
+    margin: 5px auto 3px;
 }
 #robomancer-controls .motions select {
     height: 200px;
@@ -283,8 +307,4 @@ table.center {
 }
 #robomancer-controls .motions input {
     margin: 1em auto;
-}
-.box {
-    border: 1px solid black;
-    padding: 20px;
 }
