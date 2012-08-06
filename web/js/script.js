@@ -26,6 +26,9 @@ RoboQWOP.processQueue = function(json) {
 	$.each(json.controllers, function(index, controller) {
 		body[controller.robot_number] = '<tr><td>' + pos[controller.robot_number]  + '</td><td>';
         body[controller.robot_number] += controller.first_name + ' ' + controller.last_name;
+		if (is_admin) {
+		    body[controller.robot_number] += ' <input type="button" value="X" onclick="delete_user_from_queue(' + controller.user_id + ')" />';
+		}
         body[controller.robot_number] += '<br/>(' + controller.time_left + ' seconds left )'; 
         body[controller.robot_number] += '</td></tr>';
         pos[controller.robot_number]++;
