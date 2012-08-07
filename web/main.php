@@ -161,7 +161,9 @@ if (!isset( $_SESSION['user_id'] )) {
                         </tbody>
                     </table>
                     <p><button onclick="RoboQWOP.robomancer.reset();">Reset</button></p>
-                </div>
+					<p>Speed Slider</p>
+                    <div id="oriented-slider" style="width: 250px; margin: 10px 0;"></div>
+					</div>
                 <div id="oriented-controls">
                     <table>
                         <tr>
