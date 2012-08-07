@@ -375,12 +375,7 @@ if (!isset( $_SESSION['user_id'] )) {
                     </div>
                 </div>
             </div>
-            <div class="social-widget" style="margin-top: 50px;">
-                <a target="_blank" href="http://twitter.com/BaroboRobotics"> <img src="img/icons/twitter.png" alt="Twitter" width="40" /> </a>
-                <a target="_blank" href="http://www.facebook.com/barobo"> <img src="img/icons/facebook.png" alt="Facebook" width="40" /> </a>
-                <a target="_blank" href="https://plus.google.com/110706245535499996481?prsrc=3" rel="publisher"> <img src="img/icons/googleplus.png" alt="Google Plus" width="40" /> </a>
-                <a target="_blank" href="http://www.youtube.com/BaroboRobotics"> <img src="img/icons/youtube.png" alt="Youtube" width="40" /> </a>
-            </div>
+            <?php include("footer.php"); ?>
         </div>
         <audio id="soundHandle" style="display: none;"></audio>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
@@ -391,9 +386,9 @@ if (!isset( $_SESSION['user_id'] )) {
         <script src="js/plugins.js"></script>
         <script src="js/script.js"></script>
         <script type="text/javascript">
-		    var is_admin = <?php echo $is_admin; ?>;
-			var color1_name = "<?php echo $color1_name ?>";
-			var color2_name = "<?php echo $color2_name ?>";
+		    var is_admin = <?=$is_admin; ?>;
+			var color1_name = "<?=$color1_name ?>";
+			var color2_name = "<?=$color2_name ?>";
             var q = 0; var w = 0; var o = 0; var p = 0;
             var u = 0; var i = 0; var e = 0; var r = 0;
             var countDownThread = null;
