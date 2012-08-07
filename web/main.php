@@ -94,10 +94,24 @@ if (!isset( $_SESSION['user_id'] )) {
         <style>
             .color1 {
                 background:#<?=$color1_hex ?>;
+				<?php 
+				if ($color1_name == "White") {
+                    echo "color:#000;";
+                } else {
+				    echo "color:#FFF;";
+				}
+                ?>				
             }
             
             .color2 {
                 background:#<?=$color2_hex ?>;
+				<?php 
+				if ($color2_name == "White") {
+                    echo "color:#000;";
+                } else { 
+				    echo "color:#FFF;";
+				}
+                ?>	
             }
         </style>
         <script src="js/libs/modernizr-2.5.3.min.js"></script>
@@ -117,6 +131,7 @@ if (!isset( $_SESSION['user_id'] )) {
                     <li><a href="#default-controls">Default Controls</a></li>
                     <li><a href="#oriented-controls">Oriented Controls</a></li>
                     <li><a href="#robomancer-controls">Robomancer Controls</a></li>
+					<li><a href="#execute-sequence">Execute Sequence</a></li>
                 </ul>
                 <div id="default-controls">
                     <table class="controls">
@@ -146,8 +161,10 @@ if (!isset( $_SESSION['user_id'] )) {
                             </tr>
                         </tbody>
                     </table>
-                    <p><button onclick="RoboQWOP.robomancer.reset();">Reset</button></p>
-                </div>
+                    <p><button onclick="RoboQWOP.robomancer.reset();">Reset (L)</button></p>
+					<p>Speed Slider</p>
+                    <div id="oriented-slider" style="width: 250px; margin: 10px 0;"></div>
+					</div>
                 <div id="oriented-controls">
                     <table>
                         <tr>
@@ -292,7 +309,7 @@ if (!isset( $_SESSION['user_id'] )) {
                             </td>
                         </tr>
                     </table>
-					<p><button onclick="RoboQWOP.robomancer.reset();">Reset</button></p>
+					<p><button onclick="RoboQWOP.robomancer.reset();">Reset (L)</button></p>
 					<p>Speed Slider</p>
                     <div id="oriented-slider" style="width: 250px; margin: 10px 0;"></div>
                 </div>
@@ -357,14 +374,14 @@ if (!isset( $_SESSION['user_id'] )) {
                             <button id="mancer-play"><img src="img/icons/play.png" alt="Play" title="Play" width="48" height="48" /></button>
                         </div>
                     </div>
+
                 </div>
+				<div id="execute-sequence">
+				    <input id="execute-sequence-button" type="button" value="Execute sequence" style="float:right; width:200px;" />
+					<textarea id="sequence" ></textarea>
+				</div>
             </div>
-            <div class="social-widget" style="margin-top: 50px;">
-                <a target="_blank" href="http://twitter.com/BaroboRobotics"> <img src="img/icons/twitter.png" alt="Twitter" width="40" /> </a>
-                <a target="_blank" href="http://www.facebook.com/barobo"> <img src="img/icons/facebook.png" alt="Facebook" width="40" /> </a>
-                <a target="_blank" href="https://plus.google.com/110706245535499996481?prsrc=3" rel="publisher"> <img src="img/icons/googleplus.png" alt="Google Plus" width="40" /> </a>
-                <a target="_blank" href="http://www.youtube.com/BaroboRobotics"> <img src="img/icons/youtube.png" alt="Youtube" width="40" /> </a>
-            </div>
+            <?php include("footer.php"); ?>
         </div>
         <audio id="soundHandle" style="display: none;"></audio>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
@@ -375,9 +392,9 @@ if (!isset( $_SESSION['user_id'] )) {
         <script src="js/plugins.js"></script>
         <script src="js/script.js"></script>
         <script type="text/javascript">
-		    var is_admin = <?php echo $is_admin; ?>;
-			var color1_name = "<?php echo $color1_name ?>";
-			var color2_name = "<?php echo $color2_name ?>";
+		    var is_admin = <?=$is_admin; ?>;
+			var color1_name = "<?=$color1_name ?>";
+			var color2_name = "<?=$color2_name ?>";
             var q = 0; var w = 0; var o = 0; var p = 0;
             var u = 0; var i = 0; var e = 0; var r = 0;
             var countDownThread = null;
@@ -416,46 +433,49 @@ if (!isset( $_SESSION['user_id'] )) {
             function executeKeyEvent(keyCode, down) {
                 var oldval;
                 switch (keyCode) {
-                    case 81:
+                    case 81: // q
                         oldval = q;
                         q = (down) ? 1 : 0;
                         enableSend(oldval, q);
                         break;
-                    case 87:
+                    case 87: // w
                         oldval = w;
                         w = (down) ? 1 : 0;
                         enableSend(oldval, w);
                         break;
-                    case 69:
+                    case 69: // e
                         oldval = e;
                         e = (down) ? 1 : 0;
                         enableSend(oldval, e);
                         break;
-                    case 82:
+                    case 82: // r
                         oldval = r;
                         r = (down) ? 1 : 0;
                         enableSend(oldval, r);
                         break;
-                    case 85:
+                    case 85: // u
                         oldval = u;
                         u = (down) ? 1 : 0;
                         enableSend(oldval, u);
                         break;
-                    case 73:
+                    case 73: // i
                         oldval = i;
                         i = (down) ? 1 : 0;
                         enableSend(oldval, i);
                         break;
-                    case 79:
+                    case 79: // o
                         oldval = o;
                         o = (down) ? 1 : 0;
                         enableSend(oldval, o);
                         break;
-                    case 80:
+                    case 80: // p
                         oldval = p;
                         p = (down) ? 1 : 0;
                         enableSend(oldval, p);
                         break;
+					case 76: // l
+					    RoboQWOP.robomancer.reset();
+						break;
                 }
             }
 
@@ -586,6 +606,14 @@ if (!isset( $_SESSION['user_id'] )) {
                         $("#bottom_is_green_face_east_west").show();
                     }
                 });
+				$("#execute-sequence-button").click(function() {
+				    $("#sequence").val($("#sequence").val().toUpperCase());
+				    var sequence = $("#sequence").val();
+					sequence = sequence.split('');
+					for (var i = 0; i < sequence.length; i++) {
+					    executeKeyEvent(sequence[i].charCodeAt(0), 0);
+					}
+				});
             });
 
             $('#default-controls').mouseup(function(event) {
