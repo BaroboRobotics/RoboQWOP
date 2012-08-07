@@ -131,6 +131,7 @@ if (!isset( $_SESSION['user_id'] )) {
                     <li><a href="#default-controls">Default Controls</a></li>
                     <li><a href="#oriented-controls">Oriented Controls</a></li>
                     <li><a href="#robomancer-controls">Robomancer Controls</a></li>
+					<li><a href="#execute-sequence">Execute Sequence</a></li>
                 </ul>
                 <div id="default-controls">
                     <table class="controls">
@@ -373,7 +374,12 @@ if (!isset( $_SESSION['user_id'] )) {
                             <button id="mancer-play"><img src="img/icons/play.png" alt="Play" title="Play" width="48" height="48" /></button>
                         </div>
                     </div>
+
                 </div>
+				<div id="execute-sequence">
+				    <input id="execute-sequence-button" type="button" value="Execute sequence" style="float:right; width:200px;" />
+					<textarea id="sequence" ></textarea>
+				</div>
             </div>
             <?php include("footer.php"); ?>
         </div>
@@ -600,6 +606,14 @@ if (!isset( $_SESSION['user_id'] )) {
                         $("#bottom_is_green_face_east_west").show();
                     }
                 });
+				$("#execute-sequence-button").click(function() {
+				    $("#sequence").val($("#sequence").val().toUpperCase());
+				    var sequence = $("#sequence").val();
+					sequence = sequence.split('');
+					for (var i = 0; i < sequence.length; i++) {
+					    executeKeyEvent(sequence[i].charCodeAt(0), 0);
+					}
+				});
             });
 
             $('#default-controls').mouseup(function(event) {

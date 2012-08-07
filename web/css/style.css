@@ -308,3 +308,11 @@ table.controls .green {
 #robomancer-controls .motions input {
     margin: 1em auto;
 }
+
+#execute-sequence {
+    padding:5px;
+}
+
+#execute-sequence textarea {
+    width:750px;
+}
