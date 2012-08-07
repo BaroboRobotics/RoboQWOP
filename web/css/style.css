@@ -171,13 +171,13 @@ table.controls .green {
 
 #oriented-controls .color1, #oriented-controls .color2, #oriented-controls .button {
     width:300px;
-    color:#FFF;
 }
 #oriented-controls input {
     border:0;
 }
 #oriented-controls .button {
     background:#696969;
+	color:#FFF;
 }
 #oriented-controls .button:hover {
     background:#CCC;

@@ -94,10 +94,24 @@ if (!isset( $_SESSION['user_id'] )) {
         <style>
             .color1 {
                 background:#<?=$color1_hex ?>;
+				<?php 
+				if ($color1_name == "White") {
+                    echo "color:#000;";
+                } else {
+				    echo "color:#FFF;";
+				}
+                ?>				
             }
             
             .color2 {
                 background:#<?=$color2_hex ?>;
+				<?php 
+				if ($color2_name == "White") {
+                    echo "color:#000;";
+                } else { 
+				    echo "color:#FFF;";
+				}
+                ?>	
             }
         </style>
         <script src="js/libs/modernizr-2.5.3.min.js"></script>
