@@ -160,7 +160,7 @@ if (!isset( $_SESSION['user_id'] )) {
                             </tr>
                         </tbody>
                     </table>
-                    <p><button onclick="RoboQWOP.robomancer.reset();">Reset</button></p>
+                    <p><button onclick="RoboQWOP.robomancer.reset();">Reset (L)</button></p>
 					<p>Speed Slider</p>
                     <div id="oriented-slider" style="width: 250px; margin: 10px 0;"></div>
 					</div>
@@ -308,7 +308,7 @@ if (!isset( $_SESSION['user_id'] )) {
                             </td>
                         </tr>
                     </table>
-					<p><button onclick="RoboQWOP.robomancer.reset();">Reset</button></p>
+					<p><button onclick="RoboQWOP.robomancer.reset();">Reset (L)</button></p>
 					<p>Speed Slider</p>
                     <div id="oriented-slider" style="width: 250px; margin: 10px 0;"></div>
                 </div>
@@ -432,46 +432,49 @@ if (!isset( $_SESSION['user_id'] )) {
             function executeKeyEvent(keyCode, down) {
                 var oldval;
                 switch (keyCode) {
-                    case 81:
+                    case 81: // q
                         oldval = q;
                         q = (down) ? 1 : 0;
                         enableSend(oldval, q);
                         break;
-                    case 87:
+                    case 87: // w
                         oldval = w;
                         w = (down) ? 1 : 0;
                         enableSend(oldval, w);
                         break;
-                    case 69:
+                    case 69: // e
                         oldval = e;
                         e = (down) ? 1 : 0;
                         enableSend(oldval, e);
                         break;
-                    case 82:
+                    case 82: // r
                         oldval = r;
                         r = (down) ? 1 : 0;
                         enableSend(oldval, r);
                         break;
-                    case 85:
+                    case 85: // u
                         oldval = u;
                         u = (down) ? 1 : 0;
                         enableSend(oldval, u);
                         break;
-                    case 73:
+                    case 73: // i
                         oldval = i;
                         i = (down) ? 1 : 0;
                         enableSend(oldval, i);
                         break;
-                    case 79:
+                    case 79: // o
                         oldval = o;
                         o = (down) ? 1 : 0;
                         enableSend(oldval, o);
                         break;
-                    case 80:
+                    case 80: // p
                         oldval = p;
                         p = (down) ? 1 : 0;
                         enableSend(oldval, p);
                         break;
+					case 76: // l
+					    RoboQWOP.robomancer.reset();
+						break;
                 }
             }
 
