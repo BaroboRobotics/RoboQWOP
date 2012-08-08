@@ -80,6 +80,17 @@ RoboQWOP.robomancer.init = function() {
         }
     });
 }
+RoboQWOP.robomancer.updateSliders = function(array) {
+	$('#mancer-joint-val-1').val(array[0]);
+	$('#mancer-joint-val-2').val(array[1]);
+	$('#mancer-joint-val-3').val(array[2]);
+	$('#mancer-joint-val-4').val(array[3]);
+	$("#mancer-joint-1").slider( "option", "value", array[0] );
+	$("#mancer-joint-2").slider( "option", "value", array[1] );
+	$("#mancer-joint-3").slider( "option", "value", array[2] );
+	$("#mancer-joint-4").slider( "option", "value", array[3] );
+	$('.speed-slider').slider( "option", "value", array[4] );
+}
 RoboQWOP.robomancer.reset = function() {
 	$.ajax({
         type : 'GET',

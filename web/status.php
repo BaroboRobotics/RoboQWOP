@@ -170,14 +170,29 @@ try {
             }
         }
         $result->close();
-     }
+    }
+    // Get Robot status.
+    $robot_values = "";
+    /*
+    $robot_number = 0;
+    if (isset( $_SESSION['robot'] )) {
+        $robot_number = $_SESSION['robot'];
+    }
+    $host = "localhost";
+    $port = 8082 + $robot_number;
+    if ($fp = fsockopen($host, $port, $errno, $errstr, 1)) {
+        fwrite($fp, '0\n');
+        $robot_values = fread($fp, 256);
+        fclose($fp);    
+    }
+    */
     $robots_val .= "]";
     $queue_val .= "]";
     $controllers_val .= "]";
     
     $ret_val = '{"active":' . (($active) ? 'true' : 'false') . ', "status":"' . $status
         . '", "timeleft":' . $timeleft . ', "robots":' . $robots_val . ', "queue":' . $queue_val
-        . ', "controllers":' . $controllers_val . '}';
+        . ', "controllers":' . $controllers_val . ', "stats":[' . $robot_values . ']}';
 } catch (Exception $e) {
     $ret_val = '{"active":false,"status":"' . $e->getMessage() . '"}';
 }

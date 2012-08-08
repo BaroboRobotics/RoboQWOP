@@ -163,8 +163,8 @@ if (!isset( $_SESSION['user_id'] )) {
                     </table>
                     <p><button onclick="RoboQWOP.robomancer.reset();">Reset (L)</button></p>
 					<p>Speed Slider</p>
-                    <div id="oriented-slider" style="width: 250px; margin: 10px 0;"></div>
-					</div>
+                    <div id="oriented-slider" class="speed-slider" style="width: 250px; margin: 10px 0;"></div>
+				</div>
                 <div id="oriented-controls">
                     <table>
                         <tr>
@@ -311,7 +311,7 @@ if (!isset( $_SESSION['user_id'] )) {
                     </table>
 					<p><button onclick="RoboQWOP.robomancer.reset();">Reset (L)</button></p>
 					<p>Speed Slider</p>
-                    <div id="oriented-slider" style="width: 250px; margin: 10px 0;"></div>
+                    <div id="oriented-slider" class="speed-slider" style="width: 250px; margin: 10px 0;"></div>
                 </div>
                 <div id="robomancer-controls">
                     <div class="clearfix">
@@ -353,7 +353,7 @@ if (!isset( $_SESSION['user_id'] )) {
                                     </tr>
                                     <tr>
                                         <td style="padding-top: 5px; vertical-align: middle;">Speed </td>
-                                        <td style="padding-top: 5px; vertical-align: middle;" colspan="3"><div id="mancer-speed"></div></td>
+                                        <td style="padding-top: 5px; vertical-align: middle;" colspan="3"><div id="mancer-speed" class="speed-slider"></div></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -497,6 +497,11 @@ if (!isset( $_SESSION['user_id'] )) {
 					} else {
 						$('#status').css({'color':'black', 'font-weight':'normal'});
 					}
+					/*
+					if (data.stats.length > 0) {
+					    RoboQWOP.robomancer.updateSliders(data.stats);
+					}
+					*/
 					$('#info-display').html(RoboQWOP.processQueue(data));
 				});
 			}
@@ -505,22 +510,6 @@ if (!isset( $_SESSION['user_id'] )) {
 			    // TODO look into cross browser sound file (ogg doesn't play in all browsers').
                 soundHandle.src = 'sounds/beep.ogg';
                 soundHandle.play();
-			}
-			function doReset() {
-			    var data = {"reset":1}
-			    $.ajax({
-                    type : 'POST',
-                    url : 'action.php',
-                    data : data,
-                    success : function(response) {
-                        if (response.result == "error") {
-                            $('#action-errors').html('<p>Error performing action [' + response.msg + ']</p>').show();
-                        } else {
-                            $('#action-errors').hide();
-                        }
-                    },
-                    dataType : 'json'
-                });
 			}
             function executeAction() {
                 count += 100;
