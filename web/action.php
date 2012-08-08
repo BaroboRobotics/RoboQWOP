@@ -65,6 +65,46 @@ function getRoboQWOPMessage() {
     }
     return "$fp1,$fp2,$bj1,$bj2";
 }
+function getDirectionMessage() {
+    $j1 = 0;
+    $j2 = 0;
+    $j3 = 0;
+    $j4 = 0;
+    if (isset($_GET['up']) && $_GET['up'] == "1") {
+        if (isset($_GET['left']) && $_GET['left'] == "1") {
+            // Up and Left
+            $j4 = 1;
+        } else if (isset($_GET['right']) && $_GET['right'] == "1") {
+            // Up and Right
+            $j1 = 1;
+        } else {
+            // Up only
+            $j4 = 1;
+            $j1 = 1;
+        }
+    } else if (isset($_GET['down']) && $_GET['down'] == "1") {
+        if (isset($_GET['left']) && $_GET['left'] == "1") {
+            // Down and Left
+            $j4 = -1;
+        } else if (isset($_GET['right']) && $_GET['right'] == "1") {
+            // Down and Right
+            $j1 = -1;
+        } else {
+            // Down only
+            $j4 = -1;
+            $j1 = -1;
+        }
+    } else if (isset($_GET['left']) && $_GET['left'] == "1") {
+            // Left
+            $j4 = 1;
+            $j1 = -1;
+    } else if (isset($_GET['right']) && $_GET['right'] == "1") {
+            // Right
+            $j4 = -1;
+            $j1 = 1;
+    }
+    return "$j1,$j2,$j3,$j4";
+}
 function getSpeedMessage() {
     $speed = 125.0;
     if (isset($_GET["speed"])) {
@@ -76,6 +116,13 @@ function getSpeedMessage() {
         }
     }
     return "$speed,$speed,$speed,$speed";
+}
+function getActionMessage() {
+    if (isset($_GET['action'])) {
+        $action = intval($_GET['action']);
+        return "$action";
+    }
+    return "0";
 }
 function getJointMessage() {
     $j1 = 0;
@@ -149,12 +196,15 @@ switch ($mode) {
         break;
     case 5:
         // Directional controls
+        $message .= "5," . getDirectionMessage();
         break;
     case 6:
         // Action/Motion controls
+        $message .= "6," . getActionMessage();
         break;
     default:
         // Get status information.
+        $message .= "0";
         break;
 }
 

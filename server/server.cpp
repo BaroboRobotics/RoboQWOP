@@ -337,6 +337,41 @@ int process_command(char *read, char *write) {
 	case CMD_JOINT:
 		mobot[mobot_num].moveToNB(values[0], values[1], values[2], values[3]);
 		break;
+	case CMD_DIRECTIONAL:
+		mobot[mobot_num].moveContinuousNB(get_state(values[0]), get_state(values[1]),
+						get_state(values[2]), get_state(values[3]));
+		break;
+	case CMD_ACTIONS:
+		switch ((int) values[0]) {
+		case 1: // Arch
+			mobot[mobot_num].motionArchNB(180.0);
+			break;
+		case 2: // Inchworm Left
+			mobot[mobot_num].motionInchwormLeftNB(1);
+			break;
+		case 3: // Inchworm Right
+			mobot[mobot_num].motionInchwormRightNB(1);
+			break;
+		case 4: // Roll Backward
+			mobot[mobot_num].motionRollBackwardNB(90.0);
+			break;
+		case 5: // Roll Forward
+			mobot[mobot_num].motionRollForwardNB(90.0);
+			break;
+		case 6: // Skinny Pose
+			mobot[mobot_num].motionSkinnyNB(90.0);
+			break;
+		case 7: // Stand
+			mobot[mobot_num].motionStandNB();
+			break;
+		case 8: // Turn Left
+			mobot[mobot_num].motionTumbleLeftNB(1);
+			break;
+		case 9: // Turn Right
+			mobot[mobot_num].motionTumbleRightNB(1);
+			break;
+		}
+		break;
 	default:
 		strcpy(write, "UNKNOWN COMMAND");
 		printf("Unknown command\n");

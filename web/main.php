@@ -318,13 +318,13 @@ if (!isset( $_SESSION['user_id'] )) {
                         <img class="box" width="331" style="float:left;" src="img/mobot-diagram-robomancer.png" title="Mobot Diagram" alt="Mobot Diagram" />
                         <div class="box arrow-controls">
                             <div id="mancer-btngrp-1">
-                                <button id="mancer-up"><img src="img/icons/arrow-up.png" alt="Up" title="Up" width="48" height="48" /></button>
+                                <button id="mancer-up" onclick="RoboQWOP.robomancer.doDirection(true,false,false,false);"><img src="img/icons/arrow-up.png" alt="Up" title="Up" width="48" height="48" /></button>
                             </div>
                             <div id="mancer-btngrp-2">
-                                <button id="mancer-left"><img src="img/icons/arrow-left.png" alt="Left" title="Left" width="48" height="48" /></button><button id="mancer-down"><img src="img/icons/arrow-down.png" alt="Down" title="Down" width="48" height="48" /></button><button id="mancer-right"><img src="img/icons/arrow-right.png" alt="Right" title="Right" width="48" height="48" /></button>
+                                <button id="mancer-left" onclick="RoboQWOP.robomancer.doDirection(false,false,true,false);"><img src="img/icons/arrow-left.png" alt="Left" title="Left" width="48" height="48" /></button><button id="mancer-down" onclick="RoboQWOP.robomancer.doDirection(false,true,false,false);"><img src="img/icons/arrow-down.png" alt="Down" title="Down" width="48" height="48" /></button><button id="mancer-right" onclick="RoboQWOP.robomancer.doDirection(false,false,false,true);"><img src="img/icons/arrow-right.png" alt="Right" title="Right" width="48" height="48" /></button>
                             </div>
                             <div id="mancer-btngrp-3">
-                                <button id="mancer-reset" onclick="RoboQWOP.robomancer.reset();"><img src="img/icons/reset.png" alt="Reset" title="Reset" width="48" height="48" /></button><button id="mancer-stop" onclick=""><img src="img/icons/stop.png" alt="Stop" title="Stop" width="48" height="48" /></button>
+                                <button id="mancer-reset" onclick="RoboQWOP.robomancer.reset();"><img src="img/icons/reset.png" alt="Reset" title="Reset" width="48" height="48" /></button><button id="mancer-stop" onclick="RoboQWOP.robomancer.doDirection(false,false,false,false);"><img src="img/icons/stop.png" alt="Stop" title="Stop" width="48" height="48" /></button>
                             </div>
                         </div>
                     </div>
@@ -360,18 +360,20 @@ if (!isset( $_SESSION['user_id'] )) {
                         </div>
                         <div class="box motions">
                             <p>Motions</p>
-                            <select size="9">
+                            <select size="9" id="mancer-motion">
                                 <option value="1" selected="selected">Arch</option>
                                 <option value="2">Inchworm Left</option>
                                 <option value="3">Inchworm Right</option>
-                                <option value="4">Roll Backword</option>
+                                <option value="4">Roll Backward</option>
                                 <option value="5">Roll Forward</option>
                                 <option value="6">Skinny Pose</option>
                                 <option value="7">Stand</option>
                                 <option value="8">Turn Left</option>
                                 <option value="9">Turn Right</option>
                             </select>
-                            <button id="mancer-play"><img src="img/icons/play.png" alt="Play" title="Play" width="48" height="48" /></button>
+                            <button id="mancer-play" onclick="RoboQWOP.robomancer.doMotion('mancer-motion');">
+                                <img src="img/icons/play.png" alt="Play" title="Play" width="48" height="48" />
+                            </button>
                         </div>
                     </div>
 

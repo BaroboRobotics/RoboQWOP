@@ -110,6 +110,27 @@ RoboQWOP.robomancer.changeSpeed = function(event, ui) {
     });
 }
 
+RoboQWOP.robomancer.doMotion = function(id) {
+	$.ajax({
+        type : 'GET',
+        url : 'action.php',
+        data : {"mode":6, "action":$('#' + id).val() },
+        dataType : 'json'
+    });
+}
+RoboQWOP.robomancer.doDirection = function(up, down, left, right) {
+	var upVal = (up) ? 1 : 0;
+	var downVal = (down) ? 1 : 0;
+	var leftVal = (left) ? 1 : 0;
+	var rightVal = (right) ? 1 : 0;
+	$.ajax({
+        type : 'GET',
+        url : 'action.php',
+        data : {"mode":5, "up":upVal, "down":downVal, "left":leftVal, "right":rightVal },
+        dataType : 'json'
+    });
+}
+
 RoboQWOP.oriented = {};
 
 RoboQWOP.oriented.init = function() {
