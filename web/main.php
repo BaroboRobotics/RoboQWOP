@@ -426,11 +426,13 @@ if (!isset( $_SESSION['user_id'] )) {
                 countDownThread = setInterval(countDown, 1000);
             }
             function handleKeyEvent(keyCode, down) {
-                if (active) {
-                    executeKeyEvent(keyCode, down);
-                } else {
-                    $('#action-errors').html('<p><strong>Error:</strong> You not in control of the robot.</p>').show();
-                }
+			    if (!$("#sequence").is(":focus")) {
+					if (active) {
+						executeKeyEvent(keyCode, down);
+					} else {
+						$('#action-errors').html('<p><strong>Error:</strong> You not in control of the robot.</p>').show();
+					}
+				}
             }
             function executeKeyEvent(keyCode, down) {
                 var oldval;
