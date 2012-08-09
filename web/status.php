@@ -174,16 +174,18 @@ try {
     // Get Robot status.
     $robot_values = "";
     /*
-    $robot_number = 0;
-    if (isset( $_SESSION['robot'] )) {
-        $robot_number = $_SESSION['robot'];
-    }
-    $host = "localhost";
-    $port = 8082 + $robot_number;
-    if ($fp = fsockopen($host, $port, $errno, $errstr, 1)) {
-        fwrite($fp, '0\n');
-        $robot_values = fread($fp, 256);
-        fclose($fp);    
+    if ($active) {
+        $robot_number = 0;
+        if (isset( $_SESSION['robot'] )) {
+            $robot_number = $_SESSION['robot'];
+        }
+        $host = "localhost";
+        $port = 8082 + $robot_number;
+        if ($fp = fsockopen($host, $port, $errno, $errstr, 1)) {
+            fwrite($fp, '0\n');
+            $robot_values = fread($fp, 256);
+            fclose($fp);    
+        }
     }
     */
     $robots_val .= "]";

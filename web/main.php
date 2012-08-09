@@ -125,12 +125,11 @@ if (!isset( $_SESSION['user_id'] )) {
             <img src="img/imobot_diagram.png" alt="Mobot Diagram" title="Mobot Diagram" />
 			<p><span id="status">Retrieving status information.</span> <span id="time_left"></span></p>
 			<div id="action-errors"></div>
-			
             <div id="control-tabs">
                 <ul>
                     <li><a href="#default-controls">Default Controls</a></li>
-                    <li><a href="#oriented-controls">Oriented Controls</a></li>
                     <li><a href="#robomancer-controls">Robomancer Controls</a></li>
+                    <li><a href="#oriented-controls">Oriented Controls</a></li>
 					<li><a href="#execute-sequence">Execute Sequence</a></li>
                 </ul>
                 <div id="default-controls">
@@ -163,7 +162,7 @@ if (!isset( $_SESSION['user_id'] )) {
                     </table>
                     <p><button onclick="RoboQWOP.robomancer.reset();">Reset (L)</button></p>
 					<p>Speed Slider</p>
-                    <div id="oriented-slider" class="speed-slider" style="width: 250px; margin: 10px 0;"></div>
+                    <div id="default-slider" class="speed-slider" style="width: 250px; margin: 10px 0;"></div>
 				</div>
                 <div id="oriented-controls">
                     <table>
@@ -397,8 +396,6 @@ if (!isset( $_SESSION['user_id'] )) {
 		    var is_admin = <?=$is_admin; ?>;
 			var color1_name = "<?=$color1_name ?>";
 			var color2_name = "<?=$color2_name ?>";
-            var q = 0; var w = 0; var o = 0; var p = 0;
-            var u = 0; var i = 0; var e = 0; var r = 0;
             var countDownThread = null;
 			var time_left = 0;
             var send = false;
@@ -437,49 +434,19 @@ if (!isset( $_SESSION['user_id'] )) {
             function executeKeyEvent(keyCode, down) {
                 var oldval;
                 switch (keyCode) {
-                    case 81: // q
-                        oldval = q;
-                        q = (down) ? 1 : 0;
-                        enableSend(oldval, q);
-                        break;
-                    case 87: // w
-                        oldval = w;
-                        w = (down) ? 1 : 0;
-                        enableSend(oldval, w);
-                        break;
-                    case 69: // e
-                        oldval = e;
-                        e = (down) ? 1 : 0;
-                        enableSend(oldval, e);
-                        break;
-                    case 82: // r
-                        oldval = r;
-                        r = (down) ? 1 : 0;
-                        enableSend(oldval, r);
-                        break;
-                    case 85: // u
-                        oldval = u;
-                        u = (down) ? 1 : 0;
-                        enableSend(oldval, u);
-                        break;
-                    case 73: // i
-                        oldval = i;
-                        i = (down) ? 1 : 0;
-                        enableSend(oldval, i);
-                        break;
-                    case 79: // o
-                        oldval = o;
-                        o = (down) ? 1 : 0;
-                        enableSend(oldval, o);
-                        break;
-                    case 80: // p
-                        oldval = p;
-                        p = (down) ? 1 : 0;
-                        enableSend(oldval, p);
-                        break;
 					case 76: // l
 					    RoboQWOP.robomancer.reset();
-						break;
+						break;  
+				    default:
+				        if ($( "#control-tabs" ).tabs( "option", "selected") == 1) { // Robomancer tab.
+                            if (RoboQWOP.robomancer.event(keyCode, down)) {
+                                send = true;
+                            }
+                        } else {
+                            if (RoboQWOP.qwop.event(keyCode, down)) {
+                                send = true;
+                            }
+                        }
                 }
             }
 
@@ -517,10 +484,12 @@ if (!isset( $_SESSION['user_id'] )) {
                 count += 100;
                 if (send && active) {
                     send = false;
-                    var data = { "mode": 2,
-                        "q" : q, "w" : w, "e" : e, "r" : r,
-                        "u" : u, "i" : i, "o" : o, "p" : p
-                    };
+                    var data = { };
+                    if ($( "#control-tabs" ).tabs( "option", "selected") == 1) { // Robomancer tab.
+                        data = RoboQWOP.robomancer.data();
+                    } else {
+                        data = RoboQWOP.qwop.data();
+                    }
                     $.ajax({
                         type : 'GET',
                         url : 'action.php',
@@ -547,12 +516,21 @@ if (!isset( $_SESSION['user_id'] )) {
                 handleKeyEvent(event.keyCode, false);
             });
             $(function() {
-                $( "#control-tabs" ).tabs();
+                $( "#control-tabs" ).tabs({
+                    select: function(event, ui) {
+                        if (ui.index == 1) {
+                            RoboQWOP.robomancer.clear();
+                        } else {
+                            RoboQWOP.qwop.clear();
+                        }
+                        send = true;
+                    }
+                });
+                RoboQWOP.qwop.init();
                 RoboQWOP.robomancer.init();
                 RoboQWOP.oriented.init();
                 updateStatus();
 				setInterval(executeAction, 100);
-                // setInterval(queueBox, 1000);
 				
                 $("#left_is_red_face_north_south").show();
                 $("#on_left_is_red").click(function() {
@@ -610,14 +588,11 @@ if (!isset( $_SESSION['user_id'] )) {
             });
 
             $('#default-controls').mouseup(function(event) {
-                q = 0;
-                w = 0;
-                o = 0;
-                p = 0;
-                u = 0;
-                i = 0;
-                e = 0;
-                r = 0;
+                if ($( "#control-tabs" ).tabs( "option", "selected") == 1) {
+                    RoboQWOP.robomancer.clear();
+                } else {
+                    RoboQWOP.qwop.clear();
+                }
                 send = true;
             });
 

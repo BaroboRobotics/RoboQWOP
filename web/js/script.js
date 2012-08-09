@@ -6,7 +6,13 @@ function delete_user_from_queue(user_id) {
 }
 
 var RoboQWOP = {};
-
+RoboQWOP.compareAndSet = function(new_value, value) {
+	if (new_value != value) {
+		value = new_value;
+		return true;
+	}
+	return false;
+}
 RoboQWOP.processQueue = function(json) {
 	
 	var header = [];
@@ -48,10 +54,104 @@ RoboQWOP.processQueue = function(json) {
 	}
 	return html;
 }
+RoboQWOP.changeSpeed = function(event, ui) {
+	$.ajax({
+        type : 'GET',
+        url : 'action.php',
+        data : {"mode":3, "speed":ui.value },
+        dataType : 'json'
+    });
+	$('.speed-slider').slider( "option", "value", ui.value );
+}
+/* Default Tab Function and Events */
+RoboQWOP.qwop = function() {
+		var q = 0; var w = 0;
+		var o = 0; var p = 0;
+        var u = 0; var i = 0; 
+        var e = 0; var r = 0;
+}
+RoboQWOP.qwop.data = function() {
+		return {"mode": 2,
+		"q" : q, "w" : w, "e" : e, "r" : r,
+		"u" : u, "i" : i, "o" : o, "p" : p} 
+}
+RoboQWOP.qwop.event =  function(keyCode, down) {
+	var send = false;
+	var temp = (down) ? 1 : 0;
+    switch (keyCode) {
+        case 81: // q
+        	if (temp != q) {
+	    		q = temp; send = true;
+	    	}
+            break;
+        case 87: // w
+        	if (temp != w) {
+	    		w = temp; send = true;
+	    	}
+            break;
+        case 69: // e
+        	if (temp != e) {
+	    		e = temp; send = true;
+	    	}
+            break;
+        case 82: // r
+        	if (temp != r) {
+	    		r = temp; send = true;
+	    	}
+            break;
+        case 85: // u
+        	if (temp != u) {
+	    		u = temp; send = true;
+	    	}
+            break;
+        case 73: // i
+        	if (temp != i) {
+	    		i = temp; send = true;
+	    	}
+            break;
+        case 79: // o
+        	if (temp != o) {
+	    		o = temp; send = true;
+	    	}
+            break;
+        case 80: // p
+        	if (temp != p) {
+	    		p = temp; send = true;
+	    	}
+            break;  
+    }
+    return send;
+}
+RoboQWOP.qwop.clear = function() {
+	q = 0; w = 0;
+	o = 0; p = 0;
+    u = 0; i = 0; 
+    e = 0; r = 0;
+}
+RoboQWOP.qwop.debug = function() {
+	console.log(q + ', ' + w);
+}
+RoboQWOP.qwop.init = function() {
+	RoboQWOP.qwop.clear();
+	$('#default-slider').slider({
+        "max" : 120,
+        "min" : 15,
+        "value" : 120,
+        stop: function(event, ui ) {
+        	RoboQWOP.changeSpeed(event, ui)
+        }
+    });
+}
 
-RoboQWOP.robomancer = {};
-
+/* Robo Mancer Functions and Events */
+RoboQWOP.robomancer = function() {
+	var up = 0;
+	var down = 0;
+	var left = 0;
+	var right = 0;
+}
 RoboQWOP.robomancer.init = function() {
+	RoboQWOP.robomancer.clear();
 	function initSlider(sliderId, valueId) {
 		$(sliderId ).slider({
 	        orientation: "vertical",
@@ -76,7 +176,7 @@ RoboQWOP.robomancer.init = function() {
         "min" : 15,
         "value" : 120,
         stop: function(event, ui ) {
-        	RoboQWOP.robomancer.changeSpeed(event, ui)
+        	RoboQWOP.changeSpeed(event, ui)
         }
     });
 }
@@ -112,15 +212,6 @@ RoboQWOP.robomancer.moveJoints = function() {
         dataType : 'json'
     });
 }
-RoboQWOP.robomancer.changeSpeed = function(event, ui) {
-	$.ajax({
-        type : 'GET',
-        url : 'action.php',
-        data : {"mode":3, "speed":ui.value },
-        dataType : 'json'
-    });
-}
-
 RoboQWOP.robomancer.doMotion = function(id) {
 	$.ajax({
         type : 'GET',
@@ -141,16 +232,48 @@ RoboQWOP.robomancer.doDirection = function(up, down, left, right) {
         dataType : 'json'
     });
 }
-
+RoboQWOP.robomancer.data = function() {
+	return {"mode": 5, "up" : up, "down" : down, "left" : left, "right" : right} 
+}
+RoboQWOP.robomancer.event =  function(keyCode, on) {
+	var send = false;
+	var temp = (on) ? 1 : 0;
+	switch (keyCode) {
+	    case 38: // up
+	    	if (temp != up) {
+	    		up = temp; send = true;
+	    	}
+	        break;
+	    case 40: // down
+	    	if (temp != down) {
+	    		down = temp; send = true;
+	    	}
+	        break;
+	    case 37: // left
+	    	if (temp != left) {
+	    		left = temp; send = true;
+	    	}
+	        break;
+	    case 39: // right
+	    	if (temp != right) {
+	    		right = temp; send = true;
+	    	}
+	        break;  
+	}
+	return send;
+}
+RoboQWOP.robomancer.clear = function() {
+	up = 0; down = 0; left = 0; right = 0;
+}
+/* Oriented Control Functions and Events */
 RoboQWOP.oriented = {};
-
 RoboQWOP.oriented.init = function() {
 	$('#oriented-slider').slider({
         "max" : 120,
         "min" : 15,
         "value" : 120,
         stop: function(event, ui ) {
-        	RoboQWOP.robomancer.changeSpeed(event, ui)
+        	RoboQWOP.changeSpeed(event, ui)
         }
     });
 	$('#oriented-controls').mouseup(function(event) {

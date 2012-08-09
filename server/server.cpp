@@ -27,8 +27,8 @@ using namespace std;
 CMobot mobot[ROBOTS];
 char *addresses[ROBOTS] = { NULL };
 int max_mobot_index = 0;
-double last_speed[ROBOTS];
 int num_seconds[ROBOTS] = { 0 };
+double stats[ROBOTS][8] = {{ 0 }};
 
 int main(int arc, char **argv) {
 	pthread_t threads[ROBOTS];
@@ -114,6 +114,9 @@ void *keep_connected(void *id_val) {
 				printf("Relaxing Mobot due to in-activity.\n");
 				mobot[robots].moveContinuousNB(MOBOT_NEUTRAL, MOBOT_NEUTRAL, MOBOT_NEUTRAL, MOBOT_NEUTRAL);
 			}
+			// Record statistics.
+			mobot[robots].getJointAngles(stats[robots][0], stats[robots][1], stats[robots][2], stats[robots][3]);
+			mobot[robots].getJointSpeeds(stats[robots][4], stats[robots][5], stats[robots][6], stats[robots][7]);
 			num_seconds[robots]++;
 		}
 		sleep(1);
@@ -249,7 +252,6 @@ void init_mobots() {
 				error_and_exit("ERROR connecting to the Mobot.");
 			}
 			printf("Connected successfully\n");
-			last_speed[index] = -1;
 			mobot[index].setJointSpeeds(120.0, 120.0, 120.0, 120.0);
 			mobot[index].moveJointToNB(MOBOT_JOINT2, 0);
 			mobot[index].moveJointTo(MOBOT_JOINT3, 0);
@@ -317,11 +319,11 @@ int process_command(char *read, char *write) {
 	// Process the commands.
 	switch (cmd_type) {
 	case CMD_STATUS:
-		mobot[mobot_num].getJointAngles(values[0], values[1], values[2], values[3]);
-		mobot[mobot_num].getJointSpeeds(values[4], values[5], values[6], values[7]);
 		sprintf(write, "%i,%i,%i,%i,%i,%i,%i,%i",
-				(int) values[0], (int) values[1], (int) values[2], (int) values[3],
-				(int) values[4], (int) values[5], (int) values[6], (int) values[7]);
+				(int) stats[mobot_num][0], (int) stats[mobot_num][1],
+				(int) stats[mobot_num][2], (int) stats[mobot_num][3],
+				(int) stats[mobot_num][4], (int) stats[mobot_num][5],
+				(int) stats[mobot_num][6], (int) stats[mobot_num][7]);
 		break;
 	case CMD_RESET:
 		mobot[mobot_num].moveJointToNB(MOBOT_JOINT2, 0);
