@@ -582,7 +582,7 @@ if (!isset( $_SESSION['user_id'] )) {
 				    var sequence = $("#sequence").val();
 					sequence = sequence.split('');
 					for (var i = 0; i < sequence.length; i++) {
-					    executeKeyEvent(sequence[i].charCodeAt(0), 0);
+					    executeKeyEvent(sequence[i].charCodeAt(0), false);
 					}
 				});
             });
