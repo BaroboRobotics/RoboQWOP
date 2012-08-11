@@ -21,7 +21,9 @@ try {
 	$is_admin = $row->is_admin;
 	$result->close();
 	if ($is_admin) {
-	    $mysqli->query("DELETE FROM users where id = " . $_POST['user_id_to_delete']);
+	    $mysqli->query("DELETE FROM controllers where user_id = " . $_POST['user_id_to_delete']);
+	    $mysqli->query("DELETE FROM queue where user_id = " . $_POST['user_id_to_delete']);
+		
 	} else {
 	    echo "Must be admin";
 	}
