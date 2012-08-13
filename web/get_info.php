@@ -64,18 +64,20 @@ try {
             $created_date->add(new DateInterval("PT" . $row->control_time . "S"));
             $now_date = new DateTime();
             $interval = $created_date->diff($now_date);
-
+    
             $controllers_val .= '{"user_id":' . $row->user_id . ',"first_name":"' . $row->first_name
                  . '", "last_name":"' . $row->last_name . '", "country":"' . $row->country
-                 . '", "robot_name":"' . $row->name . '","robot_number":' . $row->robot_number . ', "time_left":' . $interval->format('%s') 
+                 . '", "robot_name":"' . $row->name . '","robot_number":' . $row->robot_number
+                 . ', "time_left":' . $interval->format('%s') 
                  . ',"control_time":' . $row->control_time . ' }';
         }
         $result->close();
-     }
+    }
     $robots_val .= "]";
     $queue_val .= "]";
     $controllers_val .= "]";
-    $ret_val = '{"error":false, "robots":' . $robots_val . ', "queue":' . $queue_val . ', "controllers":' . $controllers_val . '}';
+    $ret_val = '{"error":false, "admin":false, "robots":' . $robots_val . ', "queue":' . $queue_val
+        . ', "controllers":' . $controllers_val . ',"stats":[]}';
 } catch (Exception $e) {
     $mysqli->rollback();
     $ret_val = '"error":true,"msg":"' . $e->getMessage() . '"}';

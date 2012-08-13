@@ -39,11 +39,12 @@ try {
         $language_code = $d['pref/language'];
         $country_code = $d['contact/country/home'];
         $user_id = NULL;
+        $is_admin = 0;
         // See if there is an existing user record.
-        if ($stmt = $mysqli->prepare("SELECT id FROM users WHERE email = ?")) {
+        if ($stmt = $mysqli->prepare("SELECT id, is_admin FROM users WHERE email = ?")) {
             $stmt->bind_param('s', $email);
             $stmt->execute();
-            $stmt->bind_result($user_id);
+            $stmt->bind_result($user_id, $is_admin);
             $stmt->fetch();
             $stmt->close();
         }
@@ -66,6 +67,7 @@ try {
                 $stmt->close();
             }
         }
+        $_SESSION['is_admin'] = $is_admin;
         // Handle robot number.
         $robot_number = 0;
         if (isset( $_SESSION['robot'] )) {

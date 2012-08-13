@@ -161,7 +161,8 @@ try {
 
             $controllers_val .= '{"user_id":' . $row->user_id . ',"first_name":"' . $row->first_name
                  . '", "last_name":"' . $row->last_name . '", "country":"' . $row->country
-                 . '", "robot_name":"' . $row->name . '","robot_number":' . $row->robot_number . ', "time_left":' . $interval->format('%s') 
+                 . '", "robot_name":"' . $row->name . '","robot_number":' . $row->robot_number . ', "time_left":'
+                 . $interval->format('%s') 
                  . ',"control_time":' . $row->control_time . ' }';
             if ($row->user_id == $_SESSION['user_id']) {
                 $active = true;
@@ -192,7 +193,8 @@ try {
     $queue_val .= "]";
     $controllers_val .= "]";
     
-    $ret_val = '{"active":' . (($active) ? 'true' : 'false') . ', "status":"' . $status
+    $ret_val = '{"active":' . (($active) ? 'true' : 'false') . ', "admin":'
+        . (($_SESSION['is_admin'] == 1) ? 'true' : 'false') . ', "status":"' . $status
         . '", "timeleft":' . $timeleft . ', "robots":' . $robots_val . ', "queue":' . $queue_val
         . ', "controllers":' . $controllers_val . ', "stats":[' . $robot_values . ']}';
 } catch (Exception $e) {

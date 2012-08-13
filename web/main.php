@@ -39,12 +39,6 @@ if (!isset( $_SESSION['user_id'] )) {
                 }
             }
         }
-		// find out if user is admin
-		$sql = "SELECT is_admin FROM users WHERE id = " . $_SESSION['user_id'];
-		$result = $mysqli->query($sql);
-		$row = $result->fetch_object();
-		$is_admin = $row->is_admin;
-		$result->close();
     }
     // Get the username.
     $user_full_name = "Unknown User";
@@ -127,43 +121,88 @@ if (!isset( $_SESSION['user_id'] )) {
 			<div id="action-errors"></div>
             <div id="control-tabs">
                 <ul>
-                    <li><a href="#default-controls">Default Controls</a></li>
                     <li><a href="#robomancer-controls">Robomancer Controls</a></li>
                     <li><a href="#oriented-controls">Oriented Controls</a></li>
 					<li><a href="#execute-sequence">Execute Sequence</a></li>
                 </ul>
-                <div id="default-controls">
-                    <table class="controls">
-                        <thead>
-                            <tr>
-                                <th>Direction</th>
-                                <th>Face Plate / Joint 1</th>
-                                <th>Body Joint / Joint 2</th>
-                                <th>Body Joint / Joint 3</th>
-                                <th>Face Plate / Joint 4</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Forward</td>
-                                <td class="color1"><input class="key-button" type="button" onmousedown="handleKeyEvent(87, true);" value="W" /></td>
-                                <td class="color1"><input class="key-button" type="button" onmousedown="handleKeyEvent(82, true);" value="R" /></td>
-                                <td class="color2"><input class="key-button" type="button" onmousedown="handleKeyEvent(73, true);" value="I" /></td>
-                                <td class="color2"><input class="key-button" type="button" onmousedown="handleKeyEvent(79, true);" value="O" /></td>
-                            </tr>
-                            <tr>
-                                <td>Backwards</td>
-                                <td class="color1"><input class="key-button" type="button" onmousedown="handleKeyEvent(81, true);" value="Q" /></td>
-                                <td class="color1"><input class="key-button" type="button" onmousedown="handleKeyEvent(69, true);" value="E" /></td>
-                                <td class="color2"><input class="key-button" type="button" onmousedown="handleKeyEvent(85, true);" value="U" /></td>
-                                <td class="color2"><input class="key-button" type="button" onmousedown="handleKeyEvent(80, true);" value="P" /></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p><button onclick="RoboQWOP.robomancer.reset();">Reset (L)</button></p>
-					<p>Speed Slider</p>
-                    <div id="default-slider" class="speed-slider" style="width: 250px; margin: 10px 0;"></div>
-				</div>
+                <div id="robomancer-controls">
+                    <div class="clearfix">
+                        <img class="box" width="338" height="246" style="float:left;" src="img/mobot-diagram-robomancer.png" title="Mobot Diagram" alt="Mobot Diagram" />
+                        <div class="box arrow-controls">
+                            <div id="mancer-btngrp-1">
+                                <button id="mancer-up" onclick="controller.doDirection(true,false,false,false);"><img src="img/icons/arrow-up.png" alt="Up" title="Up" width="48" height="48" /></button>
+                            </div>
+                            <div id="mancer-btngrp-2">
+                                <button id="mancer-left" onclick="controller.doDirection(false,false,true,false);"><img src="img/icons/arrow-left.png" alt="Left" title="Left" width="48" height="48" /></button><button id="mancer-down" onclick="controller.doDirection(false,true,false,false);"><img src="img/icons/arrow-down.png" alt="Down" title="Down" width="48" height="48" /></button><button id="mancer-right" onclick="controller.doDirection(false,false,false,true);"><img src="img/icons/arrow-right.png" alt="Right" title="Right" width="48" height="48" /></button>
+                            </div>
+                            <div id="mancer-btngrp-3">
+                                <button id="mancer-reset" onclick="controller.reset();"><img src="img/icons/reset.png" alt="Reset" title="Reset" width="48" height="48" /></button><button id="mancer-stop" onclick="controller.doDirection(false,false,false,false);"><img src="img/icons/stop.png" alt="Stop" title="Stop" width="48" height="48" /></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <div class="box positions">
+                            <p>Joint Positions</p>
+                            <table id="robomancer-joint-table">
+                                <thead><tr>
+                                    <th>1</th>
+                                    <th>2</th>
+                                    <th>3</th>
+                                    <th>4</th>
+                                </tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="color1"><input class="key-button" type="button" onmousedown="handleKeyEvent(87, true);" value="W" /></td>
+                                        <td class="color1"><input class="key-button" type="button" onmousedown="handleKeyEvent(82, true);" value="R" /></td>
+                                        <td class="color2"><input class="key-button" type="button" onmousedown="handleKeyEvent(73, true);" value="I" /></td>
+                                        <td class="color2"><input class="key-button" type="button" onmousedown="handleKeyEvent(79, true);" value="O" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div id="mancer-joint-1"></div></td>
+                                        <td><div id="mancer-joint-2"></div></td>
+                                        <td><div id="mancer-joint-3"></div></td>
+                                        <td><div id="mancer-joint-4"></div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input id="mancer-joint-val-1" type="text" onkeypress="controller.degreeCheck(event);" maxlength="3" /></td>
+                                        <td><input id="mancer-joint-val-2" type="text" onkeypress="controller.degreeCheck(event);" maxlength="3" /></td>
+                                        <td><input id="mancer-joint-val-3" type="text" onkeypress="controller.degreeCheck(event);" maxlength="3" /></td>
+                                        <td><input id="mancer-joint-val-4" type="text" onkeypress="controller.degreeCheck(event);" maxlength="3" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4"><button onclick="controller.moveJointsTo();">Move To</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="color1"><input class="key-button" type="button" onmousedown="handleKeyEvent(81, true);" value="Q" /></td>
+                                        <td class="color1"><input class="key-button" type="button" onmousedown="handleKeyEvent(69, true);" value="E" /></td>
+                                        <td class="color2"><input class="key-button" type="button" onmousedown="handleKeyEvent(85, true);" value="U" /></td>
+                                        <td class="color2"><input class="key-button" type="button" onmousedown="handleKeyEvent(80, true);" value="P" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-top: 5px; vertical-align: middle;">Speed </td>
+                                        <td style="padding-top: 5px; vertical-align: middle;" colspan="3"><div id="mancer-speed" class="speed-slider"></div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="box motions">
+                            <p>Motions</p>
+                            <select size="9" id="mancer-motion">
+                                <option value="1" selected="selected">Arch</option>
+                                <option value="2">Inchworm Left</option>
+                                <option value="3">Inchworm Right</option>
+                                <option value="4">Roll Backward</option>
+                                <option value="5">Roll Forward</option>
+                                <option value="6">Skinny Pose</option>
+                                <option value="8">Turn Left</option>
+                                <option value="9">Turn Right</option>
+                            </select>
+                            <button id="mancer-play" onclick="controller.doMotion('mancer-motion');">
+                                <img src="img/icons/play.png" alt="Play" title="Play" width="48" height="48" />
+                            </button>
+                        </div>
+                    </div>
+                </div> <!-- /robomancer controls -->
                 <div id="oriented-controls">
                     <table>
                         <tr>
@@ -308,79 +347,14 @@ if (!isset( $_SESSION['user_id'] )) {
                             </td>
                         </tr>
                     </table>
-					<p><button onclick="RoboQWOP.robomancer.reset();">Reset (L)</button></p>
+					<p><button onclick="controller.reset();">Reset (L)</button></p>
 					<p>Speed Slider</p>
                     <div id="oriented-slider" class="speed-slider" style="width: 250px; margin: 10px 0;"></div>
-                </div>
-                <div id="robomancer-controls">
-                    <div class="clearfix">
-                        <img class="box" width="331" style="float:left;" src="img/mobot-diagram-robomancer.png" title="Mobot Diagram" alt="Mobot Diagram" />
-                        <div class="box arrow-controls">
-                            <div id="mancer-btngrp-1">
-                                <button id="mancer-up" onclick="RoboQWOP.robomancer.doDirection(true,false,false,false);"><img src="img/icons/arrow-up.png" alt="Up" title="Up" width="48" height="48" /></button>
-                            </div>
-                            <div id="mancer-btngrp-2">
-                                <button id="mancer-left" onclick="RoboQWOP.robomancer.doDirection(false,false,true,false);"><img src="img/icons/arrow-left.png" alt="Left" title="Left" width="48" height="48" /></button><button id="mancer-down" onclick="RoboQWOP.robomancer.doDirection(false,true,false,false);"><img src="img/icons/arrow-down.png" alt="Down" title="Down" width="48" height="48" /></button><button id="mancer-right" onclick="RoboQWOP.robomancer.doDirection(false,false,false,true);"><img src="img/icons/arrow-right.png" alt="Right" title="Right" width="48" height="48" /></button>
-                            </div>
-                            <div id="mancer-btngrp-3">
-                                <button id="mancer-reset" onclick="RoboQWOP.robomancer.reset();"><img src="img/icons/reset.png" alt="Reset" title="Reset" width="48" height="48" /></button><button id="mancer-stop" onclick="RoboQWOP.robomancer.doDirection(false,false,false,false);"><img src="img/icons/stop.png" alt="Stop" title="Stop" width="48" height="48" /></button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="clearfix">
-                        <div class="box positions">
-                            <p>Joint Positions</p>
-                            <table>
-                                <thead><tr>
-                                    <th>1</th>
-                                    <th>2</th>
-                                    <th>3</th>
-                                    <th>4</th>
-                                </tr></thead>
-                                <tbody>
-                                    <tr>
-                                        <td><div id="mancer-joint-1"></div></td>
-                                        <td><div id="mancer-joint-2"></div></td>
-                                        <td><div id="mancer-joint-3"></div></td>
-                                        <td><div id="mancer-joint-4"></div></td>
-                                    </tr>
-                                    <tr>
-                                        <td><input id="mancer-joint-val-1" type="text" readonly="readonly" /></td>
-                                        <td><input id="mancer-joint-val-2" type="text" readonly="readonly" /></td>
-                                        <td><input id="mancer-joint-val-3" type="text" readonly="readonly" /></td>
-                                        <td><input id="mancer-joint-val-4" type="text" readonly="readonly" /></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding-top: 5px; vertical-align: middle;">Speed </td>
-                                        <td style="padding-top: 5px; vertical-align: middle;" colspan="3"><div id="mancer-speed" class="speed-slider"></div></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="box motions">
-                            <p>Motions</p>
-                            <select size="9" id="mancer-motion">
-                                <option value="1" selected="selected">Arch</option>
-                                <option value="2">Inchworm Left</option>
-                                <option value="3">Inchworm Right</option>
-                                <option value="4">Roll Backward</option>
-                                <option value="5">Roll Forward</option>
-                                <option value="6">Skinny Pose</option>
-                                <option value="7">Stand</option>
-                                <option value="8">Turn Left</option>
-                                <option value="9">Turn Right</option>
-                            </select>
-                            <button id="mancer-play" onclick="RoboQWOP.robomancer.doMotion('mancer-motion');">
-                                <img src="img/icons/play.png" alt="Play" title="Play" width="48" height="48" />
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
+                </div> <!-- /oriented-controls -->
 				<div id="execute-sequence">
 				    <input id="execute-sequence-button" type="button" value="Execute sequence" style="float:right; width:200px;" />
 					<textarea id="sequence" ></textarea>
-				</div>
+				</div> <!-- /execute-sequence -->
             </div>
             <?php include("footer.php"); ?>
         </div>
@@ -393,7 +367,6 @@ if (!isset( $_SESSION['user_id'] )) {
         <script src="js/plugins.js"></script>
         <script src="js/script.js"></script>
         <script type="text/javascript">
-		    var is_admin = <?=$is_admin; ?>;
 			var color1_name = "<?=$color1_name ?>";
 			var color2_name = "<?=$color2_name ?>";
             var countDownThread = null;
@@ -435,18 +408,10 @@ if (!isset( $_SESSION['user_id'] )) {
                 var oldval;
                 switch (keyCode) {
 					case 76: // l
-					    RoboQWOP.robomancer.reset();
+					    controller.reset();
 						break;  
 				    default:
-				        if ($( "#control-tabs" ).tabs( "option", "selected") == 1) { // Robomancer tab.
-                            if (RoboQWOP.robomancer.event(keyCode, down)) {
-                                send = true;
-                            }
-                        } else {
-                            if (RoboQWOP.qwop.event(keyCode, down)) {
-                                send = true;
-                            }
-                        }
+				        controller.event(keyCode, down);
                 }
             }
 
@@ -468,10 +433,10 @@ if (!isset( $_SESSION['user_id'] )) {
 					}
 					/*
 					if (data.stats.length > 0) {
-					    RoboQWOP.robomancer.updateSliders(data.stats);
+					    controller.updateSliders(data.stats);
 					}
 					*/
-					$('#info-display').html(RoboQWOP.processQueue(data));
+					$('#info-display').html(controller.getQueueHTML(data));
 				});
 			}
 			function playSound() {
@@ -482,27 +447,8 @@ if (!isset( $_SESSION['user_id'] )) {
 			}
             function executeAction() {
                 count += 100;
-                if (send && active) {
-                    send = false;
-                    var data = { };
-                    if ($( "#control-tabs" ).tabs( "option", "selected") == 1) { // Robomancer tab.
-                        data = RoboQWOP.robomancer.data();
-                    } else {
-                        data = RoboQWOP.qwop.data();
-                    }
-                    $.ajax({
-                        type : 'GET',
-                        url : 'action.php',
-                        data : data,
-                        success : function(response) {
-                            if (response.success) {
-                                $('#action-errors').hide();
-                            } else {
-                                $('#action-errors').html('<p>Error performing action [' + response.msg + ']</p>').show();
-                            }
-                        },
-                        dataType : 'json'
-                    });
+                if (active) {
+                    controller.sendAction();
                 }
                 if (count >= 1000) {
                     count = 0;
@@ -516,19 +462,8 @@ if (!isset( $_SESSION['user_id'] )) {
                 handleKeyEvent(event.keyCode, false);
             });
             $(function() {
-                $( "#control-tabs" ).tabs({
-                    select: function(event, ui) {
-                        if (ui.index == 1) {
-                            RoboQWOP.robomancer.clear();
-                        } else {
-                            RoboQWOP.qwop.clear();
-                        }
-                        send = true;
-                    }
-                });
-                RoboQWOP.qwop.init();
-                RoboQWOP.robomancer.init();
-                RoboQWOP.oriented.init();
+                $( "#control-tabs" ).tabs();
+                controller.init();
                 updateStatus();
 				setInterval(executeAction, 100);
 				
@@ -586,16 +521,6 @@ if (!isset( $_SESSION['user_id'] )) {
 					}
 				});
             });
-
-            $('#default-controls').mouseup(function(event) {
-                if ($( "#control-tabs" ).tabs( "option", "selected") == 1) {
-                    RoboQWOP.robomancer.clear();
-                } else {
-                    RoboQWOP.qwop.clear();
-                }
-                send = true;
-            });
-
         </script>
     </body>
 </html>
