@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<!-- Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *      
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License
+-->
+  <ModulePrefs title="RoboQWOP ">
+    <Require feature="rpc"/>
+    <Require feature="views"/>
+  </ModulePrefs>
+  <Content type="html">
+    <![CDATA[
+    
+<script src="//hangoutsapi.talkgadget.google.com/hangouts/api/hangout.js?v=1.0"></script>
+<div id="participants"><p><i>Participants not available yet.</i></p></div>
+        
+<script>
+google.load("jquery", "1.7");
+
+var baroboRobId = '118297411864790602556'; // Used to show Barobo Rob's video feed 
+
+function setFeed() {
+  // Set the video feed to Barobo Rob
+  var feed = gapi.hangout.layout.createParticipantVideoFeed(baroboRobId);
+  var canvas = gapi.hangout.layout.getVideoCanvas();
+
+  canvas.setVideoFeed(feed);
+  canvas.setWidth(600);
+  canvas.setPosition(300, 50);
+  canvas.setVisible(true);
+}
+
+// This runs when the gadget is ready
+function init() {
+  console.log('Init.');
+
+  // When API is ready...
+  gapi.hangout.onApiReady.add(
+      function(eventObj) {
+        if (eventObj.isApiReady) {
+          console.log('API is ready');
+          updateParticipants();
+          updateDisplayedParticipant();
+          
+          // Add some listeners
+
+          // When people leave the hangout
+          gapi.hangout.onParticipantsChanged.add(
+              function(eventObj) {
+                console.log('Participants changed');
+                updateParticipants();
+              });
+
+          // Every time the default video feed changes, we want the text to change
+          // Note that these events go off whether or not the default video feed
+          // is currently displayed.
+          gapi.hangout.layout.getDefaultVideoFeed().onDisplayedParticipantChanged.add(
+              function(eventObj) {
+                console.log('Displayed participant changed');
+                updateDisplayedParticipant();
+              });
+         
+        }
+      });
+}
+
+// Wait for gadget to load.
+gadgets.util.registerOnLoadHandler(init);
+
+
+</script>
+    ]]>
+  </Content>
+</Module>
