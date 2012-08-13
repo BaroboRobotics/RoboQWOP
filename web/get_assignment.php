@@ -16,10 +16,15 @@ if ($result->num_rows == 0) {
 }
 $sql = "SELECT objective, instructions, youtube_url FROM assignments WHERE number = " . $number . " and course_id = 1;";
 $result = $mysqli->query($sql);
-$row = $result->fetch_object();
-$objective = $row->objective;
-$instructions = $row->instructions;
-$youtube_url = $row->youtube_url;
-echo '{"number": ' . $number . ', "objective": "' . $objective .'", "instructions": "' . $instructions . '", "youtube_url": "' . $youtube_url . '"}';
+if ($result->num_rows == 0) {
+    echo '{"completed": "true"}';
+} else {
+	$row = $result->fetch_object();
+	$objective = $row->objective;
+	$instructions = $row->instructions;
+	$youtube_url = $row->youtube_url;
+	echo '{"completed": "false", "number": ' . $number . ', "objective": "' . $objective .'", "instructions": "' . $instructions . '", "youtube_url": "' . $youtube_url . '"}';
+
+}
 $mysqli->close();
 ?>
