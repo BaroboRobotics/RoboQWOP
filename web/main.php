@@ -476,6 +476,7 @@ if (!isset( $_SESSION['user_id'] )) {
 			    showAssignment();
 				$("#completed_assignment").click(function() {
 				    $.post('completed_assignment.php', 'user_id='+current_user_id+'&assignment_number='+$('#assignment_number').text());
+					// not sure if processing time issue but you have to hit the completed assignment button twice before the next assignment appears
 					showAssignment();
 				});
                 $( "#control-tabs" ).tabs();
