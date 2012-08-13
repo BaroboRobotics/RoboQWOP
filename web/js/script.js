@@ -5,6 +5,19 @@ function delete_user_from_queue(user_id) {
     $.post('delete_user_from_queue.php', 'user_id_to_delete='+user_id);
 }
 
+function showAssignment() {
+	$.post('get_assignment.php', 'user_id='+current_user_id, function(data) {
+	    console.log(data);
+	    $('#assignment_number').text(data.number);
+		$('#assignment_objective').text(data.objective);
+		$('#assignment_instructions').text(data.instructions);
+		$('#assignment_youtube').html('');
+		if (data.youtube_url) {
+		    $('#assignment_youtube').html('<iframe width="560" height="315" src="'+data.youtube_url+'" frameborder="0" allowfullscreen></iframe>');
+		}
+	});
+}
+
 function RoboQWOPController() {
 	var self = this;
 	var sendQwop = false;

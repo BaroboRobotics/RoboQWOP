@@ -66,6 +66,11 @@ if (!isset( $_SESSION['user_id'] )) {
     $color1_name = $row->color1_name;
     $color2_name = $row->color2_name;
     $result->close();
+	// Get course title
+	$sql = "SELECT title FROM courses WHERE id = 1";
+    $result = $mysqli->query($sql);
+	$row = $result->fetch_object();
+	$course_title = $row->title;
     // Close the connection.
     $mysqli->close();
 }
@@ -114,8 +119,13 @@ if (!isset( $_SESSION['user_id'] )) {
         <div role="main" id="page">
 		    <p style="float:right"><strong><?=$user_full_name ?></strong> | <a href="logout.php" style="">Logout</a></p>
 		    <div id="info-display" style="float:right; clear:both;"></div>
-            <a style="margin: 0 auto; display: block;" href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
+            <a style="margin: 0 auto; float:left;" href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
             <h1>RoboQWOP</h1>
+			<div id="assignment">
+			   <h3 id="course">Assignment #<span id="assignment_number"></span> for <?=$course_title ?>: <span id="assignment_objective"></span></h3>
+			   <p id="assignment_instructions"></p>
+			   <input type="button" id="completed_assignment" value="I've completed this assignment" />
+			</div>
             <img src="img/imobot_diagram.png" alt="Mobot Diagram" title="Mobot Diagram" />
 			<p><span id="status">Retrieving status information.</span> <span id="time_left"></span></p>
 			<div id="action-errors"></div>
@@ -369,6 +379,7 @@ if (!isset( $_SESSION['user_id'] )) {
         <script type="text/javascript">
 			var color1_name = "<?=$color1_name ?>";
 			var color2_name = "<?=$color2_name ?>";
+			var current_user_id = "<?=$user_id ?>";
             var countDownThread = null;
 			var time_left = 0;
             var send = false;
@@ -462,6 +473,11 @@ if (!isset( $_SESSION['user_id'] )) {
                 handleKeyEvent(event.keyCode, false);
             });
             $(function() {
+			    showAssignment();
+				$("#completed_assignment").click(function() {
+				    $.post('completed_assignment.php', 'user_id='+current_user_id+'&assignment_number='+$('#assignment_number').text());
+					showAssignment();
+				});
                 $( "#control-tabs" ).tabs();
                 controller.init();
                 updateStatus();
