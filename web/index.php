@@ -36,14 +36,13 @@
         <script src="js/plugins.js"></script>
         <script src="js/script.js"></script>
         <script type="text/javascript">
-		    var is_admin = false;
             function infoDisplay() {
                 $.getJSON('get_info.php', function(json) {
                     if (json.error) {
                         $('#info-display').html('<p>' + json.msg + '</p>');
                         return;
                     }
-                    $('#info-display').html(RoboQWOP.processQueue(json));
+                    $('#info-display').html(controller.getQueueHTML(json));
                 });
             }
 
