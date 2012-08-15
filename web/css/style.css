@@ -1,3 +1,4 @@
+
 /* HTML5 Boilerplate  */
 
 article, aside, details, figcaption, figure, footer, header, hgroup, nav, section { display: block; }
@@ -319,6 +320,36 @@ table.controls .green {
 #execute-sequence {
     padding:5px;
 }
+
 #execute-sequence textarea {
     width:750px;
+}
+
+#assignment h3 {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+	}
+
+#assignment {
+width:600px;
+clear:left;
+border:1px solid orange;
+padding:10px;
+background:#FFF;
+}
+
+#assignment h3 {
+font-size:1.25em;
+font-weight:bold;
+padding:10px;
+margin:-10px -10px 10px -10px;
+background:orange;
+}
+
+#assignment_instructions {
+margin-bottom:10px;
 }
