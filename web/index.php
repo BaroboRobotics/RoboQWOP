@@ -16,18 +16,23 @@
         <script src="js/libs/modernizr-2.5.3.min.js"></script>
     </head>
     <body>
-        <div role="main" id="page" class="homepage">
-            <a href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
-            <h1>RoboQWOP</h1>
-            <img src="img/roboqwop.jpg" style="text-align: center; margin: 0 auto;" width="640" height="480" alt="RoboQWOP" title="RoboQWOP - best way to test drive a mobot." />
-            <p>
-                Click a team to control the Mobot!.
-            </p>
-            <div id="info-display" style="width:410px; margin:5px auto;" class="clearfix">
-                
+        <div role="main" id="page">
+        	<div id="page-content" class="homepage">
+            	<a href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
+	            <h1>RoboQWOP</h1>
+	            <img src="img/roboqwop.jpg" style="text-align: center; margin: 0 auto;" width="640" height="480" alt="RoboQWOP" title="RoboQWOP - best way to test drive a mobot." />
+	            <p>
+	                Click a team to control the Mobot!.
+	            </p>
+	            <div id="info-display" class="clearfix" style="width: 410px; margin:5px auto;" >
+	                
+	            </div>
             </div>
-            <?php include("footer.php"); ?>
+	        <?php include("includes/sidebar.php") ?>
+	        <div class="clearfix"></div>
+            <?php include("includes/footer.php"); ?>
         </div>
+        
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
         <script>
             window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')
