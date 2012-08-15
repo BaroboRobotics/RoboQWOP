@@ -21,7 +21,11 @@
 <div id="page-sidebar">
 	<?php if (isset( $user_full_name )) : ?>
 	<div class="widget">
-		<p><strong><?=$user_full_name ?></strong> | <a href="logout.php" style="">Logout</a></p>
+		<p><strong><?=$user_full_name ?></strong> | <?php if ($page == 'main') : ?><a href="exit_queue.php" style="">Exit Queue</a> | <?php endif; ?><a href="logout.php" style="">Logout</a></p>
+	</div>
+	<?php else: ?>
+	<div class="widget">
+		<p><a href="login.php" style="">Login</a></p>
 	</div>
 	<?php endif; ?>
 	<div class="widget">
