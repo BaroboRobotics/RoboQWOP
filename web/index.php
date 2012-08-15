@@ -1,3 +1,11 @@
+<?php
+include 'config.php';
+session_start();
+if (isset( $_SESSION['user_id'] )) {
+	$user_id = $_SESSION['user_id'];	
+}
+$page = 'index';    
+?>
 <!doctype html>
 <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
 <!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
@@ -21,9 +29,7 @@
             	<a href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
 	            <h1>RoboQWOP</h1>
 	            <img src="img/roboqwop.jpg" style="text-align: center; margin: 0 auto;" width="640" height="480" alt="RoboQWOP" title="RoboQWOP - best way to test drive a mobot." />
-	            <p>
-	                Click a team to control the Mobot!.
-	            </p>
+	            <p><a href="connect.php" style="font-size:3em; clear:left;">Click here to control the robot</a></p>
 	            <div id="info-display" class="clearfix" style="width: 410px; margin:5px auto;" >
 	                
 	            </div>

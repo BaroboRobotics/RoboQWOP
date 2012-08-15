@@ -16,5 +16,5 @@ $mysqli->query("DELETE FROM controllers WHERE user_id = " . $user_id); // remove
 $mysqli->query("DELETE FROM queue WHERE user_id = " . $user_id); // remove user from queue
 unset($_SESSION['user_id']); // delete the session 
 $mysqli->close();
-header('Location: main.php');
+header('Location: index.php');
 ?>
