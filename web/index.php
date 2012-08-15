@@ -24,12 +24,11 @@ $page = 'index';
         <script src="js/libs/modernizr-2.5.3.min.js"></script>
     </head>
     <body>
-        <div role="main" id="page">
+        <div role="main" id="page"> <?php include("includes/header.php") ?>
         	<div id="page-content" class="homepage">
-            	<a href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
-	            <h1>RoboQWOP</h1>
-	            <img src="img/roboqwop.jpg" style="text-align: center; margin: 0 auto;" width="640" height="480" alt="RoboQWOP" title="RoboQWOP - best way to test drive a mobot." />
-	            <p><a href="connect.php" style="font-size:3em; clear:left;">Click here to control the robot</a></p>
+			   <p>Welcome to <strong>RoboQWOP.com</strong>. RoboQWOP lets you play with robots, called Mobots, over the internet for free.</p><p>Mobots are for teaching high school students science, technology, engineering, and math. They're small enough that each student can have one. <a href="http://store.barobo.com/mobot/mobot.html">Buy Mobots for your students</a>. </p><p>Put the Google Hangout and RoboQWOP windows next to each other.</p>
+	            <img src="img/split_screen_demo.jpg" />
+				<p><a href="connect.php" style="font-size:3em; clear:left;">Click here to play with Mobots</a></p>
 	            <div id="info-display" class="clearfix" style="width: 410px; margin:5px auto;" >
 	                
 	            </div>

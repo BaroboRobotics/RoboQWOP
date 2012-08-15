@@ -104,7 +104,35 @@ td { vertical-align: top; }
 }
 
 body {
-    background-color: #c2e8f1;
+    margin:5px 0;
+    background: #FFF url('../img/header_orange.png') repeat-x;
+}
+
+h1 a:link, h1 a:visited {
+background:url('../img/header.png') no-repeat;
+height:39px;
+display:block;
+}
+h1 {
+width:398px;
+	padding: 0;
+	margin: 0;
+	line-height: 1;
+	}
+h1 span {
+display:none;
+}
+#navbar {
+float:right;
+text-align:right;
+}
+
+#navbar a:link, #navbar a:visited {
+color:blue;
+}
+
+#navbar a:hover {
+text-decoration:none;
 }
 
 footer#page-footer {
@@ -341,10 +369,10 @@ table.controls .green {
 }
 
 #assignment {
-	width:600px;
+	width:738px;
 	border:1px solid orange;
 	padding:10px;
-	margin: 0 0 15px;
+	margin: 20px 0 15px;
 	background:#FFF;
 }
 
@@ -353,7 +381,7 @@ table.controls .green {
 	font-weight:bold;
 	padding:10px;
 	margin:-10px -10px 10px -10px;
-	background:orange;
+	background:#f5bc5c;
 	vertical-align: baseline;
 }
 

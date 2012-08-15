@@ -112,14 +112,12 @@ if (!isset( $_SESSION['user_id'] )) {
         <script src="js/libs/modernizr-2.5.3.min.js"></script>
     </head>
     <body>
-        <div role="main" id="page">
+        <div role="main" id="page"><?php include("includes/header.php") ?>
         	<div id="page-content">
-	            <a style="margin: 0 auto; display: block;" href="http://www.barobo.com"><img src="img/logo.png" alt="Barobo" title="Barobo" /></a>
-	            <h1>RoboQWOP</h1>
+	            
 				<?php include 'includes/courses.php' ?>
 				<div>
-	            	<img src="img/imobot_diagram.png" alt="Mobot Diagram" title="Mobot Diagram" style="float:left;" />
-	            	<div id="info-display" style="float:left; margin-left: 20px;"></div>
+	            	<div id="info-display" style="float:right;"></div>
 	            	<div class="clearfix"></div>
 				</div>
 				<p><span id="status">Retrieving status information.</span> <span id="time_left"></span></p>
