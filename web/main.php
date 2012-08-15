@@ -477,6 +477,11 @@ if (!isset( $_SESSION['user_id'] )) {
 					// not sure if processing time issue but you have to hit the completed assignment button twice before the next assignment appears
 					showAssignment();
 				});
+				$("#hide_tutorial").click(function() {
+				    $.post('hide_tutorial.php', 'user_id='+current_user_id);
+					// not sure if processing time issue but you have to hit the completed assignment button twice before the next assignment appears
+					$("#assignment").hide();
+				});
                 $( "#control-tabs" ).tabs();
                 controller.init();
                 updateStatus();

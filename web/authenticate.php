@@ -41,10 +41,10 @@ try {
         $user_id = NULL;
         $is_admin = 0;
         // See if there is an existing user record.
-        if ($stmt = $mysqli->prepare("SELECT id, is_admin FROM users WHERE email = ?")) {
+        if ($stmt = $mysqli->prepare("SELECT id, is_admin, show_tutorial FROM users WHERE email = ?")) {
             $stmt->bind_param('s', $email);
             $stmt->execute();
-            $stmt->bind_result($user_id, $is_admin);
+            $stmt->bind_result($user_id, $is_admin, $show_tutorial);
             $stmt->fetch();
             $stmt->close();
         }
@@ -68,6 +68,7 @@ try {
             }
         }
         $_SESSION['is_admin'] = $is_admin;
+		$_SESSION['show_tutorial'] = $show_tutorial;
         // Handle robot number.
         $robot_number = 0;
         if (isset( $_SESSION['robot'] )) {
