@@ -32,7 +32,6 @@ try {
                 $stmt -> execute();
 				$stmt->bind_result($n);
 				while ($stmt->fetch()) {
-				    echo '<br/>' . $n . '</br>';
 					$robots[$key] = $robots[$key] + $n;
 				}
 				
@@ -40,10 +39,11 @@ try {
 			}
 		} else { $result->close(); }
     }
-    print_r($robots);
+    $robot_number = array_keys($robots, min($robots));
+	$robot_number = $robot_number[0];
 } catch (Exception $e) {
     $mysqli->rollback();
 }
 $mysqli->close();
-// header('Location: authenicate.php?robot=' . $robot_number);
+header('Location: authenticate.php?robot=' . $robot_number);
 ?>
