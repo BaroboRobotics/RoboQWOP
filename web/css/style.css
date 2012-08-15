@@ -107,9 +107,24 @@ body {
     background-color: #c2e8f1;
 }
 
+footer#page-footer {
+	margin: 10px auto 0;
+	text-align: center;
+}
+
 #page {
     margin: 20px auto;
     width: 980px;
+}
+
+#page-content {
+	width: 760px;
+	float: left;
+}
+
+#page-sidebar {
+	width: 200px;
+	float: right;
 }
 
 div.homepage {
@@ -325,31 +340,24 @@ table.controls .green {
     width:750px;
 }
 
-#assignment h3 {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
-	}
-
 #assignment {
-width:600px;
-clear:left;
-border:1px solid orange;
-padding:10px;
-background:#FFF;
+	width:600px;
+	border:1px solid orange;
+	padding:10px;
+	margin: 0 0 15px;
+	background:#FFF;
+	display: none;
 }
 
 #assignment h3 {
-font-size:1.25em;
-font-weight:bold;
-padding:10px;
-margin:-10px -10px 10px -10px;
-background:orange;
+	font-size:1.25em;
+	font-weight:bold;
+	padding:10px;
+	margin:-10px -10px 10px -10px;
+	background:orange;
+	vertical-align: baseline;
 }
 
 #assignment_instructions {
-margin-bottom:10px;
+	margin-bottom:10px;
 }
