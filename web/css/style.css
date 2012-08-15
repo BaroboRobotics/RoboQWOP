@@ -360,3 +360,27 @@ table.controls .green {
 #assignment_instructions {
 	margin-bottom:10px;
 }
+
+#user_stats {
+width:100%;
+text-align:left;
+border-collapse:collapse;
+background:#FFF;
+}
+
+#user_stats th, #user_stats td {
+padding:5px;
+border:1px solid orange;
+}
+
+#user_stats th {
+background:orange;
+}
+
+#tutorial_progress {
+width:175px;
+}
+
+.completed_tutorial {
+background:#FC3;
+}

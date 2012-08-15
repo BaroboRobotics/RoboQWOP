@@ -20,7 +20,6 @@ try {
     }
 	foreach ($robots as $key => $val) {
         $sql = "SELECT robot_number FROM controllers WHERE robot_number = " . $key . ";";
-		echo $sql;
 		$result = $mysqli->query($sql);
 		
 		if ( $result->num_rows )
