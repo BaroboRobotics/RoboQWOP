@@ -27,13 +27,13 @@
 	<div class="widget">
 	    <div><h3>Contribute</h3></div>
 	    <div>
-			<p>Donate to Barobo!</p>
-			<form action="#" method="post"><input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" name="submit" alt="Make payments with PayPal - it's fast, free and secure!"> <input type="hidden" name="cmd" value="_xclick-subscriptions"></form>
-			<p>Recurring $2/month donation (recommended)</p>
-			<form action="#" method="post"><input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" name="submit" alt="Make payments with PayPal - it's fast, free and secure!"> <input type="hidden" name="cmd" value="_xclick-subscriptions"></form>
-			<p>Recurring $20/year donation</p>
-			<form action="#" method="post"><input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" name="submit" alt="Make payments with PayPal - it's fast, free and secure!"> <input type="hidden" name="cmd" value="_xclick-subscriptions"></form>
-			<p>One time donation of any amount</p>
+			<p style="margin: 0;">One time donation of any amount<p>
+			<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+				<input type="hidden" name="cmd" value="_s-xclick">
+				<input type="hidden" name="hosted_button_id" value="H7TP3NJC76TQJ">
+				<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+				<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+			</form>
 		</div>
 	</div>
 </div>
