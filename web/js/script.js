@@ -12,6 +12,7 @@ function showAssignment() {
 		    $('#assignment').hide();
 			$('#info-display').css('margin-top', '20px');
 		} else {
+		    alert(JSON.stringify(data));
 			$('#assignment_number').text(data.number);
 			$('#assignment_objective').text(data.objective);
 			$('#assignment_instructions').text(data.instructions);

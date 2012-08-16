@@ -13,6 +13,7 @@
 <div id="assignment">
    <h3 id="course">Assignment #<span id="assignment_number"></span> for <?=$course_title ?>: <span id="assignment_objective"></span></h3>
    <p id="assignment_instructions"></p>
+   <div id="assignment_youtube"></div>
    <input type="button" id="hide_tutorial" value="Hide <?=$course_title ?>" style="float:right;" /><input type="button" id="completed_assignment" value="I've completed this assignment" /> 
 </div>
 <?php } ?>
