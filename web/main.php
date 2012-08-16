@@ -255,7 +255,7 @@ if (!isset( $_SESSION['user_id'] )) {
 					} else {
 					    if (jQuery.inArray(keyCode, [38, 40, 37, 39, 76, 81, 87, 69, 82, 85, 73, 79, 80, 38, 40]) > -1) { // only show error if the key pressed is a control key
                            
-    						$('#action-errors').html('<p><strong>Error:</strong> You not in control of the robot.</p>').show();
+    						$('#action-errors').html('<p><strong>Error:</strong> You not in control of the robot.</p>').show().delay( 10000 ).hide( 0 );
 					    }
 					}
 				}
