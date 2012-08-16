@@ -122,12 +122,8 @@ if (!isset( $_SESSION['user_id'] )) {
 				</div>
 				<p><span id="status">Retrieving status information.</span> <span id="time_left"></span></p>
 				<div id="action-errors"></div>
+				<p>You can use your keyboard's arrow buttons. If <?=$color2_name ?> is on left then pressing down arrow moves the Mobot up not down. When moving left to right and <?=$color2_name ?> is on bottom hitting up arrow moves the Mobot to the right.</p>
 	            <div id="control-tabs">
-	                <ul>
-	                    <li><a href="#robomancer-controls">Robomancer Controls</a></li>
-	                    <li><a href="#oriented-controls">Oriented Controls</a></li>
-						<li><a href="#execute-sequence">Execute Sequence</a></li>
-	                </ul>
 	                <div id="robomancer-controls">
 	                    <div class="clearfix">
 	                        <img class="box" width="338" height="246" style="float:left;" src="img/mobot-diagram-robomancer.png" title="Mobot Diagram" alt="Mobot Diagram" />
@@ -141,6 +137,7 @@ if (!isset( $_SESSION['user_id'] )) {
 	                            <div id="mancer-btngrp-3">
 	                                <button id="mancer-reset" onclick="controller.reset();"><img src="img/icons/reset.png" alt="Reset" title="Reset" width="48" height="48" /></button><button id="mancer-stop" onclick="controller.doDirection(false,false,false,false);"><img src="img/icons/stop.png" alt="Stop" title="Stop" width="48" height="48" /></button>
 	                            </div>
+								
 	                        </div>
 	                    </div>
 	                    <div class="clearfix">
@@ -206,158 +203,7 @@ if (!isset( $_SESSION['user_id'] )) {
 	                        </div>
 	                    </div>
 	                </div> <!-- /robomancer controls -->
-	                <div id="oriented-controls">
-	                    <table>
-	                        <tr>
-	                            <th rowspan="2">Orientation</th><td>
-	                            <input type="button" value="<?=$color1_name ?> is on the left" id="on_left_is_red" class="button active" />
-	                            </td><td>
-	                            <input type="button" value="<?=$color2_name ?> is on the left" id="on_left_is_green" class="button" />
-	                            </td>
-	                        </tr>
-	                        <tr>
-	                            <td>
-	                            <input type="button" id="facing_north_south" value="Facing North/South" class="button active" />
-	                            </td><td>
-	                            <input type="button" id="facing_east_west" value="Facing East/West" class="button" />
-	                            </td>
-	                        </tr>
-	                    </table>
-	                    <table id="left_is_red_face_north_south" class="quad">
-	                        <tr>
-	                            <th rowspan="4">Controls</th><td>
-	                            <input type="button" value="Spin clockwise P&amp;W" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" />
-	                            </td><td>
-	                            <input type="button" value="Spin counter clockwise Q&amp;O"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" />
-	                            </td>
-	                        </tr>
-	                    
-	                        <tr>
-	                            <td>
-	                            <input type="button" value="North W&amp;O" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" />
-	                            </td><td>
-	                            <input type="button" value="South O&amp;P" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" />
-	                            </td>
-	                        </tr>
-	                        <tr>
-	                            <td>
-	                            <input type="button" value="Northeast R" onmousedown="handleKeyEvent(82, true);" class="color1" />
-	                            </td><td>
-	                            <input type="button" value="Northwest U" onmousedown="handleKeyEvent(85, true);" class="color2" />
-	                            </td>
-	                        </tr>
-	                        <tr>
-	                            <td>
-	                            <input type="button" value="Southeast E" onmousedown="handleKeyEvent(69, true);" class="color1" />
-	                            </td><td>
-	                            <input type="button" value="Southwest I" onmousedown="handleKeyEvent(73, true);" class="color2" />
-	                            </td>
-	                        </tr>
-	                    </table>
-	                    <table id="left_is_green_face_north_south" class="quad">
-	                        <tr>
-	                            <th rowspan="4">Controls</th><td>
-	                            <input type="button" value="Spin clockwise P&amp;W" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" />
-	                            </td><td>
-	                            <input type="button" value="Spin counter clockwise Q&amp;O"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" />
-	                            </td>
-	                        </tr>
-	                    
-	                        <tr>
-	                            <td>
-	                            <input type="button" value="North Q&amp;P" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" />
-	                            </td><td>
-	                            <input type="button" value="South W&amp;O" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" />
-	                            </td>
-	                        </tr>
-	                        <tr>
-	                            <td>
-	                            <input type="button" value="Northwest I" onmousedown="handleKeyEvent(73, true);" class="color2" />
-	                            </td><td>
-	                            <input type="button" value="Northeast E" onmousedown="handleKeyEvent(69, true);" class="color1" />
-	                            </td>
-	                        </tr>
-	                        <tr>
-	                            <td>
-	                            <input type="button" value="Southwest U" onmousedown="handleKeyEvent(85, true);" class="color2" />
-	                            </td><td>
-	                            <input type="button" value="Southeast R" onmousedown="handleKeyEvent(82, true);" class="color1" />
-	                            </td>
-	                        </tr>
-	                    </table>
-	                    
-	                    <table id="bottom_is_green_face_east_west" class="quad">
-	                        <tr>
-	                            <th rowspan="4">Controls</th><td>
-	                            <input type="button" value="Spin clockwise P&amp;W" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" />
-	                            </td><td>
-	                            <input type="button" value="Spin counter clockwise Q&amp;O"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" />
-	                            </td>
-	                        </tr>
-	                    
-	                        <tr>
-	                            <td>
-	                            <input type="button" value="West Q&amp;P" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" />
-	                            </td><td>
-	                            <input type="button" value="East W&amp;O" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" />
-	                            </td>
-	                        </tr>
-	                    
-	                        <tr>
-	                            <td>
-	                            <input type="button" value="Southwest R" onmousedown="handleKeyEvent(82, true);" class="color1" />
-	                            </td><td>
-	                            <input type="button" value="Southeast E" onmousedown="handleKeyEvent(69, true);" class="color1" />
-	                            </td>
-	                        </tr>
-	                        <tr>
-	                            <td>
-	                            <input type="button" value="Northwest U" onmousedown="handleKeyEvent(85, true);" class="color2" />
-	                            </td><td>
-	                            <input type="button" value="Northeast I" onmousedown="handleKeyEvent(73, true);" class="color2" />
-	                            </td>
-	                        </tr>
-	                    </table>
-	                    <table id="bottom_is_red_face_east_west" class="quad">
-	                        <tr>
-	                            <th rowspan="4">Controls</th><td>
-	                            <input type="button" value="Spin clockwise P&amp;W" onmousedown="handleKeyEvent(87, true); handleKeyEvent(80, true);" class="button" />
-	                            </td><td>
-	                            <input type="button" value="Spin counter clockwise Q&amp;O"  onmousedown="handleKeyEvent(81, true); handleKeyEvent(79, true);" class="button" />
-	                            </td>
-	                        </tr>
-	                    
-	                        <tr>
-	                            <td>
-	                            <input type="button" value="West Q&amp;P" onmousedown="handleKeyEvent(87, true); handleKeyEvent(79, true);" class="button" />
-	                            </td><td>
-	                            <input type="button" value="East W&amp;O" onmousedown="handleKeyEvent(81, true); handleKeyEvent(80, true);" class="button" />
-	                            </td>
-	                        </tr>
-	                    
-	                        <tr>
-	                            <td>
-	                            <input type="button" value="Southwest R" onmousedown="handleKeyEvent(73, true);" class="color2" />
-	                            </td><td>
-	                            <input type="button" value="Southeast E" onmousedown="handleKeyEvent(85, true);" class="color2" />
-	                            </td>
-	                        </tr>
-	                        <tr>
-	                            <td>
-	                            <input type="button" value="Northwest U" onmousedown="handleKeyEvent(69, true);" class="color1" />
-	                            </td><td>
-	                            <input type="button" value="Northeast I" onmousedown="handleKeyEvent(82, true);" class="color1" />
-	                            </td>
-	                        </tr>
-	                    </table>
-						<p><button onclick="controller.reset();">Reset (L)</button></p>
-						<p>Speed Slider</p>
-	                    <div id="oriented-slider" class="speed-slider" style="width: 250px; margin: 10px 0;"></div>
-	                </div> <!-- /oriented-controls -->
-					<div id="execute-sequence">
-					    <input id="execute-sequence-button" type="button" value="Execute sequence" style="float:right; width:200px;" />
-						<textarea id="sequence" ></textarea>
-					</div> <!-- /execute-sequence -->
+	                
 	            </div>
             </div> <!-- /page-content -->
             <?php include("includes/sidebar.php") ?>
