@@ -10,9 +10,6 @@ $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 if (mysqli_connect_errno()) {
     die('Connection Error: ' . mysqli_connect_error());
 }
-if (isset( $_GET['robot'] )) {
-    $_SESSION['robot'] = $_GET['robot'];
-}
 try {
     $openid = new LightOpenID($_SERVER['HTTP_HOST']);
 
@@ -68,35 +65,9 @@ try {
             }
         }
         $_SESSION['is_admin'] = $is_admin;
-		$_SESSION['show_tutorial'] = $show_tutorial;
-        // Handle robot number.
-        $robot_number = 0;
-        if (isset( $_SESSION['robot'] )) {
-            $robot_number = $_SESSION['robot'];
-        }
-        $_SESSION['robot_number'] = $robot_number;
-        $mysqli->query("DELETE from controllers WHERE user_id = " . $user_id);
-        // Create or update the queue record.
-        if ($result = $mysqli->query("SELECT id FROM queue WHERE user_id = " . $user_id )) {
-            $row_cnt = $result -> num_rows;
-            $result -> close();
-            if ($row_cnt == 0) {
-                if ($stmt = $mysqli -> prepare("INSERT INTO queue (created, last_active, user_id, robot_number) values (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?)")) {
-                    $stmt -> bind_param('ii', $user_id, $robot_number);
-                    $stmt -> execute();
-                    $_SESSION['queue_id'] = $stmt -> insert_id;
-                    $stmt -> close();
-                }
-            } else {
-                if ($stmt = $mysqli->prepare("UPDATE queue SET last_active = CURRENT_TIMESTAMP, robot_number = ? where user_id = ?")) {
-                    $stmt->bind_param('ii', $robot_number, $user_id);
-                    $stmt->execute();
-                    $stmt->close();
-                }
-            }
-        }
-        // Redirect the user to the control page.
-        header('Location: main.php');
+        $_SESSION['show_tutorial'] = $show_tutorial;
+        // Redirect the user to index.php
+        header('Location: index.php');
     }
     $mysqli->close();
 } catch(ErrorException $e) {

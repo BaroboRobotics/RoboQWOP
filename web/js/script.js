@@ -10,6 +10,7 @@ function showAssignment() {
 	    console.log(data);
 		if (data.completed) {
 		    $('#assignment').hide();
+			$('#info-display').css('margin-top', '20px');
 		} else {
 			$('#assignment_number').text(data.number);
 			$('#assignment_objective').text(data.objective);
@@ -238,7 +239,7 @@ function RoboQWOPController() {
 		$.ajax({
 	        type : 'GET',
 	        url : 'action.php',
-	        data : {"mode":6, "action":$('#' + id).val() },
+	        data : {"mode":6, "action":id },
 	        dataType : 'json'
 	    });
 	}

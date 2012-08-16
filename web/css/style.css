@@ -104,7 +104,35 @@ td { vertical-align: top; }
 }
 
 body {
-    background-color: #c2e8f1;
+    margin:5px 0;
+    background: #FFF url('../img/header_gray.png') repeat-x;
+}
+
+h1 a:link, h1 a:visited {
+background:url('../img/header.png') no-repeat;
+height:39px;
+display:block;
+}
+h1 {
+width:398px;
+	padding: 0;
+	margin: 0;
+	line-height: 1;
+	}
+h1 span {
+display:none;
+}
+#navbar {
+float:right;
+text-align:right;
+}
+
+#navbar a:link, #navbar a:visited {
+color:blue;
+}
+
+#navbar a:hover {
+text-decoration:none;
 }
 
 footer#page-footer {
@@ -222,7 +250,7 @@ table.controls .green {
 #queue td, #queue th {
     background:#FFF;
     padding:5px;
-    border:1px solid orange;
+    border:1px solid #c2c2c2;
 }
 
 #queue th {
@@ -230,7 +258,7 @@ table.controls .green {
 }
 
 .in_control td {
-    background:orange;
+    background:#c2c2c2;
     color:#FFF;
 }
 
@@ -261,7 +289,7 @@ table.controls .green {
 #info-display table td, #info-display table th {
     background:#FFF;
     padding:5px;
-    border:1px solid orange;
+    border:1px solid #c2c2c2;
 }
 #robomancer-controls table {
     
@@ -341,12 +369,11 @@ table.controls .green {
 }
 
 #assignment {
-	width:600px;
-	border:1px solid orange;
+	width:738px;
+	border:1px solid #c2c2c2;
 	padding:10px;
-	margin: 0 0 15px;
+	margin: 20px 0 15px;
 	background:#FFF;
-	display: none;
 }
 
 #assignment h3 {
@@ -354,10 +381,38 @@ table.controls .green {
 	font-weight:bold;
 	padding:10px;
 	margin:-10px -10px 10px -10px;
-	background:orange;
+	background:#ddd;
 	vertical-align: baseline;
 }
 
 #assignment_instructions {
 	margin-bottom:10px;
+}
+
+#user_stats {
+width:100%;
+text-align:left;
+border-collapse:collapse;
+background:#FFF;
+}
+
+#user_stats th, #user_stats td {
+padding:5px;
+border:1px solid #c2c2c2;
+}
+
+#user_stats th {
+background:#c2c2c2;
+}
+
+#tutorial_progress {
+width:175px;
+}
+
+.motion_button {
+width:200px;
+}
+
+.completed_tutorial {
+background:#FC3;
 }

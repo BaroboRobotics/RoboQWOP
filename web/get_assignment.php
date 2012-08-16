@@ -14,9 +14,13 @@ if ($result->num_rows == 0) {
     $row = $result->fetch_object();
     $number = $row->last_completed_assignment_number + 1;
 }
+$sql = "SELECT show_tutorial FROM users WHERE id = " . $user_id . ";";
+$result = $mysqli->query($sql);
+$row = $result->fetch_object();
+$show_tutorial = $row->show_tutorial;
 $sql = "SELECT objective, instructions, youtube_url FROM assignments WHERE number = " . $number . " and course_id = 1;";
 $result = $mysqli->query($sql);
-if ($result->num_rows == 0) {
+if ($result->num_rows == 0 || $show_tutorial == 0) {
     echo '{"completed": true}';
 } else {
 	$row = $result->fetch_object();
