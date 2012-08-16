@@ -250,7 +250,7 @@ table.controls .green {
 #queue td, #queue th {
     background:#FFF;
     padding:5px;
-    border:1px solid orange;
+    border:1px solid #c2c2c2;
 }
 
 #queue th {
@@ -258,7 +258,7 @@ table.controls .green {
 }
 
 .in_control td {
-    background:orange;
+    background:#c2c2c2;
     color:#FFF;
 }
 
@@ -289,7 +289,7 @@ table.controls .green {
 #info-display table td, #info-display table th {
     background:#FFF;
     padding:5px;
-    border:1px solid orange;
+    border:1px solid #c2c2c2;
 }
 #robomancer-controls table {
     
@@ -370,7 +370,7 @@ table.controls .green {
 
 #assignment {
 	width:738px;
-	border:1px solid orange;
+	border:1px solid #c2c2c2;
 	padding:10px;
 	margin: 20px 0 15px;
 	background:#FFF;
@@ -381,7 +381,7 @@ table.controls .green {
 	font-weight:bold;
 	padding:10px;
 	margin:-10px -10px 10px -10px;
-	background:#f5bc5c;
+	background:#ddd;
 	vertical-align: baseline;
 }
 
@@ -398,11 +398,11 @@ background:#FFF;
 
 #user_stats th, #user_stats td {
 padding:5px;
-border:1px solid orange;
+border:1px solid #c2c2c2;
 }
 
 #user_stats th {
-background:orange;
+background:#c2c2c2;
 }
 
 #tutorial_progress {
