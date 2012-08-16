@@ -310,9 +310,17 @@ if (!isset( $_SESSION['user_id'] )) {
             }
             $(document).keydown(function(event) {
                 handleKeyEvent(event.keyCode, true);
+				if ($.inArray(event.keyCode, [38, 40, 37, 39])) { // if arrow key pressed don't move the page up/down/left/right
+					event.preventDefault();
+					return false;
+				}
             });
             $(document).keyup(function(event) {
                 handleKeyEvent(event.keyCode, false);
+				if ($.inArray(event.keyCode, [38, 40, 37, 39])) { // if arrow key pressed don't move the page up/down/left/right
+					event.preventDefault();
+					return false;
+				}
             });
             $(function() {
 			    showAssignment();
