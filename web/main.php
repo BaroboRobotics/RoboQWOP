@@ -195,7 +195,6 @@ if (!isset( $_SESSION['user_id'] )) {
 								<input type="button" value="Skinny Pose" onclick="controller.doMotion(6)" class="motion_button"/>
 								<input type="button" value="Turn Left" onclick="controller.doMotion(8)" class="motion_button"/>
 								<input type="button" value="Turn Right" onclick="controller.doMotion(9)" class="motion_button"/>
-
 	                        </div>
 	                    </div>
 	                </div> <!-- /robomancer controls -->
