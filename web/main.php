@@ -187,19 +187,15 @@ if (!isset( $_SESSION['user_id'] )) {
 	                        </div>
 	                        <div class="box motions">
 	                            <p>Motions</p>
-	                            <select size="9" id="mancer-motion">
-	                                <option value="1" selected="selected">Arch</option>
-	                                <option value="2">Inchworm Left</option>
-	                                <option value="3">Inchworm Right</option>
-	                                <option value="4">Roll Backward</option>
-	                                <option value="5">Roll Forward</option>
-	                                <option value="6">Skinny Pose</option>
-	                                <option value="8">Turn Left</option>
-	                                <option value="9">Turn Right</option>
-	                            </select>
-	                            <button id="mancer-play" onclick="controller.doMotion('mancer-motion');">
-	                                <img src="img/icons/play.png" alt="Play" title="Play" width="48" height="48" />
-	                            </button>
+								<input type="button" value="Arch" onclick="controller.doMotion(1)" class="motion_button"/>
+								<input type="button" value="Inchworm Left" onclick="controller.doMotion(2)" class="motion_button"/>
+								<input type="button" value="Inchworm Right" onclick="controller.doMotion(3)" class="motion_button"/>
+								<input type="button" value="Roll Backward" onclick="controller.doMotion(4)" class="motion_button"/>
+								<input type="button" value="Roll Forward" onclick="controller.doMotion(5)" class="motion_button"/>
+								<input type="button" value="Skinny Pose" onclick="controller.doMotion(6)" class="motion_button"/>
+								<input type="button" value="Turn Left" onclick="controller.doMotion(8)" class="motion_button"/>
+								<input type="button" value="Turn Right" onclick="controller.doMotion(9)" class="motion_button"/>
+
 	                        </div>
 	                    </div>
 	                </div> <!-- /robomancer controls -->

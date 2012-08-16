@@ -239,7 +239,7 @@ function RoboQWOPController() {
 		$.ajax({
 	        type : 'GET',
 	        url : 'action.php',
-	        data : {"mode":6, "action":$('#' + id).val() },
+	        data : {"mode":6, "action":id },
 	        dataType : 'json'
 	    });
 	}

@@ -409,6 +409,10 @@ background:#c2c2c2;
 width:175px;
 }
 
+.motion_button {
+width:200px;
+}
+
 .completed_tutorial {
 background:#FC3;
 }
