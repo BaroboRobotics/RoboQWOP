@@ -122,7 +122,7 @@ if (!isset( $_SESSION['user_id'] )) {
 				</div>
 				<p><span id="status">Retrieving status information.</span> <span id="time_left"></span></p>
 				<div id="action-errors"></div>
-				<p>You can use your keyboard's arrow buttons. If <?=$color2_name ?> is on left then pressing down arrow moves the Mobot up not down. When moving left to right and <?=$color2_name ?> is on bottom hitting up arrow moves the Mobot to the right.</p>
+				<p>You can use your keyboard's arrow buttons. If <?=$color2_name ?> is on left then pressing down arrow moves the Mobot up not down. When moving left to right and <?=$color2_name ?> is on bottom hitting up arrow moves the Mobot to the right and hitting left arrows spins the Mobot to the right.</p>
 	            <div id="control-tabs">
 	                <div id="robomancer-controls">
 	                    <div class="clearfix">
