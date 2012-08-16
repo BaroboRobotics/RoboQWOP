@@ -1,0 +1,12 @@
+Barobo's business goal for Roboqwop is to sell Mobots, rent Mobots, and collect dontations.
+
+Course management:
+    Create assignment:
+    (1) Create box for inputing info about assignment
+	(2) Move the webpage to where the box for the new assignment is
+	Delete assignment: 
+	(1) hide the assignment from the admin
+	(2) remove the assignment from the database
+	(3) update the assignment number for the other assignments in the course
+	
+	Change order of assignments:

@@ -14,7 +14,7 @@
 		        }
 		        $stmt->close();
 		    }
-			if (!($page == 'user stats')) {
+			if (!($page == 'user stats') && !($page == 'manage courses')) {
 			    $mysqli->close();
 		    }
 		}

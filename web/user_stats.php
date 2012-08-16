@@ -47,7 +47,7 @@ if ($stmt = $mysqli->prepare($sql)) {
         	<div id="page-content">
 	            
 				<h2>User Stats</h2>
-				<table id="user_stats">
+				<table id="user_stats" class="data_table">
 				<tr><th>Name</th><th id="tutorial_progress">Tutorial Progress</th></tr>
 				<?php
 foreach ($users as $key => $val) {
