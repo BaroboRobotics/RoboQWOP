@@ -156,8 +156,12 @@ if (!isset( $_SESSION['user_id'] )) {
 	                            <div id="mancer-btngrp-3">
 	                                <button id="mancer-reset" onclick="controller.reset();"><img src="img/icons/reset.png" alt="Reset" title="Reset" width="48" height="48" /></button><button id="mancer-stop" onclick="controller.doDirection(false,false,false,false);"><img src="img/icons/stop.png" alt="Stop" title="Stop" width="48" height="48" /></button>
 	                            </div>
-								
+								<table style="margin-top:20px;"><tr><th style="padding-right:20px;">Speed</th><td>
+	                                       <div id="mancer-speed" class="speed-slider"></div></td></tr>
+										   <tr><td colspan="2" style="font-size:.75em;">Press 5 for half-speed and 6 for full-speed</td></table>
 	                        </div>
+	                                        
+	                                    
 	                    </div>
 	                    <div class="clearfix">
 	                        <div class="box positions">
@@ -197,10 +201,7 @@ if (!isset( $_SESSION['user_id'] )) {
 	                                        <td class="color2"><input class="key-button" type="button" onmousedown="handleKeyEvent(85, true);" value="U" /></td>
 	                                        <td class="color2"><input class="key-button" type="button" onmousedown="handleKeyEvent(80, true);" value="P" /></td>
 	                                    </tr>
-	                                    <tr>
-	                                        <td style="padding-top: 5px; vertical-align: middle;">Speed </td>
-	                                        <td style="padding-top: 5px; vertical-align: middle;" colspan="3"><div id="mancer-speed" class="speed-slider"></div></td>
-	                                    </tr>
+	                                    
 	                                </tbody>
 	                            </table>
 	                        </div>
@@ -242,6 +243,16 @@ if (!isset( $_SESSION['user_id'] )) {
             var active = false;
             var count = 0;
 			var orientation = 1;
+			var nextOrientation = null;
+			function changeSpeedWithKeystroke(speed) {
+			    $('#mancer-speed').slider('value', speed);
+				$.ajax({
+					type : 'GET',
+					url : 'action.php',
+					data : {"mode":3, "speed":speed },
+					dataType : 'json'
+				});
+			}
             function enableSend(oldval, newval) {
                 if (oldval !== newval) {
                     send = true;
@@ -265,7 +276,12 @@ if (!isset( $_SESSION['user_id'] )) {
             }
             function handleKeyEvent(keyCode, down) {
 			    if (!$("#sequence").is(":focus")) {
-					if (active || jQuery.inArray(keyCode, [49, 50, 51, 52]) > -1) {
+					if (active || jQuery.inArray(keyCode, [13, 49, 50, 51, 52]) > -1) {
+					    if (keyCode == 13) {
+						    if (nextOrientation) {
+						        changeOrientation(nextOrientation);
+						    }
+						}
 						executeKeyEvent(keyCode, down);
 					} else {
 					    if (jQuery.inArray(keyCode, [38, 52, 37, 39, 76, 81, 87, 69, 82, 85, 73, 79, 80, 38, 40]) > -1) { // only show error if the key pressed is a control key

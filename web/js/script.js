@@ -107,6 +107,12 @@ function RoboQWOPController() {
 			case 52: // 4
 	        	changeOrientation(4);
 	            break;
+		    case 53: // 5 half-speed
+			    changeSpeedWithKeystroke(60);
+				break;
+			case 54: // 6 full-speed
+			    changeSpeedWithKeystroke(120);
+				break;
 	        case 81: // q
 	        	if (temp != self.qwopData.q) {
 		    		self.qwopData.q = temp; sendQwop = true;
@@ -156,11 +162,13 @@ function RoboQWOPController() {
 						case 2:
 		    		        self.directionData.down = temp; sendDirection = true;
 							break;
-						case 2:
+						case 3:
 		    		        self.directionData.right = temp; sendDirection = true;
+							nextOrientation = 2;
 							break;
-						case 2:
+						case 4:
 		    		        self.directionData.left = temp; sendDirection = true;
+							nextOrientation = 1;
 							break;
 				    }
 		    	}
@@ -175,11 +183,13 @@ function RoboQWOPController() {
 						case 2:
 		    		        self.directionData.up = temp; sendDirection = true;
 							break;
-						case 2:
+						case 3:
 		    		        self.directionData.left = temp; sendDirection = true;
+							nextOrientation = 1;
 							break;
-						case 2:
+						case 4:
 		    		        self.directionData.right = temp; sendDirection = true;
+							nextOrientation = 2;
 							break;
 				    }
 		    	}
@@ -190,14 +200,16 @@ function RoboQWOPController() {
 				    switch (orientation) {
 					    case 1:
 		    		        self.directionData.left = temp; sendDirection = true;
+							nextOrientation = 3;
 							break;
 						case 2:
 		    		        self.directionData.right = temp; sendDirection = true;
+							nextOrientation = 4;
 							break;
-						case 2:
+						case 3:
 		    		        self.directionData.up = temp; sendDirection = true;
 							break;
-						case 2:
+						case 4:
 		    		        self.directionData.down = temp; sendDirection = true;
 							break;
 				    }
@@ -209,14 +221,16 @@ function RoboQWOPController() {
 				    switch (orientation) {
 					    case 1:
 		    		        self.directionData.right = temp; sendDirection = true;
+							nextOrientation = 4;
 							break;
 						case 2:
 		    		        self.directionData.left = temp; sendDirection = true;
+							nextOrientation = 3;
 							break;
-						case 2:
+						case 3:
 		    		        self.directionData.down = temp; sendDirection = true;
 							break;
-						case 2:
+						case 4:
 		    		        self.directionData.up = temp; sendDirection = true;
 							break;
 				    }
