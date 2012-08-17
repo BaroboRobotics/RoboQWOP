@@ -1,4 +1,4 @@
-
+<?php if (!($page == 'user stats') && !($page == 'manage courses')) { ?>
 <div id="page-sidebar">
 
 	<div class="widget">
@@ -20,3 +20,6 @@
 		</div>
 	</div>
 </div>
+<?php } else { if ($page == 'manage courses') { echo "<input type=\"button\" id=\"save_course_changes\" value=\"Save course changes\" />"; } ?>
+
+<?php } ?> 
