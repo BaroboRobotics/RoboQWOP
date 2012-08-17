@@ -242,6 +242,7 @@ if (!isset( $_SESSION['user_id'] )) {
             var active = false;
             var count = 0;
 			var orientation = 1;
+			var nextOrientation = null;
             function enableSend(oldval, newval) {
                 if (oldval !== newval) {
                     send = true;
@@ -265,7 +266,12 @@ if (!isset( $_SESSION['user_id'] )) {
             }
             function handleKeyEvent(keyCode, down) {
 			    if (!$("#sequence").is(":focus")) {
-					if (active || jQuery.inArray(keyCode, [49, 50, 51, 52]) > -1) {
+					if (active || jQuery.inArray(keyCode, [13, 49, 50, 51, 52]) > -1) {
+					    if (keyCode == 13) {
+						    if (nextOrientation) {
+						        changeOrientation(nextOrientation);
+						    }
+						}
 						executeKeyEvent(keyCode, down);
 					} else {
 					    if (jQuery.inArray(keyCode, [38, 52, 37, 39, 76, 81, 87, 69, 82, 85, 73, 79, 80, 38, 40]) > -1) { // only show error if the key pressed is a control key

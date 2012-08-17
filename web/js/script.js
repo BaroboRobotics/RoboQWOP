@@ -156,11 +156,13 @@ function RoboQWOPController() {
 						case 2:
 		    		        self.directionData.down = temp; sendDirection = true;
 							break;
-						case 2:
+						case 3:
 		    		        self.directionData.right = temp; sendDirection = true;
+							nextOrientation = 2;
 							break;
-						case 2:
+						case 4:
 		    		        self.directionData.left = temp; sendDirection = true;
+							nextOrientation = 1;
 							break;
 				    }
 		    	}
@@ -175,11 +177,13 @@ function RoboQWOPController() {
 						case 2:
 		    		        self.directionData.up = temp; sendDirection = true;
 							break;
-						case 2:
+						case 3:
 		    		        self.directionData.left = temp; sendDirection = true;
+							nextOrientation = 1;
 							break;
-						case 2:
+						case 4:
 		    		        self.directionData.right = temp; sendDirection = true;
+							nextOrientation = 2;
 							break;
 				    }
 		    	}
@@ -190,14 +194,16 @@ function RoboQWOPController() {
 				    switch (orientation) {
 					    case 1:
 		    		        self.directionData.left = temp; sendDirection = true;
+							nextOrientation = 3;
 							break;
 						case 2:
 		    		        self.directionData.right = temp; sendDirection = true;
+							nextOrientation = 4;
 							break;
-						case 2:
+						case 3:
 		    		        self.directionData.up = temp; sendDirection = true;
 							break;
-						case 2:
+						case 4:
 		    		        self.directionData.down = temp; sendDirection = true;
 							break;
 				    }
@@ -209,14 +215,16 @@ function RoboQWOPController() {
 				    switch (orientation) {
 					    case 1:
 		    		        self.directionData.right = temp; sendDirection = true;
+							nextOrientation = 4;
 							break;
 						case 2:
 		    		        self.directionData.left = temp; sendDirection = true;
+							nextOrientation = 3;
 							break;
-						case 2:
+						case 3:
 		    		        self.directionData.down = temp; sendDirection = true;
 							break;
-						case 2:
+						case 4:
 		    		        self.directionData.up = temp; sendDirection = true;
 							break;
 				    }
