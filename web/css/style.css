@@ -66,13 +66,6 @@ td { vertical-align: top; }
 .chromeframe { margin: 0.2em 0; background: #ccc; color: black; padding: 0.2em 0; }
 
 
-
-
-
-
-
-
-
 @media only screen and (min-width: 35em) {
   
 
@@ -156,7 +149,7 @@ footer#page-footer {
 }
 
 div.homepage {
-    text-align: center;
+
 }
 .box {
     border: 1px solid black;
