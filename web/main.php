@@ -266,7 +266,7 @@ if (!isset( $_SESSION['user_id'] )) {
             }
             function handleKeyEvent(keyCode, down) {
 			    if (!$("#sequence").is(":focus")) {
-					if (true || jQuery.inArray(keyCode, [13, 49, 50, 51, 52]) > -1) {
+					if (active || jQuery.inArray(keyCode, [13, 49, 50, 51, 52]) > -1) {
 					    if (keyCode == 13) {
 						    if (nextOrientation) {
 						        changeOrientation(nextOrientation);
