@@ -120,10 +120,29 @@ if (!isset( $_SESSION['user_id'] )) {
 	            	<div id="info-display" style="float:right;"></div>
 	            	<div class="clearfix"></div>
 				</div>
+				
+				<?php if ($color1_name == 'White' && $color2_name == 'Red') : ?>
+				<table style="margin-top:20px;">
+				<tr><th rowspan="2" style="width:150px">Select orientation of Mobot</th><th>1</th><th>2</th><th>3</th><th>4</th><td rowspan="2" style="vertical-align:center; width:200px; padding-left:30px;">You can drive the Mobot with the arrow keys on your keyboard</td></tr>
+				<tr><td><img src="img/orientation_icons/white_and_red/white_on_left.png" id="orientation_icon_1" class="orientation_icon selected_orientation" onclick="changeOrientation(1);" /></td>
+				<td><img src="img/orientation_icons/white_and_red/red_on_left.png" id="orientation_icon_2" class="orientation_icon" onclick="changeOrientation(2);" /></td>
+				<td><img src="img/orientation_icons/white_and_red/white_on_bottom.png" id="orientation_icon_3" class="orientation_icon" onclick="changeOrientation(3);" /></td>
+				<td><img src="img/orientation_icons/white_and_red/red_on_bottom.png" id="orientation_icon_4" class="orientation_icon" onclick="changeOrientation(4);" /></td>
+				</tr>
+				</table>
+				<?php elseif ($color1_name == 'White' && $color2_name == 'Blue') : ?>
+				<table style="margin-top:20px;">
+				<tr><th rowspan="2" style="width:150px">Select orientation of Mobot</th><th>1</th><th>2</th><th>3</th><th>4</th><td rowspan="2" style="vertical-align:center; width:200px; padding-left:30px;">You can drive the Mobot with the arrow keys on your keyboard</td></tr>
+				<tr><td><img src="img/orientation_icons/white_and_blue/white_on_left.png" id="orientation_icon_1" class="orientation_icon selected_orientation" onclick="changeOrientation(1);" /></td>
+				<td><img src="img/orientation_icons/white_and_blue/blue_on_left.png" id="orientation_icon_2" class="orientation_icon" onclick="changeOrientation(2);" /></td>
+				<td><img src="img/orientation_icons/white_and_blue/white_on_bottom.png" id="orientation_icon_3" class="orientation_icon" onclick="changeOrientation(3);" /></td>
+				<td><img src="img/orientation_icons/white_and_blue/blue_on_bottom.png" id="orientation_icon_4" class="orientation_icon" onclick="changeOrientation(4);" /></td>
+				</tr>
+				</table>
+				<?php endif; ?>
 				<p><span id="status">Retrieving status information.</span> <span id="time_left"></span></p>
 				<div id="action-errors"></div>
-				<p>You can use your keyboard's arrow buttons. If <?=$color2_name ?> is on left then pressing down arrow moves the Mobot up not down. When moving left to right and <?=$color2_name ?> is on bottom hitting up arrow moves the Mobot to the right and hitting left arrows spins the Mobot to the right.</p>
-	            <div id="control-tabs">
+				<div id="control-tabs">
 	                <div id="robomancer-controls">
 	                    <div class="clearfix">
 	                        <img class="box" width="338" height="246" style="float:left;" src="img/mobot-diagram-robomancer.png" title="Mobot Diagram" alt="Mobot Diagram" />
@@ -222,6 +241,7 @@ if (!isset( $_SESSION['user_id'] )) {
             var send = false;
             var active = false;
             var count = 0;
+			var orientation = 1;
             function enableSend(oldval, newval) {
                 if (oldval !== newval) {
                     send = true;
@@ -245,10 +265,10 @@ if (!isset( $_SESSION['user_id'] )) {
             }
             function handleKeyEvent(keyCode, down) {
 			    if (!$("#sequence").is(":focus")) {
-					if (active) {
+					if (active || jQuery.inArray(keyCode, [49, 50, 51, 52]) > -1) {
 						executeKeyEvent(keyCode, down);
 					} else {
-					    if (jQuery.inArray(keyCode, [38, 40, 37, 39, 76, 81, 87, 69, 82, 85, 73, 79, 80, 38, 40]) > -1) { // only show error if the key pressed is a control key
+					    if (jQuery.inArray(keyCode, [38, 52, 37, 39, 76, 81, 87, 69, 82, 85, 73, 79, 80, 38, 40]) > -1) { // only show error if the key pressed is a control key
                            
     						$('#action-errors').html('<p><strong>Error:</strong> You not in control of the robot.</p>').show().delay( 10000 ).hide( 0 );
 					    }

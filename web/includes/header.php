@@ -15,7 +15,7 @@
 		        }
 		        $stmt->close();
 		    }
-			if (!($page == 'user stats')) {
+			if (!($page == 'user stats') && !($page == 'manage courses')) {
 			    $mysqli->close();
 		    }
 		}
@@ -24,7 +24,7 @@
 <div id="header">
     <?php if (isset( $user_full_name )) : ?>
     	<div id="navbar">
-    		<?php if ($page == 'user stats') : ?>
+    		<?php if ($page == 'user stats' || $page == 'manage courses') : ?>
     		    <a href="authenticate.php">Control robot</a> | <a href="index.php">Watch queue</a> | 
             <?php elseif ($_SESSION['is_admin']) :?>
                 <a href="user_stats.php">User stats</a> | 
