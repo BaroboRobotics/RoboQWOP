@@ -156,8 +156,12 @@ if (!isset( $_SESSION['user_id'] )) {
 	                            <div id="mancer-btngrp-3">
 	                                <button id="mancer-reset" onclick="controller.reset();"><img src="img/icons/reset.png" alt="Reset" title="Reset" width="48" height="48" /></button><button id="mancer-stop" onclick="controller.doDirection(false,false,false,false);"><img src="img/icons/stop.png" alt="Stop" title="Stop" width="48" height="48" /></button>
 	                            </div>
-								
+								<table style="margin-top:20px;"><tr><th style="padding-right:20px;">Speed</th><td>
+	                                       <div id="mancer-speed" class="speed-slider"></div></td></tr>
+										   <tr><td colspan="2" style="font-size:.75em;">Press 5 for half-speed and 6 for full-speed</td></table>
 	                        </div>
+	                                        
+	                                    
 	                    </div>
 	                    <div class="clearfix">
 	                        <div class="box positions">
@@ -197,10 +201,7 @@ if (!isset( $_SESSION['user_id'] )) {
 	                                        <td class="color2"><input class="key-button" type="button" onmousedown="handleKeyEvent(85, true);" value="U" /></td>
 	                                        <td class="color2"><input class="key-button" type="button" onmousedown="handleKeyEvent(80, true);" value="P" /></td>
 	                                    </tr>
-	                                    <tr>
-	                                        <td style="padding-top: 5px; vertical-align: middle;">Speed </td>
-	                                        <td style="padding-top: 5px; vertical-align: middle;" colspan="3"><div id="mancer-speed" class="speed-slider"></div></td>
-	                                    </tr>
+	                                    
 	                                </tbody>
 	                            </table>
 	                        </div>
@@ -243,6 +244,15 @@ if (!isset( $_SESSION['user_id'] )) {
             var count = 0;
 			var orientation = 1;
 			var nextOrientation = null;
+			function changeSpeedWithKeystroke(speed) {
+			    $('#mancer-speed').slider('value', speed);
+				$.ajax({
+					type : 'GET',
+					url : 'action.php',
+					data : {"mode":3, "speed":speed },
+					dataType : 'json'
+				});
+			}
             function enableSend(oldval, newval) {
                 if (oldval !== newval) {
                     send = true;

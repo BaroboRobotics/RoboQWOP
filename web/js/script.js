@@ -107,6 +107,12 @@ function RoboQWOPController() {
 			case 52: // 4
 	        	changeOrientation(4);
 	            break;
+		    case 53: // 5 half-speed
+			    changeSpeedWithKeystroke(60);
+				break;
+			case 54: // 6 full-speed
+			    changeSpeedWithKeystroke(120);
+				break;
 	        case 81: // q
 	        	if (temp != self.qwopData.q) {
 		    		self.qwopData.q = temp; sendQwop = true;
