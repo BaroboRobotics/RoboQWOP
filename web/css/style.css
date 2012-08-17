@@ -447,3 +447,11 @@ top:85px;
 input.course_title {
 width:417px;
 }
+
+.orientation_icon {
+border:3px solid #FFF;
+}
+
+.orientation_icon:hover, .selected_orientation {
+border-color:#696969;
+}
