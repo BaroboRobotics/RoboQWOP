@@ -14,20 +14,47 @@ function changeOrientation(n) {
 	$('#orientation_icon_'+n).addClass('selected_orientation');
 }
 
+function showAssignmentN(n) {
+	$.post('get_assignment.php', 'user_id='+current_user_id+'&assignment='+n, function(data) {
+	    console.log(data);
+		if (currentAssignment != data.number) {
+			if (data.completed) {
+				$('#assignment').hide();
+				$('#info-display').css('margin-top', '20px');
+			} else {
+				$('#assignment_number').text(data.number);
+				$('#assignment_objective').text(data.objective);
+				$('#assignment_instructions').text(data.instructions);
+				$('#assignment_youtube').html('');
+				if (data.youtube_url) {
+					$('#assignment_youtube').html('<iframe width="560" height="315" src="'+data.youtube_url+'" frameborder="0" allowfullscreen></iframe>');
+				}
+			}
+		} else {
+		    
+		}
+	});
+}
+
 function showAssignment() {
 	$.post('get_assignment.php', 'user_id='+current_user_id, function(data) {
 	    console.log(data);
-		if (data.completed) {
-		    $('#assignment').hide();
-			$('#info-display').css('margin-top', '20px');
-		} else {
-			$('#assignment_number').text(data.number);
-			$('#assignment_objective').text(data.objective);
-			$('#assignment_instructions').text(data.instructions);
-			$('#assignment_youtube').html('');
-			if (data.youtube_url) {
-				$('#assignment_youtube').html('<iframe width="560" height="315" src="'+data.youtube_url+'" frameborder="0" allowfullscreen></iframe>');
+		if (currentAssignment != data.number) {
+		    currentAssignment = data.number;
+			if (data.completed) {
+				$('#assignment').hide();
+				$('#info-display').css('margin-top', '20px');
+			} else {
+				$('#assignment_number').text(data.number);
+				$('#assignment_objective').text(data.objective);
+				$('#assignment_instructions').text(data.instructions);
+				$('#assignment_youtube').html('');
+				if (data.youtube_url) {
+					$('#assignment_youtube').html('<iframe width="560" height="315" src="'+data.youtube_url+'" frameborder="0" allowfullscreen></iframe>');
+				}
 			}
+		} else {
+		    showAssignment(data.number + 1)
 		}
 	});
 }
