@@ -448,3 +448,38 @@ border:3px solid #FFF;
 .orientation_icon:hover, .selected_orientation {
 border-color:#696969;
 }
+
+#ad {
+margin-top:20px;
+border:1px solid #c2c2c2;
+}
+
+.adlink {
+display:block;
+}
+
+.adlink span {
+display:none;
+}
+
+#topad {
+background:url('../img/ads/sidebar/top.jpg') no-repeat;
+height:284px;
+}
+
+#topad:hover {
+background:url('../img/ads/sidebar/top_hover.jpg') no-repeat;
+}
+
+#bottomad {
+background:url('../img/ads/sidebar/bottom.jpg') no-repeat;
+height:324px;
+}
+
+#bottomad:hover {
+background:url('../img/ads/sidebar/bottom_hover.jpg') no-repeat;
+}
+
+.hidden {
+display:none;
+}
