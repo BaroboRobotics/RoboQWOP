@@ -3,8 +3,8 @@
 
 	<div class="widget">
 	<div id="ad">
-		<a href="" id="topad" class="adlink"><span>Buy a Mobot $269.95</span></a>
-		<a href="" id="bottomad" class="adlink"><span>Buy three Mobots </a>
+		<a href="http://store.barobo.com/mobot/mobot.html" id="topad" class="adlink"><span>Buy a Mobot $269.95</span></a>
+		<a href="http://store.barobo.com/mobot/gorilla-bundle.html" id="bottomad" class="adlink"><span>Buy three Mobots with connectors $827.75</span></a>
 		</div>
 	    <div><h3>Support RoboQWOP</h3></div>
 	    <div>
