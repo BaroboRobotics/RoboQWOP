@@ -449,35 +449,35 @@ border:3px solid #FFF;
 border-color:#696969;
 }
 
-#ad {
+#promo {
 margin-top:20px;
 border:1px solid #c2c2c2;
 }
 
-.adlink {
+.promolink {
 display:block;
 }
 
-.adlink span {
+.promolink span {
 display:none;
 }
 
-#topad {
-background:url('../img/ads/sidebar/top.jpg') no-repeat;
+#toppromo:link, #toppromo:visited {
+background:url('../img/promos/sidebar/top.jpg') no-repeat;
 height:284px;
 }
 
-#topad:hover {
-background:url('../img/ads/sidebar/top_hover.jpg') no-repeat;
+#toppromo:hover {
+background:url('../img/promos/sidebar/top_hover.jpg') no-repeat;
 }
 
-#bottomad {
-background:url('../img/ads/sidebar/bottom.jpg') no-repeat;
+#bottompromo:link, #bottompromo:visited {
+background:url('../img/promos/sidebar/bottom.jpg') no-repeat;
 height:324px;
 }
 
-#bottomad:hover {
-background:url('../img/ads/sidebar/bottom_hover.jpg') no-repeat;
+#bottompromo:hover {
+background:url('../img/promos/sidebar/bottom_hover.jpg') no-repeat;
 }
 
 .hidden {
