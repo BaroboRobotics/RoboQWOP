@@ -15,7 +15,7 @@
 	<img src="img/triangle_mobot.jpg" alt="Triangle Mobot" />
 	<img src="img/mobot_standing_head_to_side.jpg" alt="Standing Head to Side" />
 </div>
-<a href="http://store.barobo.com/mobot/mobot.html" id="toppromo" class="promolink" style="margin-top:-5px;"><span>Buy a Mobot $269.95</span></a>
+<a href="http://store.barobo.com/mobot/mobot.html" id="toppromo" class="promolink"><span>Buy a Mobot $269.95</span></a>
 			<div id="slideshow1" class="slideshow">
     <img src="img/mobot.jpg" alt="A Mobot" class="active" />
 	<img src="img/four_mobots.jpg" alt="Four Mobots" />
