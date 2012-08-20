@@ -202,7 +202,6 @@ function RoboQWOPController() {
 		        break;
 		    case 40: // down
 		    	if (temp != self.qwopData.down) {
-		    		self.directionData.down = temp; sendDirection = true;
 				    switch (orientation) {
 					    case 1:
 		    		        self.directionData.down = temp; sendDirection = true;
@@ -223,7 +222,6 @@ function RoboQWOPController() {
 		        break;
 		    case 37: // left
 		    	if (temp != self.qwopData.left) {
-		    		self.directionData.left = temp; sendDirection = true;
 				    switch (orientation) {
 					    case 1:
 		    		        self.directionData.left = temp; sendDirection = true;
@@ -234,17 +232,16 @@ function RoboQWOPController() {
 							nextOrientation = 4;
 							break;
 						case 3:
-		    		        self.directionData.up = temp; sendDirection = true;
+		    		        handleKeyEvent(87, true); handleKeyEvent(79, true);
 							break;
 						case 4:
-		    		        self.directionData.down = temp; sendDirection = true;
+		    		        handleKeyEvent(81, true); handleKeyEvent(80, true);
 							break;
 				    }
 		    	}
 		        break;
 		    case 39: // right
 		    	if (temp != self.qwopData.right) {
-		    		self.directionData.right = temp; sendDirection = true;
 				    switch (orientation) {
 					    case 1:
 		    		        self.directionData.right = temp; sendDirection = true;
@@ -255,10 +252,10 @@ function RoboQWOPController() {
 							nextOrientation = 3;
 							break;
 						case 3:
-		    		        self.directionData.down = temp; sendDirection = true;
+		    		        handleKeyEvent(81, true); handleKeyEvent(80, true);
 							break;
 						case 4:
-		    		        self.directionData.up = temp; sendDirection = true;
+		    		        handleKeyEvent(87, true); handleKeyEvent(79, true);
 							break;
 				    }
 		    	}
