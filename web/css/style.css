@@ -101,16 +101,22 @@ body {
     background: #FFF url('../img/header_gray.png') repeat-x;
 }
 
+#header {
+margin-bottom:20px;
+height:39px;
+}
+
 h1 a:link, h1 a:visited {
 background:url('../img/header.png') no-repeat;
 height:39px;
 display:block;
 }
 h1 {
-width:398px;
+width:362px;
 	padding: 0;
 	margin: 0;
 	line-height: 1;
+	float:left;
 	}
 h1 span {
 display:none;
@@ -365,7 +371,7 @@ table.controls .green {
 	width:738px;
 	border:1px solid #c2c2c2;
 	padding:10px;
-	margin: 20px 0 15px;
+	margin-bottom:20px;
 	background:#FFF;
 }
 
@@ -450,7 +456,6 @@ border-color:#696969;
 }
 
 #promo {
-margin-top:20px;
 border:1px solid #c2c2c2;
 }
 
@@ -464,7 +469,7 @@ display:none;
 
 #toppromo:link, #toppromo:visited {
 background:url('../img/promos/sidebar/top.jpg') no-repeat;
-height:284px;
+height:138px;
 }
 
 #toppromo:hover {
@@ -473,7 +478,7 @@ background:url('../img/promos/sidebar/top_hover.jpg') no-repeat;
 
 #bottompromo:link, #bottompromo:visited {
 background:url('../img/promos/sidebar/bottom.jpg') no-repeat;
-height:324px;
+height:174px;
 }
 
 #bottompromo:hover {
@@ -482,4 +487,78 @@ background:url('../img/promos/sidebar/bottom_hover.jpg') no-repeat;
 
 .hidden {
 display:none;
+}
+
+#drive_mobot:link, #drive_mobot:visited, #site_summary {
+border:1px solid #c2c2c2; 
+background:#ddd;
+
+display:block;
+
+
+
+
+}
+
+
+#drive_mobot:link, #drive_mobot:visited {
+float:right;
+font-size: 3em;
+width:350px;
+height:90px;
+padding-top:20px;
+text-decoration:none;
+color:#3d5770;
+text-align:center;
+}
+
+#site_summary {
+width:375px;
+margin:0;
+font-size:.95em;
+padding-top:10px;
+height:100px;
+text-align:center;
+}
+
+#site_summary a:link, #site_summary a:visited {
+color:blue;
+}
+
+#site_summary a:hover {
+text-decoration:none;
+}
+
+.rounded_corners {
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+	}
+
+#drive_mobot:hover {
+background:#FFF;
+}
+
+
+.slideshow {
+    position:relative;
+    height:149px;
+}
+
+.slideshow IMG {
+    position:absolute;
+    top:0;
+    left:0;
+    z-index:8;
+    opacity:0.0;
+}
+
+.slideshow IMG.active {
+    opacity:1.0;
+    z-index:10;
+}
+
+.slideshow IMG.last-active {
+    z-index:9;
 }
