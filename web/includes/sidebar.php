@@ -2,9 +2,9 @@
 <div id="page-sidebar">
 
 	<div class="widget">
-	<div id="promo">
-		<a href="http://store.barobo.com/mobot/mobot.html" id="toppromo" class="promolink"><span>Buy a Mobot $269.95</span></a>
-		<a href="http://store.barobo.com/mobot/gorilla-bundle.html" id="bottompromo" class="promolink"><span>Buy three Mobots with connectors $827.75</span></a>
+	    <div id="promo">
+			<a href="http://store.barobo.com/mobot/mobot.html" id="toppromo" class="promolink"><span>Buy a Mobot $269.95</span></a>
+			<a href="http://store.barobo.com/mobot/gorilla-bundle.html" id="bottompromo" class="promolink"><span>Buy three Mobots with connectors $827.75</span></a>
 		</div>
 	    <div><h3>Support RoboQWOP</h3></div>
 	    <div>
@@ -16,7 +16,8 @@
 				<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
 			</form>
 		</div>
-		<!-- load the hover images so they are ready to be shown when user hovers --><div class="hidden"><img src="img/ads/sidebar/top_hover.jpg" /><img src="img/ads/sidebar/bottom_hover.jpg" /></div>
+		<!-- load the hover images so they are ready to be shown when user hovers --><div class="hidden">
+		<img src="img/promos/sidebar/top_hover.jpg" /><img src="img/promos/sidebar/bottom_hover.jpg" /></div>
 		
 		<div><h3>Help develop RoboQWOP. </h3></div>
 	    <div>

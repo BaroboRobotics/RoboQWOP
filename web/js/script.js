@@ -17,7 +17,7 @@ function changeOrientation(n) {
 function showAssignmentN(n) {
 	$.post('get_assignment.php', 'user_id='+current_user_id+'&assignment='+n, function(data) {
 	    console.log(data);
-		if (currentAssignment != data.number) {
+		if (currentAssignment != data.number || data.completed) {
 			if (data.completed) {
 				$('#assignment').hide();
 				$('#info-display').css('margin-top', '20px');
@@ -37,9 +37,10 @@ function showAssignmentN(n) {
 }
 
 function showAssignment() {
+	
 	$.post('get_assignment.php', 'user_id='+current_user_id, function(data) {
 	    console.log(data);
-		if (currentAssignment != data.number) {
+		if (currentAssignment != data.number || data.completed) {
 		    currentAssignment = data.number;
 			if (data.completed) {
 				$('#assignment').hide();
@@ -54,6 +55,7 @@ function showAssignment() {
 				}
 			}
 		} else {
+		    currentAssignment = data.number + 1;
 		    showAssignment(data.number + 1)
 		}
 	});
