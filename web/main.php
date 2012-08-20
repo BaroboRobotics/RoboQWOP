@@ -148,10 +148,10 @@ if (!isset( $_SESSION['user_id'] )) {
 	                        <img class="box" width="338" height="246" style="float:left;" src="img/mobot-diagram-robomancer.png" title="Mobot Diagram" alt="Mobot Diagram" />
 	                        <div class="box arrow-controls">
 	                            <div id="mancer-btngrp-1">
-	                                <button id="mancer-up" onclick="controller.doDirection(true,false,false,false);"><img src="img/icons/arrow-up.png" alt="Up" title="Up" width="48" height="48" /></button>
+	                                <button id="mancer-up" onclick="executeKeyEvent(38, true);"><img src="img/icons/arrow-up.png" alt="Up" title="Up" width="48" height="48" /></button>
 	                            </div>
 	                            <div id="mancer-btngrp-2">
-	                                <button id="mancer-left" onclick="controller.doDirection(false,false,true,false);"><img src="img/icons/arrow-left.png" alt="Left" title="Left" width="48" height="48" /></button><button id="mancer-down" onclick="controller.doDirection(false,true,false,false);"><img src="img/icons/arrow-down.png" alt="Down" title="Down" width="48" height="48" /></button><button id="mancer-right" onclick="controller.doDirection(false,false,false,true);"><img src="img/icons/arrow-right.png" alt="Right" title="Right" width="48" height="48" /></button>
+	                                <button id="mancer-left" onclick="executeKeyEvent(37, true);"><img src="img/icons/arrow-left.png" alt="Left" title="Left" width="48" height="48" /></button><button id="mancer-down" onclick="executeKeyEvent(40, true);"><img src="img/icons/arrow-down.png" alt="Down" title="Down" width="48" height="48" /></button><button id="mancer-right" onclick="executeKeyEvent(39, true);"><img src="img/icons/arrow-right.png" alt="Right" title="Right" width="48" height="48" /></button>
 	                            </div>
 	                            <div id="mancer-btngrp-3">
 	                                <button id="mancer-reset" onclick="controller.reset();"><img src="img/icons/reset.png" alt="Reset" title="Reset" width="48" height="48" /></button><button id="mancer-stop" onclick="controller.doDirection(false,false,false,false);"><img src="img/icons/stop.png" alt="Stop" title="Stop" width="48" height="48" /></button>
