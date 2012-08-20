@@ -469,7 +469,7 @@ display:none;
 
 #toppromo:link, #toppromo:visited {
 background:url('../img/promos/sidebar/top.jpg') no-repeat;
-height:284px;
+height:138px;
 }
 
 #toppromo:hover {
@@ -478,7 +478,7 @@ background:url('../img/promos/sidebar/top_hover.jpg') no-repeat;
 
 #bottompromo:link, #bottompromo:visited {
 background:url('../img/promos/sidebar/bottom.jpg') no-repeat;
-height:324px;
+height:174px;
 }
 
 #bottompromo:hover {
@@ -538,4 +538,27 @@ text-decoration:none;
 
 #drive_mobot:hover {
 background:#FFF;
+}
+
+
+.slideshow {
+    position:relative;
+    height:149px;
+}
+
+.slideshow IMG {
+    position:absolute;
+    top:0;
+    left:0;
+    z-index:8;
+    opacity:0.0;
+}
+
+.slideshow IMG.active {
+    opacity:1.0;
+    z-index:10;
+}
+
+.slideshow IMG.last-active {
+    z-index:9;
 }
