@@ -103,6 +103,7 @@ body {
 
 #header {
 margin-bottom:20px;
+height:39px;
 }
 
 h1 a:link, h1 a:visited {
@@ -111,10 +112,11 @@ height:39px;
 display:block;
 }
 h1 {
-width:398px;
+width:362px;
 	padding: 0;
 	margin: 0;
 	line-height: 1;
+	float:left;
 	}
 h1 span {
 display:none;
