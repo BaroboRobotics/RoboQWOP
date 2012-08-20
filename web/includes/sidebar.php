@@ -2,9 +2,14 @@
 <div id="page-sidebar">
 
 	<div class="widget">
-	    <div><h3>Help keep advertising off this site. </h3></div>
+	    <div id="promo">
+		    <iframe width="198" height="111" src="http://www.youtube.com/embed/7dD4zgTcFJE" frameborder="0" allowfullscreen></iframe>
+			<a href="http://store.barobo.com/mobot/mobot.html" id="toppromo" class="promolink"><span>Buy a Mobot $269.95</span></a>
+			<a href="http://store.barobo.com/mobot/gorilla-bundle.html" id="bottompromo" class="promolink"><span>Buy three Mobots with connectors $827.75</span></a>
+		</div>
+	    <div><h3>Support RoboQWOP</h3></div>
 	    <div>
-			<p style="margin: 0;">RoboQWOP is free - no subscription is ever necessary, but your donations help keep it online<p>
+			<p style="margin: 0;">Your donatations help keep RoboQWOP online<p>
 			<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 				<input type="hidden" name="cmd" value="_s-xclick">
 				<input type="hidden" name="hosted_button_id" value="H7TP3NJC76TQJ">
@@ -12,6 +17,9 @@
 				<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
 			</form>
 		</div>
+		<!-- load the hover images so they are ready to be shown when user hovers --><div class="hidden">
+		<img src="img/promos/sidebar/top_hover.jpg" /><img src="img/promos/sidebar/bottom_hover.jpg" /></div>
+		
 		<div><h3>Help develop RoboQWOP. </h3></div>
 	    <div>
 			<p style="margin: 0;">RoboQWOP is free open source code software written in PHP, Javascript, and C. <p>

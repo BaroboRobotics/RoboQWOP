@@ -244,6 +244,7 @@ if (!isset( $_SESSION['user_id'] )) {
             var count = 0;
 			var orientation = 1;
 			var nextOrientation = null;
+			var currentAssignment = null;
 			function changeSpeedWithKeystroke(speed) {
 			    $('#mancer-speed').slider('value', speed);
 				$.ajax({
@@ -362,6 +363,7 @@ if (!isset( $_SESSION['user_id'] )) {
 				    $.post('completed_assignment.php', 'user_id='+current_user_id+'&assignment_number='+$('#assignment_number').text());
 					// not sure if processing time issue but you have to hit the completed assignment button twice before the next assignment appears
 					showAssignment();
+					
 				});
 				$("#hide_tutorial").click(function() {
 				    $.post('hide_tutorial.php', 'user_id='+current_user_id);
