@@ -2,10 +2,10 @@
 <div id="page-sidebar">
 
 	<div class="widget">
-	    <div id="promo">
-		    <iframe width="198" height="111" src="http://www.youtube.com/embed/7dD4zgTcFJE" frameborder="0" allowfullscreen></iframe>
-			<a href="http://store.barobo.com/mobot/mobot.html" id="toppromo" class="promolink"><span>Buy a Mobot $269.95</span></a>
-			<a href="http://store.barobo.com/mobot/gorilla-bundle.html" id="bottompromo" class="promolink"><span>Buy three Mobots with connectors $827.75</span></a>
+	    <div id="promo" class="rounded_corners">
+			<iframe src="http://www.youtube.com/embed/videoseries?list=PL1D8ED3B2BA1B3726" width="198" height="111" frameborder="0" allowfullscreen></iframe>
+			<a href="http://store.barobo.com/mobot/mobot.html" id="toppromo" class="promolink" style="margin-top:-5px;"><span>Buy a Mobot $269.95</span></a>
+			<a href="http://store.barobo.com/mobot/gorilla-bundle.html" id="bottompromo" class="promolink rounder_corners_bottom"><span>Buy three Mobots with connectors $827.75</span></a>
 		</div>
 	    <div><h3>Support RoboQWOP</h3></div>
 	    <div>

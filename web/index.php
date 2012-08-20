@@ -26,13 +26,16 @@ $page = 'index';
     <body>
         <div role="main" id="page"> <?php include("includes/header.php") ?>
         	<div id="page-content" class="homepage">
-			   <p>Welcome to <strong>RoboQWOP.com</strong>. RoboQWOP lets you play with robots, called Mobots, over the internet for free.</p>
-			   <p>
-			       Mobots are for teaching K-12 students science, technology, engineering, and math.
+			<a href="authenticate.php" id="drive_mobot" class="rounded_corners">Drive a Mobot</a>
+			<p id="site_summary" class="rounded_corners"><strong>RoboQWOP</strong> lets you drive <strong>Mobots</strong> online for free. 
+			
+			Mobots, <a href="http://www.barobo.com">developed by Barobo</a>, help interest students in computing, science, technology, engineering, and math.
 			       They're small enough for each student to have one.
-			       <a href="http://store.barobo.com/mobot/mobot.html">Buy Mobots for your students</a>.
 			   </p>
-			   <p><a href="authenticate.php" style="font-size: 3em;">Control a Mobot</a></p>
+			   <!--
+			
+			   -->
+			   <div class="clearfix"></div>
 			   <p>Put the Google Hangout and RoboQWOP windows next to each other.</p>
 	           <img src="img/split_screen_demo.jpg" />
 	           <div id="info-display" class="clearfix" style="margin-top: 1em;"></div>
