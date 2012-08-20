@@ -3,6 +3,7 @@
 
 	<div class="widget">
 	    <div id="promo">
+		    <iframe width="198" height="111" src="http://www.youtube.com/embed/7dD4zgTcFJE" frameborder="0" allowfullscreen></iframe>
 			<a href="http://store.barobo.com/mobot/mobot.html" id="toppromo" class="promolink"><span>Buy a Mobot $269.95</span></a>
 			<a href="http://store.barobo.com/mobot/gorilla-bundle.html" id="bottompromo" class="promolink"><span>Buy three Mobots with connectors $827.75</span></a>
 		</div>
