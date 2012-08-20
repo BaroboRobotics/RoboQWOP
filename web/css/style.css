@@ -448,3 +448,38 @@ border:3px solid #FFF;
 .orientation_icon:hover, .selected_orientation {
 border-color:#696969;
 }
+
+#promo {
+margin-top:20px;
+border:1px solid #c2c2c2;
+}
+
+.promolink {
+display:block;
+}
+
+.promolink span {
+display:none;
+}
+
+#toppromo:link, #toppromo:visited {
+background:url('../img/promos/sidebar/top.jpg') no-repeat;
+height:284px;
+}
+
+#toppromo:hover {
+background:url('../img/promos/sidebar/top_hover.jpg') no-repeat;
+}
+
+#bottompromo:link, #bottompromo:visited {
+background:url('../img/promos/sidebar/bottom.jpg') no-repeat;
+height:324px;
+}
+
+#bottompromo:hover {
+background:url('../img/promos/sidebar/bottom_hover.jpg') no-repeat;
+}
+
+.hidden {
+display:none;
+}
