@@ -574,3 +574,13 @@ background:#FFF;
 .slideshow IMG.last-active {
     z-index:9;
 }
+
+.space_above {
+margin-top:20px;
+}
+
+#ustream_embed_control_page {
+position:fixed;
+bottom:0;
+z-index:2;
+}

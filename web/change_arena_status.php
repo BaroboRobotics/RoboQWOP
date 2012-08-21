@@ -1,7 +1,5 @@
-<?php
-// template for making admin pages
+<?php=
 include 'config.php';
-header('Content-type: application/json');
 session_start();
 if ((!isset($_SESSION['user_id'])) || (!$_SESSION['is_admin'])) {
     echo 'Must be admin';

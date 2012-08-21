@@ -67,8 +67,17 @@ if (!isset( $_SESSION['user_id'] )) {
     $color1_name = $row->color1_name;
     $color2_name = $row->color2_name;
     $result->close();
-    // Close the connection.
-    $mysqli->close();
+
+	$sql = "SELECT google_hangout_url, ustream_profile_url, ustream_embed_url FROM mobot_arenas WHERE id = 1";
+	$result = $mysqli->query($sql);
+	$row = $result->fetch_object();
+	$google_hangout_url = $row->google_hangout_url;
+	$ustream_profile_url = $row->ustream_profile_url;
+	$ustream_embed_url = $row->ustream_embed_url;
+	$result->close();
+	
+	// Close the connection.
+	$mysqli->close();
 }
 ?>
 <!doctype html>
@@ -237,6 +246,15 @@ if (!isset( $_SESSION['user_id'] )) {
 	        <div class="clearfix"></div>
             <?php include("includes/footer.php"); ?>
         </div>
+		<?php if ($ustream_embed_url): ?>
+		    
+			<!-- Ustream.tv embed -->
+			<iframe id="ustream_embed_control_page" src="<?=$ustream_embed_url ?>" frameborder="0"></iframe>
+			
+			<!-- end ustream.tv embed -->
+			<div id="white_space_control_page"></div> <!-- for scrolling to get all of controls, no hidden controls -->
+		<?php endif; ?>
+		
         <audio id="soundHandle" style="display: none;"></audio>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
         <script>
@@ -256,6 +274,15 @@ if (!isset( $_SESSION['user_id'] )) {
             var send = false;
             var active = false;
             var count = 0;
+			var embed = <?php if ($ustream_embed_url) { echo "true"; } else { echo "false"; } ?>;
+			function positionEmbed() {
+			    var height = $(window).height() / 2;
+				var width = height * 1.78;
+				$('#ustream_embed_control_page').css('left', ($(window).width() - 980) / 2);
+				$('#ustream_embed_control_page').css('width', width);
+				$('#ustream_embed_control_page').css('height', height);
+				$('#white_space_control_page').css('height', height);
+			}
             function countDown() {
                 // time_left = time_left - 1;
                 if (time_left <= 0) {
@@ -367,6 +394,12 @@ if (!isset( $_SESSION['user_id'] )) {
                 controller.init();
                 updateStatus();
 				setInterval(executeAction, 100);
+				if (embed) {
+					positionEmbed();
+					$(window).resize(function() {
+						positionEmbed();
+					});
+				}
             });
         </script>
     </body>
