@@ -32,8 +32,6 @@ $page = 'index';
                     science, technology, engineering, and math. They're small enough for each student to have one.
                 </p>
                 <div class="clearfix"></div>
-                <p>Put the Google Hangout and RoboQWOP windows next to each other.</p>
-                <img src="img/split_screen_demo.jpg" />
                 <div id="info-display" class="clearfix" style="margin-top: 1em;"></div>
             </div>
             <?php include("includes/sidebar.php") ?>
