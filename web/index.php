@@ -16,7 +16,7 @@ $page = 'index';
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>RoboQWOP</title>
+        <title>RoboQWOP: Control a Mobot Online</title>
         <meta name="description" content="RoboQWOP - Control a Mobot over the web">
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="css/style.css?v=2">
@@ -26,8 +26,8 @@ $page = 'index';
     <body>
         <div role="main" id="page"> <?php include("includes/header.php") ?>
         	<div id="page-content" class="homepage">
-                <a href="authenticate.php" id="drive_mobot" class="rounded_corners">Drive a Mobot</a>
-                <p id="site_summary" class="rounded_corners"><strong>RoboQWOP</strong> lets you drive <strong>Mobots</strong> online for free. 
+                <a href="authenticate.php" id="drive_mobot" class="rounded_corners">Control a Mobot</a>
+                <p id="site_summary" class="rounded_corners"><strong>RoboQWOP</strong> lets you control <strong>Mobots</strong> online for free. 
                     Mobots, <a href="http://www.barobo.com">developed by Barobo</a>, help interest students in computing,
                     science, technology, engineering, and math. They're small enough for each student to have one.
                 </p>

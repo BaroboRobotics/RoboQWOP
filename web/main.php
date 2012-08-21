@@ -115,7 +115,7 @@ if (!isset( $_SESSION['user_id'] )) {
         <div role="main" id="page"><?php include("includes/header.php") ?>
         	<div id="page-content">
 	            
-				<?php include 'includes/courses.php' ?>
+				
 				<div>
 	            	<div id="info-display" style="float:right;"></div>
 	            	<div class="clearfix"></div>
@@ -256,7 +256,6 @@ if (!isset( $_SESSION['user_id'] )) {
             var send = false;
             var active = false;
             var count = 0;
-			var currentAssignment = null;
             function countDown() {
                 // time_left = time_left - 1;
                 if (time_left <= 0) {
