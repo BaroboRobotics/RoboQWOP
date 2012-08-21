@@ -11,6 +11,7 @@ function showAssignmentN(n) {
 		if (currentAssignment != data.number || data.completed) {
 			if (data.completed) {
 				$('#assignment').hide();
+				$('.tutorial_item').hide();
 			} else {
 				$('#assignment_number').text(data.number);
 				$('#assignment_objective').text(data.objective);
@@ -34,6 +35,7 @@ function showAssignment() {
 		    currentAssignment = data.number;
 			if (data.completed) {
 				$('#assignment').hide();
+				$('.tutorial_item').hide();
 			} else {
 				$('#assignment_number').text(data.number);
 				$('#assignment_objective').text(data.objective);

@@ -1,3 +1,4 @@
+CREATE DATABASE barobo;
 USE barobo;
 
 /* Contains users waiting to control the Mobot */
@@ -39,6 +40,7 @@ CREATE TABLE IF NOT EXISTS robots (
     color2_name VARCHAR(10) Default 'White',
     number INT NOT NULL,
     status INT NOT NULL DEFAULT 1,
+	arena_id INT NOT NULL DEFAULT 1,
     UNIQUE(number)
 ) ENGINE = InnoDB;
 
@@ -82,3 +84,19 @@ INSERT INTO courses (title) values ('Mobot Tutorial');
 INSERT INTO assignments (course_id, number, objective, instructions, youtube_url) values (1, 1, 'Move the robot to the wall.', 'Hitting W&O at the same time on your keyboard will move the robot one direction. Hitting O&P will move it in the other direction.', "http://www.youtube.com/embed/uUzY5vpPMdU");
 INSERT INTO assignments (course_id, number, objective, instructions, youtube_url) values (1, 2, 'Kick the ball to the wall', 'First get the robot next to the ball. Second spin the robot by pressing P&W (clockwise) or Q&O (counter-clockwise).', "http://www.youtube.com/embed/_6sePrtHDeU");
 INSERT INTO assignments (course_id, number, objective, instructions, youtube_url) values (1, 3, 'Stand the robot up straight and knock it back down with legs straight out', "First get the robot rotated so that the joints move up and now not side to side. Second push both joints down rapidly. Depending on the robot's orientation, you'll need to press U&R down or I&E down.", "http://www.youtube.com/embed/_6H_AzCQ3do");
+
+CREATE TABLE IF NOT EXISTS mobot_arenas (
+    id INT NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY(id),
+    name VARCHAR(100),
+    status INT NOT NULL DEFAULT 0,
+	google_hangout_url VARCHAR(300),
+	ustream_profile_url VARCHAR(300),
+	ustream_embed_url VARCHAR(300),
+	justindottv_profile_url VARCHAR(300),
+	justindottv_embed_url VARCHAR(300),
+	livestream_profile_url VARCHAR(300),
+	livestream_embed_url VARCHAR(300)
+) ENGINE = InnoDB;
+
+INSERT INTO mobot_arenas (name) values ('Barobo office');
