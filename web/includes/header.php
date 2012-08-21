@@ -22,10 +22,12 @@
 	}
 ?>
 <div id="header">
+    
     <?php if (isset( $user_full_name )) : ?>
     	<div id="navbar">
+            <?php include("includes/navbar_general.php") ?>
     		<?php if ($page == 'user stats' || $page == 'manage courses') : ?>
-    		    <a href="authenticate.php">Control robot</a> | <a href="index.php">Watch queue</a> | 
+    		    <a href="authenticate.php">Control a Mobot</a> | <a href="index.php">Watch queue</a> | 
             <?php elseif ($_SESSION['is_admin']) :?>
                 <a href="user_stats.php">User stats</a> | 
             <?php endif; ?>
@@ -37,7 +39,8 @@
     	</div>
 	<?php else: ?>
     	<div id="navbar">
-    		<a href="login.php">Login</a>
+		    <?php include("includes/navbar_general.php") ?>
+    		<a href="login.php">Login with Google</a>
     	</div>
 	<?php endif; ?>
     <h1><a href="http://www.barobo.com"><span>RoboQWOP</span></a></h1>
