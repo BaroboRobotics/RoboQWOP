@@ -84,7 +84,7 @@ if (!isset( $_SESSION['user_id'] )) {
         <title>RoboQWOP</title>
         <meta name="description" content="RoboQWOP - Control a Mobot over the web">
         <meta name="viewport" content="width=device-width">
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/style.css?v=2">
         <link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.21.custom.css"  />
         <style>
             .color1 {
@@ -123,22 +123,34 @@ if (!isset( $_SESSION['user_id'] )) {
 				
 				<?php if ($color1_name == 'White' && $color2_name == 'Red') : ?>
 				<table style="margin-top:20px;">
-				<tr><th rowspan="2" style="width:150px">Select orientation of Mobot</th><th>1</th><th>2</th><th>3</th><th>4</th><td rowspan="2" style="vertical-align:center; width:200px; padding-left:30px;">You can drive the Mobot with the arrow keys on your keyboard</td></tr>
-				<tr><td><img src="img/orientation_icons/white_and_red/white_on_left.png" id="orientation_icon_1" class="orientation_icon selected_orientation" onclick="changeOrientation(1);" /></td>
-				<td><img src="img/orientation_icons/white_and_red/red_on_left.png" id="orientation_icon_2" class="orientation_icon" onclick="changeOrientation(2);" /></td>
-				<td><img src="img/orientation_icons/white_and_red/white_on_bottom.png" id="orientation_icon_3" class="orientation_icon" onclick="changeOrientation(3);" /></td>
-				<td><img src="img/orientation_icons/white_and_red/red_on_bottom.png" id="orientation_icon_4" class="orientation_icon" onclick="changeOrientation(4);" /></td>
-				</tr>
+				    <tr><th rowspan="2" style="width:150px">Select orientation of Mobot</th><th>1</th><th>2</th><th>3</th><th>4</th><td rowspan="2" style="vertical-align:center; width:200px; padding-left:30px;">You can drive the Mobot with the arrow keys on your keyboard</td></tr>
+				    <tr><td><img src="img/orientation_icons/white_and_red/white_on_left.png" id="orientation_icon_1" class="orientation_icon selected_orientation" onclick="controller.changeOrientation(1);" /></td>
+				        <td><img src="img/orientation_icons/white_and_red/red_on_left.png" id="orientation_icon_2" class="orientation_icon" onclick="controller.changeOrientation(2);" /></td>
+				        <td><img src="img/orientation_icons/white_and_red/white_on_bottom.png" id="orientation_icon_3" class="orientation_icon" onclick="controller.changeOrientation(3);" /></td>
+				        <td><img src="img/orientation_icons/white_and_red/red_on_bottom.png" id="orientation_icon_4" class="orientation_icon" onclick="controller.changeOrientation(4);" /></td>
+				    </tr>
 				</table>
 				<?php elseif ($color1_name == 'White' && $color2_name == 'Blue') : ?>
 				<table style="margin-top:20px;">
-				<tr><th rowspan="2" style="width:150px">Select orientation of Mobot</th><th>1</th><th>2</th><th>3</th><th>4</th><td rowspan="2" style="vertical-align:center; width:200px; padding-left:30px;">You can drive the Mobot with the arrow keys on your keyboard</td></tr>
-				<tr><td><img src="img/orientation_icons/white_and_blue/white_on_left.png" id="orientation_icon_1" class="orientation_icon selected_orientation" onclick="changeOrientation(1);" /></td>
-				<td><img src="img/orientation_icons/white_and_blue/blue_on_left.png" id="orientation_icon_2" class="orientation_icon" onclick="changeOrientation(2);" /></td>
-				<td><img src="img/orientation_icons/white_and_blue/white_on_bottom.png" id="orientation_icon_3" class="orientation_icon" onclick="changeOrientation(3);" /></td>
-				<td><img src="img/orientation_icons/white_and_blue/blue_on_bottom.png" id="orientation_icon_4" class="orientation_icon" onclick="changeOrientation(4);" /></td>
-				</tr>
+				    <tr><th rowspan="2" style="width:150px">Select orientation of Mobot</th><th>1</th><th>2</th><th>3</th><th>4</th><td rowspan="2" style="vertical-align:center; width:200px; padding-left:30px;">You can drive the Mobot with the arrow keys on your keyboard</td></tr>
+				    <tr><td><img src="img/orientation_icons/white_and_blue/white_on_left.png" id="orientation_icon_1" class="orientation_icon selected_orientation" onclick="controller.changeOrientation(1);" /></td>
+				        <td><img src="img/orientation_icons/white_and_blue/blue_on_left.png" id="orientation_icon_2" class="orientation_icon" onclick="controller.changeOrientation(2);" /></td>
+				        <td><img src="img/orientation_icons/white_and_blue/white_on_bottom.png" id="orientation_icon_3" class="orientation_icon" onclick="controller.changeOrientation(3);" /></td>
+				        <td><img src="img/orientation_icons/white_and_blue/blue_on_bottom.png" id="orientation_icon_4" class="orientation_icon" onclick="controller.changeOrientation(4);" /></td>
+				    </tr>
 				</table>
+				<?php else: ?>
+				<table style="margin-top:20px;">
+                    <tr>
+                        <th rowspan="2" style="width:150px">Select orientation of Mobot</th><th>1</th><th>2</th><th>3</th><th>4</th><td rowspan="2" style="vertical-align:center; width:200px; padding-left:30px;">You can drive the Mobot with the arrow keys on your keyboard</td>
+                    </tr>
+                    <tr>
+                        <td><img src="img/orientation_icons/white_and_blue/white_on_left.png" id="orientation_icon_1" class="orientation_icon selected_orientation" onclick="controller.changeOrientation(1);" /></td>
+                        <td><img src="img/orientation_icons/white_and_blue/blue_on_left.png" id="orientation_icon_2" class="orientation_icon" onclick="controller.changeOrientation(2);" /></td>
+                        <td><img src="img/orientation_icons/white_and_blue/white_on_bottom.png" id="orientation_icon_3" class="orientation_icon" onclick="controller.changeOrientation(3);" /></td>
+                        <td><img src="img/orientation_icons/white_and_blue/blue_on_bottom.png" id="orientation_icon_4" class="orientation_icon" onclick="controller.changeOrientation(4);" /></td>
+                    </tr>
+                </table>
 				<?php endif; ?>
 				<p><span id="status">Retrieving status information.</span> <span id="time_left"></span></p>
 				<div id="action-errors"></div>
@@ -231,9 +243,11 @@ if (!isset( $_SESSION['user_id'] )) {
             window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')
         </script>
         <script src="js/libs/jquery-ui-1.8.21.custom.min.js"></script>
-        <script src="js/plugins.js"></script>
-        <script src="js/script.js"></script>
+        <script src="js/plugins.js?v=1"></script>
+        <script src="js/script.js?v=2"></script>
         <script type="text/javascript">
+            var arrowKeycodes = [38, 40, 37, 39];
+            var controlKeycodes = [38, 52, 37, 39, 76, 81, 87, 69, 82, 85, 73, 79, 80, 38, 40];
 			var color1_name = "<?=$color1_name ?>";
 			var color2_name = "<?=$color2_name ?>";
 			var current_user_id = "<?=$user_id ?>";
@@ -242,23 +256,7 @@ if (!isset( $_SESSION['user_id'] )) {
             var send = false;
             var active = false;
             var count = 0;
-			var orientation = 1;
-			var nextOrientation = null;
 			var currentAssignment = null;
-			function changeSpeedWithKeystroke(speed) {
-			    $('#mancer-speed').slider('value', speed);
-				$.ajax({
-					type : 'GET',
-					url : 'action.php',
-					data : {"mode":3, "speed":speed },
-					dataType : 'json'
-				});
-			}
-            function enableSend(oldval, newval) {
-                if (oldval !== newval) {
-                    send = true;
-                }
-            }
             function countDown() {
                 // time_left = time_left - 1;
                 if (time_left <= 0) {
@@ -276,25 +274,22 @@ if (!isset( $_SESSION['user_id'] )) {
                 countDownThread = setInterval(countDown, 1000);
             }
             function handleKeyEvent(keyCode, down) {
-			    if (!$("#sequence").is(":focus")) {
-					if (active || jQuery.inArray(keyCode, [13, 49, 50, 51, 52]) > -1) {
-					    if (keyCode == 13) {
-						    if (nextOrientation) {
-						        changeOrientation(nextOrientation);
-						    }
-						}
-						executeKeyEvent(keyCode, down);
-					} else {
-					    if (jQuery.inArray(keyCode, [38, 52, 37, 39, 76, 81, 87, 69, 82, 85, 73, 79, 80, 38, 40]) > -1) { // only show error if the key pressed is a control key
-                           
-    						$('#action-errors').html('<p><strong>Error:</strong> You not in control of the robot.</p>').show().delay( 10000 ).hide( 0 );
-					    }
-					}
+				if (active) {
+					executeKeyEvent(keyCode, down);
+				} else {
+				    if (jQuery.inArray(keyCode, controlKeycodes) > -1) { // only show error if the key pressed is a control key
+						$('#action-errors').html('<p><strong>Error:</strong> You not in control of the robot.</p>')
+						  .show()
+						  .delay(10000)
+						  .hide(0);
+				    }
 				}
             }
             function executeKeyEvent(keyCode, down) {
                 var oldval;
                 switch (keyCode) {
+                    case 13:
+                        controller.nextOrientation();
 					case 76: // l
 					    controller.reset();
 						break;  
@@ -345,14 +340,14 @@ if (!isset( $_SESSION['user_id'] )) {
             }
             $(document).keydown(function(event) {
                 handleKeyEvent(event.keyCode, true);
-				if ($.inArray(event.keyCode, [38, 40, 37, 39]) > -1) { // if arrow key pressed don't move the page up/down/left/right
+				if ($.inArray(event.keyCode, arrowKeycodes) > -1) { // if arrow key pressed don't move the page up/down/left/right
 					event.preventDefault();
 					return false;
 				}
             });
             $(document).keyup(function(event) {
                 handleKeyEvent(event.keyCode, false);
-				if ($.inArray(event.keyCode, [38, 40, 37, 39]) > -1) { // if arrow key pressed don't move the page up/down/left/right
+				if ($.inArray(event.keyCode, arrowKeycodes) > -1) { // if arrow key pressed don't move the page up/down/left/right
 					event.preventDefault();
 					return false;
 				}
@@ -374,60 +369,6 @@ if (!isset( $_SESSION['user_id'] )) {
                 controller.init();
                 updateStatus();
 				setInterval(executeAction, 100);
-				
-                $("#left_is_red_face_north_south").show();
-                $("#on_left_is_red").click(function() {
-                    $("#on_left_is_red").addClass('active');
-                    $("#on_left_is_green").removeClass('active');
-                    $(".quad").hide();
-                    if ($("#facing_north_south").is('.active')) {
-                        $("#left_is_red_face_north_south").show();
-                    } else {
-                        $("#bottom_is_red_face_east_west").show();
-                    }
-                });
-                $("#on_left_is_green").click(function() {
-                    $("#on_left_is_green").addClass('active');
-                    $("#on_left_is_red").removeClass('active');
-                    $(".quad").hide();
-                    if ($("#facing_north_south").is('.active')) {
-                        $("#left_is_green_face_north_south").show();
-                    } else {
-                        $("#bottom_is_green_face_east_west").show();
-                    }
-                });
-                $("#facing_north_south").click(function() {
-                    $("#facing_north_south").addClass('active');
-                    $("#facing_east_west").removeClass('active');
-                    $("#on_left_is_red").prop('value', color1_name + ' is on left');
-                    $("#on_left_is_green").prop('value', color2_name + ' is on left');
-                    $(".quad").hide();
-                    if ($("#on_left_is_red").is('.active')) {
-                        $("#left_is_red_face_north_south").show();
-                    } else {
-                        $("#left_is_green_face_north_south").show();
-                    }
-                });
-                $("#facing_east_west").click(function() {
-                    $("#facing_east_west").addClass('active');
-                    $("#facing_north_south").removeClass('active');
-                    $("#on_left_is_red").prop('value', color1_name + ' is on bottom');
-                    $("#on_left_is_green").prop('value', color2_name + ' is on bottom');
-                    $(".quad").hide();
-                    if ($("#on_left_is_red").is('.active')) {
-                        $("#bottom_is_red_face_east_west").show();
-                    } else {
-                        $("#bottom_is_green_face_east_west").show();
-                    }
-                });
-				$("#execute-sequence-button").click(function() {
-				    $("#sequence").val($("#sequence").val().toUpperCase());
-				    var sequence = $("#sequence").val();
-					sequence = sequence.split('');
-					for (var i = 0; i < sequence.length; i++) {
-					    executeKeyEvent(sequence[i].charCodeAt(0), true);
-					}
-				});
             });
         </script>
     </body>

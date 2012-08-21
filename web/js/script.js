@@ -5,15 +5,6 @@ function delete_user_from_queue(user_id) {
     $.post('delete_user_from_queue.php', 'user_id_to_delete='+user_id);
 }
 
-function changeOrientation(n) {
-    orientation = n;
-    $('#orientation_icon_1').removeClass('selected_orientation');
-	$('#orientation_icon_2').removeClass('selected_orientation');
-	$('#orientation_icon_3').removeClass('selected_orientation');
-	$('#orientation_icon_4').removeClass('selected_orientation');
-	$('#orientation_icon_'+n).addClass('selected_orientation');
-}
-
 function showAssignmentN(n) {
 	$.post('get_assignment.php', 'user_id='+current_user_id+'&assignment='+n, function(data) {
 	    console.log(data);
@@ -63,19 +54,21 @@ function RoboQWOPController() {
 	var self = this;
 	var sendQwop = false;
 	var sendDirection = false;
+	var orientation = 1;
+	var nextOrientation = 1;
 
 	self.qwopData = {"mode": 2, "q" : 0, "w" : 0, "e" : 0, "r" : 0,
 				"u" : 0, "i" : 0, "o" : 0, "p" : 0};
 	self.directionData = {"mode": 5, "up" : 0, "down" : 0, "left" : 0, "right" : 0};
 	
-	self.changeSpeed = function(event, ui) {
+	self.changeSpeed = function(value) {
 		$.ajax({
 	        type : 'GET',
 	        url : 'action.php',
-	        data : {"mode":3, "speed":ui.value },
+	        data : {"mode":3, "speed":value },
 	        dataType : 'json'
 	    });
-		$('.speed-slider').slider( "option", "value", ui.value );
+		$('.speed-slider').slider( "option", "value", value );
 	}
 	
 	self.getQueueHTML = function(json) {
@@ -123,22 +116,22 @@ function RoboQWOPController() {
 		var temp = (down) ? 1 : 0;
 	    switch (keyCode) {
 			case 49: // 1
-	        	changeOrientation(1);
+	        	self.changeOrientation(1);
 	            break;
 			case 50: // 2
-	        	changeOrientation(2);
+	        	self.changeOrientation(2);
 	            break;
 			case 51: // 3
-    			changeOrientation(3);
+    			self.changeOrientation(3);
 	            break;
 			case 52: // 4
-	        	changeOrientation(4);
+	        	self.changeOrientation(4);
 	            break;
 		    case 53: // 5 half-speed
-			    changeSpeedWithKeystroke(60);
+		    	self.changeSpeed(60);
 				break;
 			case 54: // 6 full-speed
-			    changeSpeedWithKeystroke(120);
+				self.changeSpeed(120);
 				break;
 	        case 81: // q
 	        	if (temp != self.qwopData.q) {
@@ -182,83 +175,84 @@ function RoboQWOPController() {
 	            break;
 	        case 38: // up
 		    	if (temp != self.directionData.up) {
+		    		sendDirection = true;
 				    switch (orientation) {
 					    case 1:
-		    		        self.directionData.up = temp; sendDirection = true;
+		    		        self.directionData.up = temp; 
 							break;
 						case 2:
-		    		        self.directionData.down = temp; sendDirection = true;
+		    		        self.directionData.down = temp;
 							break;
 						case 3:
-		    		        self.directionData.right = temp; sendDirection = true;
-							nextOrientation = 2;
+		    		        self.directionData.right = temp;
+							nextOrientation = 1;
 							break;
 						case 4:
-		    		        self.directionData.left = temp; sendDirection = true;
-							nextOrientation = 1;
+		    		        self.directionData.left = temp;
+							nextOrientation = 2;
 							break;
 				    }
 		    	}
 		        break;
 		    case 40: // down
 		    	if (temp != self.directionData.down) {
-		    		self.directionData.down = temp; sendDirection = true;
-				    switch (orientation) {
-					    case 1:
-		    		        self.directionData.down = temp; sendDirection = true;
-							break;
-						case 2:
-		    		        self.directionData.up = temp; sendDirection = true;
-							break;
-						case 3:
-		    		        self.directionData.left = temp; sendDirection = true;
-							nextOrientation = 1;
-							break;
-						case 4:
-		    		        self.directionData.right = temp; sendDirection = true;
-							nextOrientation = 2;
-							break;
-				    }
+		    		sendDirection = true;
+		    		switch (orientation) {
+				    case 1:
+	    		        self.directionData.down = temp;
+						break;
+					case 2:
+	    		        self.directionData.up = temp;
+						break;
+					case 3:
+						self.directionData.left = temp;
+						nextOrientation = 2;
+						break;
+					case 4:
+	    		        self.directionData.right = temp;
+						nextOrientation = 1;
+						break;
+		    		}
 		    	}
 		        break;
 		    case 37: // left
 		    	if (temp != self.directionData.left) {
-		    		self.directionData.left = temp; sendDirection = true;
-				    switch (orientation) {
-					    case 1:
-		    		        self.directionData.left = temp; sendDirection = true;
-							nextOrientation = 3;
-							break;
-						case 2:
-		    		        self.directionData.right = temp; sendDirection = true;
-							nextOrientation = 4;
-							break;
-						case 3:
-		    		        self.directionData.up = temp; sendDirection = true;
-							break;
-						case 4:
-		    		        self.directionData.down = temp; sendDirection = true;
-							break;
-				    }
+		    		sendDirection = true;
+		    		switch (orientation) {
+		    		case 1:
+		    			self.directionData.left = temp;
+		    			nextOrientation = 3;
+		    			break;
+		    		case 2:
+		    			self.directionData.right = temp;
+		    			nextOrientation = 4;
+		    			break;
+		    		case 3:
+		    			self.directionData.up = temp;
+		    			break;
+		    		case 4:
+		    			self.directionData.down = temp;
+		    			break;
+		    		}
 		    	}
 		        break;
 		    case 39: // right
 		    	if (temp != self.directionData.right) {
-		    		self.directionData.right = temp; sendDirection = true;
+		    		sendDirection = true;
 				    switch (orientation) {
 					    case 1:
-		    		        self.directionData.right = temp; sendDirection = true;
+		    		        self.directionData.right = temp;
 							nextOrientation = 4;
 							break;
 						case 2:
-		    		        self.directionData.left = temp; sendDirection = true;
+		    		        self.directionData.left = temp;
 							nextOrientation = 3;
 							break;
 						case 3:
-		    		        self.directionData.down = temp; sendDirection = true;
+		    		        self.directionData.down = temp;
 							break;
 						case 4:
-		    		        self.directionData.up = temp; sendDirection = true;
+		    		        self.directionData.up = temp;
 							break;
 				    }
 		    	}
@@ -295,7 +289,7 @@ function RoboQWOPController() {
 	        "min" : 15,
 	        "value" : 120,
 	        stop: function(event, ui ) {
-	        	self.changeSpeed(event, ui)
+	        	self.changeSpeed(ui.value)
 	        }
 	    });
 		$('#oriented-controls').mouseup(function(event) {
@@ -412,8 +406,8 @@ function RoboQWOPController() {
 	self.resetDirection = function() {
 		self.directionData.up = 0; self.directionData.down = 0;
 		self.directionData.left = 0; self.directionData.right = 0;
-		sendQwop = true;
-		sendDirection = false;
+		sendQwop = false;
+		sendDirection = true;
 	}
 
 	self.degreeCheck = function(event) {
@@ -429,6 +423,20 @@ function RoboQWOPController() {
 	    }
 	    return true;
 	};
+
+	self.changeOrientation = function(n) {
+	    orientation = n;
+	    $('#orientation_icon_1').removeClass('selected_orientation');
+		$('#orientation_icon_2').removeClass('selected_orientation');
+		$('#orientation_icon_3').removeClass('selected_orientation');
+		$('#orientation_icon_4').removeClass('selected_orientation');
+		$('#orientation_icon_'+n).addClass('selected_orientation');
+		self.resetDirection();
+	}
+
+	self.nextOrientation = function() {
+		self.changeOrientation(nextOrientation);
+	}
 }
 var controller = new RoboQWOPController();
 
