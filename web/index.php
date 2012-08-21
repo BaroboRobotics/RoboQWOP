@@ -54,6 +54,9 @@ $page = 'index';
 	}
 					?>
 				<?php if (arena_status(1)): ?>
+				    <?php if ($google_hangout_url): ?>
+					    <a href="<?=$google_hangout_url ?>" id="change_arena_status" style="font-size:2em;" target="_blank" class="rounded_corners">Launch the Google hangout</a>
+					<?php endif; ?>
 				    <?php if ($ustream_embed_url): ?>
 						<!-- Ustream.tv embed -->
 						<iframe src="<?=$ustream_embed_url ?>" width="760" height="460" scrolling="no" frameborder="0" style="margin-top:20px; border: 0px none transparent;"></iframe>
