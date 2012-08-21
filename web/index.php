@@ -64,6 +64,7 @@ $page = 'index';
 						<p style="padding: 2px 0px 4px; width: 400px; background: #ffffff; display: block; color: #000000; font-weight: normal; font-size: 10px; text-align: center;" target="_blank"><a href="http://www.ustream.tv/">Streaming Live by Ustream</a> <a href="">Ustream profile</a></p>
 						<!-- end ustream.tv embed -->
 					<?php endif; ?>
+					<div id="info-display" class="clearfix" style="margin-top: 1em;"></div>
 				<?php endif; ?>
 				
 				<?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) :?>
@@ -88,7 +89,7 @@ $page = 'index';
                     <tr><th colspan="3"><input type="submit" value="Save"/></th>
 					</table></form>
 				<?php endif; ?>
-                <div id="info-display" class="clearfix" style="margin-top: 1em;"></div>
+                
             </div>
             <?php include("includes/sidebar.php") ?>
             <div class="clearfix"></div>
