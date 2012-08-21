@@ -33,7 +33,7 @@ $page = 'about';
 				<h3>Where are the Mobots?</h3>
 				<p>The Mobots on RoboQWOP are at Barobo's office in Davis, California.</p>
 				<h3>Why are you asking for donations?</h3>
-				<p>Starting a new hardware company is expensive. Even if you can't afford a Mobot you can help by donating a few bucks. <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+				<p>Starting a hardware company is expensive. Even if you can't afford a Mobot you can help by donating a few bucks. <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 				<input type="hidden" name="cmd" value="_s-xclick">
 				<input type="hidden" name="hosted_button_id" value="H7TP3NJC76TQJ">
 				<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">

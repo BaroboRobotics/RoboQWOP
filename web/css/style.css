@@ -489,7 +489,7 @@ background:url('../img/promos/sidebar/bottom_hover.jpg') no-repeat;
 display:none;
 }
 
-#drive_mobot:link, #drive_mobot:visited, #site_summary {
+p#drive_mobot, a#drive_mobot:link, a#drive_mobot:visited, #change_arena_status:link, #change_arena_status:visited, #site_summary {
 border:1px solid #c2c2c2; 
 background:#ddd;
 
@@ -501,7 +501,7 @@ display:block;
 }
 
 
-#drive_mobot:link, #drive_mobot:visited {
+p#drive_mobot, a#drive_mobot:link, a#drive_mobot:visited {
 float:right;
 font-size: 3em;
 width:350px;
@@ -510,6 +510,7 @@ padding-top:20px;
 text-decoration:none;
 color:#3d5770;
 text-align:center;
+margin:0;
 }
 
 #site_summary {
@@ -519,6 +520,13 @@ font-size:.95em;
 padding-top:10px;
 height:100px;
 text-align:center;
+}
+
+#change_arena_status:link, #change_arena_status:visited {
+text-align:center;
+font-size:5em;
+color:#3d5770;
+margin-top:20px;
 }
 
 #site_summary a:link, #site_summary a:visited {
@@ -536,7 +544,11 @@ text-decoration:none;
     border-radius: 5px;
 	}
 
-#drive_mobot:hover {
+	p#drive_mobot {
+	color:#000;
+	}
+	
+a#drive_mobot:hover, #change_arena_status:hover {
 background:#FFF;
 }
 

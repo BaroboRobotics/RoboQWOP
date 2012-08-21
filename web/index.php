@@ -1,5 +1,6 @@
 <?php
 include 'config.php';
+include 'arena_status.php';
 session_start();
 if (isset( $_SESSION['user_id'] )) {
 	$user_id = $_SESSION['user_id'];	
@@ -26,12 +27,23 @@ $page = 'index';
     <body>
         <div role="main" id="page"> <?php include("includes/header.php") ?>
         	<div id="page-content" class="homepage">
-                <a href="authenticate.php" id="drive_mobot" class="rounded_corners">Control a Mobot</a>
+			    <?php if (arena_status(1)): ?>
+                    <a href="authenticate.php" id="drive_mobot" class="rounded_corners">Control a Mobot</a>
+			    <?php else: ?>
+				    <p id="drive_mobot" class="rounded_corners">Mobots Offline</a>
+			    <?php endif; ?>
                 <p id="site_summary" class="rounded_corners"><strong>RoboQWOP</strong> lets you control <strong>Mobots</strong> online for free. 
                     Mobots, <a href="http://www.barobo.com">developed by Barobo</a>, help interest students in computing,
                     science, technology, engineering, and math. They're small enough for each student to have one.
                 </p>
                 <div class="clearfix"></div>
+				<?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) :?>
+				    <?php if (arena_status(1)): ?>
+						<a href="change_arena_status.php?arena_id=1&status=0" id="change_arena_status" class="rounded_corners">Take Mobots offline</a>
+					<?php else: ?>
+						<a href="change_arena_status.php?arena_id=1&status=1" id="change_arena_status" class="rounded_corners">Put Mobots online</a>
+					<?php endif; ?>
+				<?php endif; ?>
                 <div id="info-display" class="clearfix" style="margin-top: 1em;"></div>
             </div>
             <?php include("includes/sidebar.php") ?>
