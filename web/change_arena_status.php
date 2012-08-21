@@ -1,4 +1,4 @@
-<?php=
+<?php
 include 'config.php';
 session_start();
 if ((!isset($_SESSION['user_id'])) || (!$_SESSION['is_admin'])) {
