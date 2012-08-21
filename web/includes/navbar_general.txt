@@ -1,5 +1,0 @@
-		    <?php if ($page == 'help') : ?>
-			    <strong>Help</strong> |
-		    <?php else: ?>
-		        <a href="help.php">Help</a> | 
-			<?php endif; ?>
