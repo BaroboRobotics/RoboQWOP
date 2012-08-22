@@ -582,5 +582,5 @@ margin-top:20px;
 #ustream_embed_control_page {
 position:fixed;
 bottom:0;
-z-index:2;
+z-index:20;
 }
