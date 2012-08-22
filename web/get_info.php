@@ -1,7 +1,7 @@
 <?php
 include 'config.php';
 header('Content-type: application/json');
-
+session_start();
 $ret_val = '{}';
 $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 if (mysqli_connect_errno()) {
@@ -76,7 +76,12 @@ try {
     $robots_val .= "]";
     $queue_val .= "]";
     $controllers_val .= "]";
-    $ret_val = '{"error":false, "admin":false, "robots":' . $robots_val . ', "queue":' . $queue_val
+	if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) {
+	    $is_admin = 'true';
+    } else {
+	    $is_admin = 'false';
+	}
+    $ret_val = '{"error":false, "admin":' . $is_admin . ', "robots":' . $robots_val . ', "queue":' . $queue_val
         . ', "controllers":' . $controllers_val . ',"stats":[]}';
 } catch (Exception $e) {
     $mysqli->rollback();
