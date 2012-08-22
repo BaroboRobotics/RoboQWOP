@@ -59,7 +59,7 @@ $page = 'index';
 					<?php endif; ?>
 				    <?php if ($ustream_embed_url): ?>
 						<!-- Ustream.tv embed -->
-						<iframe src="<?=$ustream_embed_url ?>" width="760" height="460" scrolling="no" frameborder="0" style="margin-top:20px; border: 0px none transparent;"></iframe>
+						<iframe src="<?=$ustream_embed_url ?>?autoplay=true" width="760" height="460" scrolling="no" frameborder="0" style="margin-top:20px; border: 0px none transparent;"></iframe>
 						<br />
 						<p style="padding: 2px 0px 4px; width: 400px; background: #ffffff; display: block; color: #000000; font-weight: normal; font-size: 10px; text-align: center;" target="_blank"><a href="http://www.ustream.tv/">Streaming Live by Ustream</a> <a href="">Ustream profile</a></p>
 						<!-- end ustream.tv embed -->

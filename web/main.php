@@ -249,7 +249,7 @@ if (!isset( $_SESSION['user_id'] )) {
 		<?php if ($ustream_embed_url): ?>
 		    
 			<!-- Ustream.tv embed -->
-			<iframe id="ustream_embed_control_page" src="<?=$ustream_embed_url ?>" frameborder="0"></iframe>
+			<iframe id="ustream_embed_control_page" src="<?=$ustream_embed_url ?>?autoplay=true" frameborder="0"></iframe>
 			
 			<!-- end ustream.tv embed -->
 			<div id="white_space_control_page"></div> <!-- for scrolling to get all of controls, no hidden controls -->
