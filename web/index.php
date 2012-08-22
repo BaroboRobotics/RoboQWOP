@@ -86,7 +86,9 @@ $page = 'index';
 						<td><input type="input" value="<?=$ustream_profile_url ?>" name="ustream_profile_url" style="width:100%" /></td>
 						<td><input type="input" value="<?=$ustream_embed_url ?>" name="ustream_embed_url" style="width:100%" /></td>
 					</tr>
-                    <tr><th colspan="3"><input type="submit" value="Save"/></th>
+                    <tr>
+                        <th colspan="3"><input type="submit" value="Save"/></th>
+                    </tr>
 					</table></form>
 				<?php endif; ?>
                 

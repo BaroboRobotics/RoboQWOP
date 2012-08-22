@@ -302,6 +302,10 @@ function RoboQWOPController() {
 			self.resetQwop();
 			self.sendAction();
 		});
+		$('#robomancer-controls .arrow-button').mouseup(function(event) {
+			self.resetDirection();
+			self.sendAction();
+		});
 	}
 
 	self.updateSliders = function(array) {
