@@ -48,8 +48,17 @@ $page = 'index';
 		$ustream_profile_url = $row->ustream_profile_url;
 		$ustream_embed_url = $row->ustream_embed_url;
 		$result->close();
-		
-		// Close the connection.
+		$offline_robots = array();
+		$sql = "SELECT number, name FROM robots WHERE status = 0";
+		if ($stmt = $mysqli->prepare($sql)) {
+			$stmt->execute();
+			$stmt->bind_result($number, $name);
+			while ($stmt->fetch()) {
+				$offline_robots[$number] = $name;  
+			}
+			$stmt->close();
+		}
+		// Close the connection
 		$mysqli->close();
 	}
 					?>
@@ -90,6 +99,12 @@ $page = 'index';
                         <th colspan="3"><input type="submit" value="Save"/></th>
                     </tr>
 					</table></form>
+					<?php
+foreach ($offline_robots as $key => $val) {
+    echo "<input type=\"button\" value=\"Put $val online\" onclick=\"change_robot_status($key, 1); \$(this).hide();\" /><br/>";
+}
+?>
+					
 				<?php endif; ?>
                 
             </div>
@@ -106,7 +121,9 @@ $page = 'index';
         <script src="js/script.js?v=2"></script>
         <script type="text/javascript">
             function infoDisplay() {
+			    
                 $.getJSON('get_info.php', function(json) {
+				    console.log(json);
                     if (json.error) {
                         $('#info-display').html('<p>' + json.msg + '</p>');
                         return;

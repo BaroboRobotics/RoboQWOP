@@ -5,6 +5,10 @@ function delete_user_from_queue(user_id) {
     $.post('delete_user_from_queue.php', 'user_id_to_delete='+user_id);
 }
 
+function change_robot_status(robot_number, status) {
+    $.post('change_robot_status.php', 'robot_number='+robot_number+'&status='+status);
+}
+
 function showAssignmentN(n) {
 	$.post('get_assignment.php', 'user_id='+current_user_id+'&assignment='+n, function(data) {
 	    console.log(data);
@@ -81,7 +85,11 @@ function RoboQWOPController() {
 		var cnt = 0;
 		$.each(json.robots, function(idx1, robot) {
 			header[robot.number] = '<table><thead><tr>';
-			header[robot.number] += '<th colspan="2"><a href="authenticate.php?robot=' + robot.number + '">' + robot.name + '</a></th>';
+			header[robot.number] += '<th colspan="2"><a href="authenticate.php?robot=' + robot.number + '">' + robot.name + '</a>';
+			if (json.admin) {
+			    header[robot.number] += ' <input type="button" value="X" onclick="change_robot_status(' + robot.number + ', 0)" />';
+			}
+			header[robot.number] += '</th>';
 			header[robot.number] += '</tr></thead><tbody>';
 			body[robot.number] = '';
 			footer[robot.number] = '</tbody></table>';
