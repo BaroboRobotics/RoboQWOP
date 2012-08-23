@@ -185,84 +185,56 @@ function RoboQWOPController() {
 	            break;
 	        case 38: // up
 		    	if (temp != self.directionData.up) {
+		    		self.directionData.up = temp;
 		    		sendDirection = true;
 				    switch (orientation) {
-					    case 1:
-		    		        self.directionData.up = temp; 
-							break;
-						case 2:
-		    		        self.directionData.down = temp;
-							break;
 						case 3:
-		    		        self.directionData.right = temp;
-							nextOrientation = 1;
+							nextOrientation = 2;
 							break;
 						case 4:
-		    		        self.directionData.left = temp;
-							nextOrientation = 2;
+							nextOrientation = 1;
 							break;
 				    }
 		    	}
 		        break;
 		    case 40: // down
 		    	if (temp != self.directionData.down) {
+		    		self.directionData.down = temp;
 		    		sendDirection = true;
 		    		switch (orientation) {
-				    case 1:
-	    		        self.directionData.down = temp;
-						break;
-					case 2:
-	    		        self.directionData.up = temp;
-						break;
 					case 3:
-						self.directionData.left = temp;
-						nextOrientation = 2;
+						nextOrientation = 1;
 						break;
 					case 4:
-	    		        self.directionData.right = temp;
-						nextOrientation = 1;
+						nextOrientation = 2;
 						break;
 		    		}
 		    	}
 		        break;
 		    case 37: // left
 		    	if (temp != self.directionData.left) {
+		    		self.directionData.left = temp;
 		    		sendDirection = true;
 		    		switch (orientation) {
 		    		case 1:
-		    			self.directionData.left = temp;
 		    			nextOrientation = 3;
 		    			break;
 		    		case 2:
-		    			self.directionData.right = temp;
 		    			nextOrientation = 4;
-		    			break;
-		    		case 3:
-		    			self.directionData.up = temp;
-		    			break;
-		    		case 4:
-		    			self.directionData.down = temp;
 		    			break;
 		    		}
 		    	}
 		        break;
 		    case 39: // right
 		    	if (temp != self.directionData.right) {
+		    		self.directionData.right = temp;
 		    		sendDirection = true;
 				    switch (orientation) {
 					    case 1:
-		    		        self.directionData.right = temp;
 							nextOrientation = 4;
 							break;
 						case 2:
-		    		        self.directionData.left = temp;
 							nextOrientation = 3;
-							break;
-						case 3:
-		    		        self.directionData.down = temp;
-							break;
-						case 4:
-		    		        self.directionData.up = temp;
 							break;
 				    }
 		    	}
@@ -385,7 +357,31 @@ function RoboQWOPController() {
 	self.sendAction = function() {
 		var data = null;
 		if (sendDirection) {
-			data = self.directionData;
+			if (orientation == 1) {
+				data = {"mode":self.directionData.mode,
+						"up":self.directionData.up,
+						"down":self.directionData.down,
+						"left":self.directionData.left,
+						"right":self.directionData.right};
+			} else if (orientation == 2) {
+				data = {"mode":self.directionData.mode,
+						"up":self.directionData.down,
+						"down":self.directionData.up,
+						"left":self.directionData.left,
+						"right":self.directionData.right};
+			} else if (orientation == 3) {
+				data = {"mode":self.directionData.mode,
+						"up":self.directionData.left,
+						"down":self.directionData.right,
+						"left":self.directionData.down,
+						"right":self.directionData.up};
+			} else if (orientation == 4) {
+				data = {"mode":self.directionData.mode,
+						"up":self.directionData.right,
+						"down":self.directionData.left,
+						"left":self.directionData.up,
+						"right":self.directionData.down};
+			}
 			sendDirection = false;
 		} else if (sendQwop) {
 			data = self.qwopData;
@@ -445,7 +441,6 @@ function RoboQWOPController() {
 		$('#orientation_icon_3').removeClass('selected_orientation');
 		$('#orientation_icon_4').removeClass('selected_orientation');
 		$('#orientation_icon_'+n).addClass('selected_orientation');
-		self.resetDirection();
 	}
 
 	self.nextOrientation = function() {

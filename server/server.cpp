@@ -255,7 +255,7 @@ void init_mobots() {
 			mobot[index].setJointSpeeds(120.0, 120.0, 120.0, 120.0);
 			mobot[index].moveJointToNB(MOBOT_JOINT2, 0);
 			mobot[index].moveJointTo(MOBOT_JOINT3, 0);
-			mobot[index].moveToZero();
+			//mobot[index].moveToZero();
 			max_mobot_index = index;
 			printf("Mobot %s is ready\n", addresses[index]);
 		}
@@ -310,7 +310,7 @@ int process_command(char *read, char *write) {
 		printf("invalid Mobot number reference");
 		return 1;
 	}
-	num_seconds[mobot_num] = 0;
+
 	if (!mobot[mobot_num].isConnected()) {
 		printf("Mobot is not connected, not processing command.\n");
 		strcpy(write, "NOT CONNECTED");
@@ -326,24 +326,31 @@ int process_command(char *read, char *write) {
 				(int) stats[mobot_num][6], (int) stats[mobot_num][7]);
 		break;
 	case CMD_RESET:
+		num_seconds[mobot_num] = 0;
+		mobot[mobot_num].moveContinuousNB(MOBOT_HOLD, MOBOT_HOLD, MOBOT_HOLD, MOBOT_HOLD);
 		mobot[mobot_num].moveJointToNB(MOBOT_JOINT2, 0);
 		mobot[mobot_num].moveJointTo(MOBOT_JOINT3, 0);
 		break;
 	case CMD_MOVE_CONTINUOUS:
+		num_seconds[mobot_num] = 0;
 		mobot[mobot_num].moveContinuousNB(get_state(values[0]), get_state(values[3]),
 				get_state(values[2]), get_state(values[1]));
 		break;
 	case CMD_SPEED:
+		num_seconds[mobot_num] = 0;
 		mobot[mobot_num].setJointSpeeds(values[0], values[1], values[2], values[3]);
 		break;
 	case CMD_JOINT:
+		num_seconds[mobot_num] = 0;
 		mobot[mobot_num].moveToNB(values[0], values[1], values[2], values[3]);
 		break;
 	case CMD_DIRECTIONAL:
+		num_seconds[mobot_num] = 0;
 		mobot[mobot_num].moveContinuousNB(get_state(values[0]), get_state(values[1]),
 						get_state(values[2]), get_state(values[3]));
 		break;
 	case CMD_ACTIONS:
+		num_seconds[mobot_num] = 0;
 		switch ((int) values[0]) {
 		case 1: // Arch
 			mobot[mobot_num].motionArchNB(180.0);
@@ -375,6 +382,7 @@ int process_command(char *read, char *write) {
 		}
 		break;
 	default:
+		num_seconds[mobot_num] = 0;
 		strcpy(write, "UNKNOWN COMMAND");
 		printf("Unknown command\n");
 	}
