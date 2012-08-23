@@ -228,12 +228,12 @@ if (!isset( $_SESSION['user_id'] )) {
 	                        </div>
 	                        <div class="box motions">
 	                            <p>Motions</p>
-								<input type="button" value="Arch" onclick="controller.doMotion(1)" class="motion_button"/>
-								<input type="button" value="Inchworm Left" onclick="controller.doMotion(2)" class="motion_button"/>
-								<input type="button" value="Inchworm Right" onclick="controller.doMotion(3)" class="motion_button"/>
+								<input type="button" value="Arch (W)" onclick="controller.doMotion(1)" class="motion_button"/>
+								<input type="button" value="Inchworm Left (X)" onclick="controller.doMotion(2)" class="motion_button"/>
+								<input type="button" value="Inchworm Right (Y)" onclick="controller.doMotion(3)" class="motion_button"/>
 								<input type="button" value="Roll Backward" onclick="controller.doMotion(4)" class="motion_button"/>
 								<input type="button" value="Roll Forward" onclick="controller.doMotion(5)" class="motion_button"/>
-								<input type="button" value="Skinny Pose" onclick="controller.doMotion(6)" class="motion_button"/>
+								<input type="button" value="Skinny Pose (Z)" onclick="controller.doMotion(6)" class="motion_button"/>
 								<input type="button" value="Turn Left" onclick="controller.doMotion(8)" class="motion_button"/>
 								<input type="button" value="Turn Right" onclick="controller.doMotion(9)" class="motion_button"/>
 	                        </div>
@@ -265,7 +265,7 @@ if (!isset( $_SESSION['user_id'] )) {
         <script src="js/script.js?v=2"></script>
         <script type="text/javascript">
             var arrowKeycodes = [38, 40, 37, 39];
-            var controlKeycodes = [38, 52, 37, 39, 76, 81, 87, 69, 82, 85, 73, 79, 80, 38, 40];
+            var controlKeycodes = [38, 52, 37, 39, 76, 81, 87, 69, 82, 85, 73, 79, 80, 38, 40, 83, 87, 88, 89, 90];
 			var color1_name = "<?=$color1_name ?>";
 			var color2_name = "<?=$color2_name ?>";
 			var current_user_id = "<?=$user_id ?>";
