@@ -13,7 +13,7 @@ try {
     $queue_val = "[";
     $controllers_val = "[";
     // Get robot information.
-    $sql = "SELECT name, number, address FROM robots WHERE status = 1";
+    $sql = "SELECT name, number, address FROM robots WHERE status = 1 ORDER BY number ASC";
     if ($result = $mysqli->query($sql)) {
         $comma = false;
         while ($row = $result->fetch_object()) {
@@ -31,7 +31,7 @@ try {
     $sql = "SELECT q.user_id, u.first_name, u.last_name, u.country, r.name, q.robot_number
                 FROM queue q INNER JOIN users AS u on u.id = q.user_id 
                 INNER JOIN robots AS r on r.number = q.robot_number
-                ORDER BY q.robot_number, q.created asc";
+                ORDER BY q.robot_number ASC, q.created ASC";
 
     if ($result = $mysqli->query($sql)) {
         $comma = false;
@@ -50,7 +50,7 @@ try {
     $sql = "SELECT c.created, c.control_time, c.user_id, u.first_name, u.last_name, u.country, r.name, c.robot_number
         FROM controllers c
         INNER JOIN users AS u on u.id = c.user_id
-        INNER JOIN robots AS r on r.number = c.robot_number";
+        INNER JOIN robots AS r on r.number = c.robot_number ORDER BY c.robot_number ASC";
     if ($result = $mysqli->query($sql)) {
         $comma = false;
         while ($row = $result->fetch_object()) {

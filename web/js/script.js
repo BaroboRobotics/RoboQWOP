@@ -78,45 +78,52 @@ function RoboQWOPController() {
 	}
 	
 	self.getQueueHTML = function(json) {
+		if (!json || !json.robots || json.robots.length == 0) {
+			return "";
+		}
 		var header = [];
 		var footer = [];
 		var body = [];
 		var pos = [];
+		var robot_index = [json.robots.length];
 		var cnt = 0;
-		$.each(json.robots, function(idx1, robot) {
-			header[robot.number] = '<table><thead><tr>';
-			header[robot.number] += '<th colspan="2"><a href="authenticate.php?robot=' + robot.number + '">' + robot.name + '</a>';
+		$.each(json.robots, function(index, robot) {
+			robot_index[robot.number] = index;
+			header[index] = '<table><thead><tr>';
+			header[index] += '<th colspan="2"><a href="authenticate.php?robot=' + robot.number + '">' + robot.name + '</a>';
 			if (json.admin) {
-			    header[robot.number] += ' <input type="button" value="X" onclick="change_robot_status(' + robot.number + ', 0)" />';
+			    header[index] += ' <input type="button" value="X" onclick="change_robot_status(' + robot.number + ', 0)" />';
 			}
-			header[robot.number] += '</th>';
-			header[robot.number] += '</tr></thead><tbody>';
-			body[robot.number] = '';
-			footer[robot.number] = '</tbody></table>';
-			pos[robot.number] = 1;
+			header[index] += '</th>';
+			header[index] += '</tr></thead><tbody>';
+			body[index] = '';
+			footer[index] = '</tbody></table>';
+			pos[index] = 1;
 			cnt++;
 		});
-		$.each(json.controllers, function(index, controller) {
-			body[controller.robot_number] = '<tr><td>' + pos[controller.robot_number]  + '</td><td>';
-	        body[controller.robot_number] += controller.first_name + ' ' + controller.last_name;
+		$.each(json.controllers, function(index, cntr) {
+			var idx = robot_index[cntr.robot_number];
+			body[idx] = '<tr><td>' + pos[idx]  + '</td><td>';
+	        body[idx] += cntr.first_name + ' ' + cntr.last_name;
 			if (json.admin) {
-			    body[controller.robot_number] += ' <input type="button" value="X" onclick="delete_user_from_queue(' + controller.user_id + ')" />';
+			    body[idx] += ' <input type="button" value="X" onclick="delete_user_from_queue(' + cntr.user_id + ')" />';
 			}
-	        body[controller.robot_number] += '<br/>(' + controller.time_left + ' seconds left )'; 
-	        body[controller.robot_number] += '</td></tr>';
-	        pos[controller.robot_number]++;
+	        body[idx] += '<br/>(' + cntr.time_left + ' seconds left )'; 
+	        body[idx] += '</td></tr>';
+	        pos[idx]++;
 	    });
 		$.each(json.queue, function(index, q) {
-	        body[q.robot_number] += '<tr><td>' + pos[q.robot_number] + '</td><td>';
-	        body[q.robot_number] += q.first_name + ' ' + q.last_name;
+			var idx = robot_index[q.robot_number];
+	        body[idx] += '<tr><td>' + pos[idx] + '</td><td>';
+	        body[idx] += q.first_name + ' ' + q.last_name;
 			if (json.admin) {
-			    body[q.robot_number] += ' <input type="button" value="X" onclick="delete_user_from_queue(' + q.user_id + ')" />';
+			    body[idx] += ' <input type="button" value="X" onclick="delete_user_from_queue(' + q.user_id + ')" />';
 			}
-	        body[q.robot_number] += '</td></tr>';
-	        pos[q.robot_number]++;
+	        body[idx] += '</td></tr>';
+	        pos[idx]++;
 	    });
 		var html = "";
-		for (var i = 0; i < cnt; i++) {
+		for (var i = 0; i < json.robots.length; i++) {
 			html += header[i] + body[i] + footer[i];
 		}
 		return html;
@@ -125,24 +132,6 @@ function RoboQWOPController() {
 	self.event = function(keyCode, down) {
 		var temp = (down) ? 1 : 0;
 	    switch (keyCode) {
-			case 49: // 1
-	        	self.changeOrientation(1);
-	            break;
-			case 50: // 2
-	        	self.changeOrientation(2);
-	            break;
-			case 51: // 3
-    			self.changeOrientation(3);
-	            break;
-			case 52: // 4
-	        	self.changeOrientation(4);
-	            break;
-		    case 53: // 5 half-speed
-		    	self.changeSpeed(60);
-				break;
-			case 54: // 6 full-speed
-				self.changeSpeed(120);
-				break;
 	        case 81: // q
 	        	if (temp != self.qwopData.q) {
 		    		self.qwopData.q = temp; sendQwop = true;
@@ -182,21 +171,6 @@ function RoboQWOPController() {
 	        	if (temp != self.qwopData.p) {
 	        		self.qwopData.p = temp; sendQwop = true;
 		    	}
-	            break;
-		    case 83: // s
-	        	controller.doDirection(false,false,false,false);
-	            break;
-			case 87: // w
-	        	controller.doMotion(1);
-	            break;
-			case 88: // x
-	        	controller.doMotion(3);
-	            break;
-			case 89: // y
-	        	controller.doMotion(4);
-	            break;
-			case 90: // z
-	        	controller.doMotion(6);
 	            break;
 	        case 38: // up
 		    	if (temp != self.directionData.up) {

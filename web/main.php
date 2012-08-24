@@ -318,7 +318,40 @@ if (!isset( $_SESSION['user_id'] )) {
                         controller.nextOrientation();
 					case 76: // l
 					    controller.reset();
-						break;  
+						break;
+					case 49: // 1
+                        controller.changeOrientation(1);
+                        break;
+                    case 50: // 2
+                        controller.changeOrientation(2);
+                        break;
+                    case 51: // 3
+                        controller.changeOrientation(3);
+                        break;
+                    case 52: // 4
+                        controller.changeOrientation(4);
+                        break;
+                    case 53: // 5 half-speed
+                        controller.changeSpeed(60);
+                        break;
+                    case 54: // 6 full-speed
+                        controller.changeSpeed(120);
+                        break;
+                    case 83: // s
+                        controller.doDirection(false,false,false,false);
+                        break;
+                    case 87: // w
+                        controller.doMotion(1);
+                        break;
+                    case 88: // x
+                        controller.doMotion(3);
+                        break;
+                    case 89: // y
+                        controller.doMotion(4);
+                        break;
+                    case 90: // z
+                        controller.doMotion(6);
+                        break;
 				    default:
 				        controller.event(keyCode, down);
                 }
