@@ -183,6 +183,21 @@ function RoboQWOPController() {
 	        		self.qwopData.p = temp; sendQwop = true;
 		    	}
 	            break;
+		    case 83: // s
+	        	controller.doDirection(false,false,false,false);
+	            break;
+			case 87: // w
+	        	controller.doMotion(1);
+	            break;
+			case 88: // x
+	        	controller.doMotion(3);
+	            break;
+			case 89: // y
+	        	controller.doMotion(4);
+	            break;
+			case 90: // z
+	        	controller.doMotion(6);
+	            break;
 	        case 38: // up
 		    	if (temp != self.directionData.up) {
 		    		self.directionData.up = temp;
